@@ -131,7 +131,14 @@
       "Bash(git switch *)",
       "PowerShell(npx vitest run tests/ts/Checkers/Basic/AlgebraChecker.test.ts)",
       "Bash(Select-Object -Last 40)",
-      "PowerShell(npx vitest run tests/ts/Checkers/Basic/PolynomChecker.test.ts tests/ts/Checkers/Basic/RationalChecker.test.ts tests/ts/Checkers/pichecker.test.ts 2>&1 | Select-Object -Last 30)"
+      "PowerShell(npx vitest run tests/ts/Checkers/Basic/PolynomChecker.test.ts tests/ts/Checkers/Basic/RationalChecker.test.ts tests/ts/Checkers/pichecker.test.ts 2>&1 | Select-Object -Last 30)",
+      "PowerShell(npx vitest run tests/ts/Checkers/Basic/ExpChecker.test.ts)",
+      "PowerShell(npx vitest run tests/ts/Checkers/Basic/_scratch.test.ts)",
+      "PowerShell(npx vitest run tests/ts/Checkers/)",
+      "Bash(cat)",
+      "Bash(rm -f _probe.mjs)",
+      "Bash(echo \"EXIT=$?\")",
+      "PowerShell(npx vitest run tests/ts/Components/Ui/markdownLinks.test.ts)"
     ]
   },
   "enableAllProjectMcpServers": true,

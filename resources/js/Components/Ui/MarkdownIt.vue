@@ -1,6 +1,44 @@
 <!--
 Affichage d'un texte en markdown.
 -->
+<script lang="ts">
+/**
+ * Résout le contenu d'une destination de lien interne (SANS parenthèses) en URL.
+ * Entrée et sortie toujours sans parenthèses → double-emballage structurellement impossible.
+ */
+function resolveInternalLink(dest: string, isCourse: boolean): string {
+	if (dest.startsWith("@")) {
+		const [routeName, ...args] = dest.substring(1).split(",")
+		const context = isCourse ? "course" : null
+
+		switch (routeName) {
+			case "posts.show":
+				return route(routeName, {post: args[0], context})
+			case "blocks.show":
+				return route(routeName, {block: args[0], context})
+			case "tools.show":
+				return route("tools.show", {tool: args[0]})
+			default:
+				return dest
+		}
+	}
+
+	// Ancres (#...) et tout le reste : destination inchangée
+	return dest
+}
+
+/**
+ * Transforme en UN seul passage tous les codes de liens internes
+ * `(@route,args)` et `(#ancre)` en destinations markdown, avec la classe de thème `{.@text}`.
+ */
+export function replaceInternalLinks(text: string, isCourse: boolean): string {
+	return text.replaceAll(
+		/\(([@#]\S+)\)/g,
+		(_match, dest: string) => `(${resolveInternalLink(dest, isCourse)}){.@text}`,
+	)
+}
+</script>
+
 <script
 	lang="ts"
 	setup
@@ -71,26 +109,8 @@ const mdit = computed(() => {
 	// Current location: course vs other.
 	const context = window.location.pathname.startsWith('/cours')
 
-	// Remplace les liens vers les routes par des liens vers les pages
-	output = output.replaceAll(/\(@\S+\)/g, (match) => {
-		const [routeName, ...routeOptions] = match
-			.substring(2, match.length - 1)
-			.split(",")
-
-		switch (routeName) {
-			case 'posts.show':
-				return `(${route(routeName, {post: routeOptions[0], context: context ? 'course' : null})}){.@text}`
-			case 'blocks.show':
-				return `(${route(routeName, {block: routeOptions[0], context: context ? 'course' : null})}){.@text}`
-			case 'tools.show':
-				return `(${route('tools.show', {tool: routeOptions[0]})}){.@text}`
-			default:
-				return `(${match}){.@text}`
-		}
-	})
-
-	// Ajoute à tous les liens internes la bonne couleur
-	output = output.replaceAll(/\(#\S+\)/g, (match) => `(${match}){.@text}`)
+	// Résout les codes de liens internes (@route,args) et (#ancre) en un seul passage.
+	output = replaceInternalLinks(output, context)
 
 	// Remplace les class courtes en classes complètes.
 

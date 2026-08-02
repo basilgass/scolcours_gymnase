@@ -106,7 +106,6 @@ export function useFormattedBody(
 ): string | null {
 	if (body === null) return null
 
-
 	const values = unref(mabyeRefValues)
 
 	if (!values) return unref(body)
