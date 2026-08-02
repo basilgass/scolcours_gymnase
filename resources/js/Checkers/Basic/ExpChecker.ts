@@ -1,17 +1,147 @@
 import {CheckerAbstract, CheckerResult, CHECKERS, makeCheckerResult} from "@/Checkers"
-import {PolynomChecker} from "@/Checkers/Basic/PolynomChecker"
-import {splitAtSigns, splitIfOutsideParentheses} from "../checkerHelperFunctions.ts"
-import {Polynom} from "pimath"
+import {splitAtSigns, splitIfOutsideParentheses, stripParenthesis} from "../checkerHelperFunctions.ts"
+import {normalizeExpression} from "@/Checkers/normalizeExpression"
+import {NumExp} from "piexpression"
 
-// const name = "exp"
 const description = `exp,[paramètres]
 
 **paramètres**
 aucun
 `
 
+/** Valeurs de x pour l'évaluation numérique (petite amplitude, non entières). */
+const NUM_SAMPLES = [0, 0.5, -0.5, 1, -1, 1.5, -1.5, 2]
+/** Nombre de points concordants requis pour conclure à l'égalité. */
+const MIN_AGREEMENTS = 5
+
+export interface ExpTerm {
+	coefficient: string
+	exponent: string | null
+	denominator: string | null
+	hasExp: boolean
+}
+
+/**
+ * Décompose un terme signé `(p1)e^(p2)/(p3)` en ses composantes. `hasExp`
+ * indique la présence d'une exponentielle au numérateur (à profondeur 0).
+ */
+export function parseExpTerm(term: string): ExpTerm {
+	const parts = splitIfOutsideParentheses(term, "/")
+	const left = parts[0]
+	const denominator = parts.length > 1 ? parts.slice(1).join("/") : null
+
+	const eIndex = findExpIndex(left)
+	if (eIndex === -1) {
+		return {coefficient: left, exponent: null, denominator, hasExp: false}
+	}
+
+	return {
+		coefficient: left.substring(0, eIndex),
+		exponent: stripParenthesis(left.substring(eIndex + 2)),
+		denominator,
+		hasExp: true,
+	}
+}
+
+/** Index du premier `e^` à profondeur de parenthèses nulle, ou -1. */
+function findExpIndex(value: string): number {
+	let depth = 0
+	for (let i = 0; i < value.length - 1; i++) {
+		const c = value[i]
+		if (c === "(") depth++
+		else if (c === ")") depth--
+		else if (c === "e" && value[i + 1] === "^" && depth === 0) return i
+	}
+	return -1
+}
+
+type EquivResult = "equal" | "different" | "unverifiable"
+
+/**
+ * Compare deux expressions par évaluation numérique sur {@link NUM_SAMPLES}.
+ * Écarte les points hors domaine (NaN/Infinity), applique une tolérance
+ * relative, et exige {@link MIN_AGREEMENTS} concordances.
+ */
+function numericEquivalence(given: string, expected: string): EquivResult {
+	let a: NumExp
+	let g: NumExp
+	try {
+		a = new NumExp(expected)
+		g = new NumExp(given)
+	} catch {
+		return "unverifiable"
+	}
+
+	let agreements = 0
+	for (const x of NUM_SAMPLES) {
+		let av: number
+		let gv: number
+		try {
+			av = a.evaluate({x})
+			gv = g.evaluate({x})
+		} catch {
+			return "unverifiable"
+		}
+		if (!isFinite(av) || !isFinite(gv)) continue
+		if (Math.abs(av - gv) > 1e-6 * (1 + Math.abs(av))) return "different"
+		agreements++
+	}
+
+	return agreements >= MIN_AGREEMENTS ? "equal" : "unverifiable"
+}
+
+/**
+ * F1 : détecte un exposant NON parenthésé suivi d'une puissance `^`
+ * (ex. `e^x^2`), signe d'un oubli de parenthèses. Ne se déclenche jamais sur
+ * une somme de termes légitime (`e^x + xe^x`).
+ */
+function hasUnparenthesizedExponentPower(value: string): boolean {
+	let depth = 0
+	for (let i = 0; i < value.length - 1; i++) {
+		const c = value[i]
+		if (c === "(") {
+			depth++
+			continue
+		}
+		if (c === ")") {
+			depth--
+			continue
+		}
+		if (c === "e" && value[i + 1] === "^" && depth === 0) {
+			if (value[i + 2] === "(") {
+				continue
+			}
+			let j = i + 2
+			while (j < value.length && /[A-Za-z0-9.]/.test(value[j])) {
+				j++
+			}
+			if (value[j] === "^") {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+/**
+ * F2 : un terme est une fraction simplifiable ssi son numérateur ET son
+ * dénominateur (dé-parenthésé, terme unique) contiennent chacun une
+ * exponentielle à profondeur 0 (annulation `e^a / e^b = e^(a-b)`).
+ */
+function isSimplifiableFraction(term: string): boolean {
+	const parsed = parseExpTerm(term)
+	if (parsed.denominator === null || !parsed.hasExp) {
+		return false
+	}
+	const denom = stripParenthesis(parsed.denominator)
+	if (splitAtSigns(denom).length !== 1) {
+		return false
+	}
+	return parseExpTerm(denom).hasExp
+}
+
 export class ExpChecker extends CheckerAbstract {
-	readonly format = "polynôme avec des exponentielles <br/>\\((x-3)e^{x^2-3}\\)"
+	readonly format = "polynôme × exponentielle <br/>\\((3x+5)e^{x^2-5x}\\)"
 
 	constructor(config?: string[] | string) {
 		super(config)
@@ -19,168 +149,42 @@ export class ExpChecker extends CheckerAbstract {
 		this.description = description
 	}
 
-	override checkValue(value: string): CheckerResult {
-		// plusieurs possible:
-		// ae^(polynom)
-		// ae^(polynom) + be^(polynom)
-		// ae^(polynom) + be^(polynom) / ae^(polynom) + be^(polynom)
-
-		// on coupe en numérateur / dénominateur
-		// on recherche un endroit qui n'est pas entre parenthèse.
-		const [N, D] = splitIfOutsideParentheses(value, "/")
-		const [eN, eD] = splitIfOutsideParentheses(this.answer, "/")
-
-		// contrôle de cohérence
-		if (D === undefined && eD !== undefined) {
-			return makeCheckerResult("Un dénominateur est attendu...")
+	override checkFormat(value: string): string {
+		try {
+			const expression = new NumExp(normalizeExpression(value))
+			if (!expression.isValid) {
+				return "L'expression n'est pas reconnue."
+			}
+		} catch {
+			return "L'expression n'est pas reconnue."
 		}
 
-		if (D !== undefined && eD === undefined) {
-			return makeCheckerResult("Aucun dénominateur n'est prévu dans cette réponse.")
+		if (hasUnparenthesizedExponentPower(value)) {
+			return "Placez des parenthèses autour de l'exposant (ex : e^(x^2-5x))."
 		}
 
-		let check = expCompare(N, eN)
-
-		if (!check.result) {
-			return makeCheckerResult([
-				"il y a une erreur au numérateur",
-				check.message
-			], check.score)
-		}
-
-		// On contrôle les dénominateurs
-		if (D !== undefined && eD !== undefined) {
-			check = expCompare(D, eD)
-
-			if (!check.result) {
-				return makeCheckerResult([
-						"il y a une erreur au dénominateur",
-						check.message
-					],
-					check.score)
+		for (const term of splitAtSigns(value)) {
+			if (isSimplifiableFraction(term)) {
+				return "Les exponentielles peuvent être simplifiées."
 			}
 		}
 
-		return makeCheckerResult()
+		return ""
 	}
 
-}
+	override checkValue(value: string): CheckerResult {
+		const given = normalizeExpression(value)
+		const expected = normalizeExpression(this.answer)
 
+		if (given === expected) return makeCheckerResult()
 
-function expCompare(value: string, eValue: string): CheckerResult {
-	if (eValue === value) {
-		return makeCheckerResult()
-	}
-
-	// On contrôle maintenant les numérateurs
-	const elements = splitAtSigns(value)
-	const expectedElements = splitAtSigns(eValue)
-
-	if (expectedElements.length !== elements.length) {
-		return makeCheckerResult("Il n'y a pas le bon nombre d'éléments")
-	}
-
-
-	if (expectedElements.length >= 2) return multiExpCompare(elements, expectedElements)
-
-
-	return expCompareParts(value, eValue)
-}
-
-function expCompareParts(givenElement: string, expectedElement: string): CheckerResult {
-	const given = displayPolynomForSorting(givenElement)
-	const expected = displayPolynomForSorting(expectedElement)
-
-	// comparer le polynom
-	const chk = new PolynomChecker([]).check(given.polynom, expected.polynom)
-	if (!chk.result) return chk
-
-	// comparer l'exposant
-	return new PolynomChecker([]).check(given.polynom, expected.polynom)
-
-}
-
-function multiExpCompare(elements: string[], expectedElements: string[]): CheckerResult {
-	// Chaque élément est maintenant de la forme
-	// (polynom)e^(polynom)
-
-	// Préparation de tous les éléments sous la forme d'un tableau:
-	// [ {polynom, exponent} ]
-
-	// TODO: move the exponential polynom to PiMathExt and a dedicated class.
-	const elementsArr: {
-		polynom: string,
-		exponent: string,
-		sort: string
-	}[] = sortPolynomials(elements)
-
-	const expectedElementsArr: {
-		polynom: string,
-		exponent: string,
-		sort: string
-	}[] = sortPolynomials(expectedElements)
-
-	// Tous les éléments sont "alignés"
-	let errors = 0
-	for (let i = 0; i < expectedElementsArr.length; i++) {
-		if (expectedElementsArr[i].sort !== elementsArr[i].sort) {
-			errors++
+		switch (numericEquivalence(given, expected)) {
+			case "equal":
+				return makeCheckerResult()
+			case "different":
+				return makeCheckerResult("La réponse n'est pas équivalente.")
+			default:
+				return makeCheckerResult("Impossible de vérifier la réponse.")
 		}
 	}
-	if (errors > 0) {
-		return makeCheckerResult(`Il y a ${errors} élément${errors === 1 ? "" : "s"} qui ${errors === 1 ? "est" : "sont"} faux.`)
-	}
-
-	return makeCheckerResult()
-}
-
-function sortPolynomials(values: string[]) {
-	return values.map(element => {
-		return displayPolynomForSorting(element)
-	}).sort((a, b) => {
-		return a.sort < b.sort ? 1 : -1
-	})
-}
-
-function displayPolynomForSorting(element: string): { polynom: string, exponent: string, sort: string } {
-	const match = element.match(/^(\S+)?(e\^(\S+))$/)
-
-	// cas (poly1)e^(poly2)
-	// poly1 est optionnel
-	let poly1
-	let poly2
-
-	if (match) {
-		try {
-			poly1 = new Polynom(match[1]).reorder().display
-		} catch {
-			poly1 = match[1] ? match[1] : ""
-		}
-		try {
-			poly2 = new Polynom(match[3]).reorder().display
-		} catch {
-			poly2 = match[3] ? match[3] : ""
-		}
-
-		return {
-			polynom: match[1],
-			exponent: match[3],
-			sort: poly1 + poly2,
-		}
-	}
-
-	// Cas où il n'y a pas d'exponentiel
-	let poly3
-	try {
-		poly3 = new Polynom(element).reorder().display
-	} catch {
-		poly3 = element
-	}
-
-	return {
-		polynom: element,
-		exponent: "",
-		sort: poly3
-	}
-
 }
