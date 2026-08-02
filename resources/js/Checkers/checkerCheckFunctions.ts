@@ -1,6 +1,6 @@
 import {Equation, Numeric, Polynom} from "pimath"
 import type {CheckerAbstract} from "@/Checkers/CheckerAbstract.ts"
-import {splitIfOutsideParentheses} from "@/Checkers/checkerHelperFunctions.ts"
+import {splitAtSigns} from "@/Checkers/checkerHelperFunctions.ts"
 
 
 export function checkMinMaxEquation(value: string, answer: string, secondaryChecker: CheckerAbstract): string {
@@ -91,11 +91,7 @@ function getFactors(value: string): string[] {
 export function checkPolynomIsFactorized(value: string, strict: boolean) {
 	// On regarde s'il y a un + ou - en dehors des parenthèses.
 	if (
-		value.includes('(') &&
-		(
-			splitIfOutsideParentheses(value, '+').length > 1 ||
-			splitIfOutsideParentheses(value, '-').length > 1
-		)) {
+		value.includes('(') && splitAtSigns(value).length > 1) {
 		return false
 	}
 

@@ -129,7 +129,9 @@
       "Bash(Select-String \"error TS\")",
       "Bash(git symbolic-ref *)",
       "Bash(git switch *)",
-      "PowerShell(npx vitest run tests/ts/Checkers/Basic/AlgebraChecker.test.ts)"
+      "PowerShell(npx vitest run tests/ts/Checkers/Basic/AlgebraChecker.test.ts)",
+      "Bash(Select-Object -Last 40)",
+      "PowerShell(npx vitest run tests/ts/Checkers/Basic/PolynomChecker.test.ts tests/ts/Checkers/Basic/RationalChecker.test.ts tests/ts/Checkers/pichecker.test.ts 2>&1 | Select-Object -Last 30)"
     ]
   },
   "enableAllProjectMcpServers": true,

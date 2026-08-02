@@ -66,7 +66,7 @@ const CODES: [string, string][] = [
 	["primitive", "primitive"],
 	["coord", "coord"],
 	["vector", "vector"],
-	["trigo", "trigo"],
+	["angle", "angle"],
 	["mod", "mod"],
 	["cartesian", "cartesian"],
 	["limit", "limit"],
@@ -74,7 +74,7 @@ const CODES: [string, string][] = [
 	["simple", "simple"],
 	// --- surcharges de checker (checker:) ---
 	["coord+checker:fraction", "coord,checker:fraction"],
-	["sol+checker:trigo,p", "sol,checker:trigo,p"],
+	["sol+checker:angle,p", "sol,checker:angle,p"],
 	// --- fallback token inconnu ---
 	["unknown", "zzz_unknown"],
 	// --- paramètres de ligne (@var, @if) ---

@@ -307,7 +307,7 @@ describe("solutions checker", () => {
 
 describe('Exercice specific checking (debug)', () => {
 	test('exercice équation trigonométrique élémentaire du premier degré (i) => 1', () => {
-		const solChk = new PiChecker('sol,checker:trigo,p')
+		const solChk = new PiChecker('sol,checker:angle,p')
 
 		const chk1 = solChk.check('{13pi/18+k2pi/3;pi/2+k2pi/3}', '{pi/2+k2pi/3;13pi/18+k2pi/3}')
 		expect(chk1.result).toBe(true)
@@ -320,7 +320,7 @@ describe('Exercice specific checking (debug)', () => {
 	})
 
 	test('équations trigonométriques élémentaires du second degré (ii)', () => {
-		const solChk = new PiChecker('sol,checker:trigo,p,d')
+		const solChk = new PiChecker('sol,checker:angle,p,d')
 		const answer = "{-1.82+k2pi;k2pi;1.82+k2pi}"
 
 		const chk1 = solChk.check(answer, answer)
