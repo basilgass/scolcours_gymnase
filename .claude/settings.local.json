@@ -139,7 +139,11 @@
       "Bash(rm -f _probe.mjs)",
       "Bash(echo \"EXIT=$?\")",
       "PowerShell(npx vitest run tests/ts/Components/Ui/markdownLinks.test.ts)",
-      "Bash(Select-Object -First 8)"
+      "Bash(Select-Object -First 8)",
+      "PowerShell(npx eslint resources/js/Components/Chapters/FormulaPicker.vue resources/js/Components/Chapters/ChapterFormulas.vue resources/js/Components/FormulaSearch.vue resources/js/Components/Blocks/FormulaShow.vue resources/js/Composables/useFormular.ts resources/js/types/modelInterfaces.ts 2>&1)",
+      "mcp__laravel-boost__last-error",
+      "mcp__laravel-boost__browser-logs",
+      "PowerShell(ConvertTo-Json *)"
     ]
   },
   "enableAllProjectMcpServers": true,

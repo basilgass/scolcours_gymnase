@@ -39,6 +39,15 @@ class FormulaResource extends JsonResource
 				"slug"  => $chapter->slug,
 				"title" => $chapter->title,
 			] : null,
+			// Tous les chapitres rattachés (badges « orpheline/partagée », filtrage du picker,
+			// mention « aussi dans… »). Le lien se construit côté client via l'id ;
+			// `active` permet de masquer les chapitres non publiés au public.
+			'chapters' => $this->chapters->map(fn ($c) => [
+				'id'       => $c->id,
+				'title'    => $c->title,
+				'theme_id' => $c->theme_id,
+				'active'   => (bool) $c->active,
+			])->values(),
 			'order'    => $this->pivot?->order ?? $chapter?->pivot?->order,
 			'block'    => BlockResource::make($this->blocks[0]),
 		];

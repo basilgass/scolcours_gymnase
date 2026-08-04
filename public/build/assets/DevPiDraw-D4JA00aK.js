@@ -1,0 +1,10 @@
+import{Ct as e,D as t,Dt as n,G as r,S as i,U as a,W as o,b as s,g as c,ht as l,k as u,rt as d,w as f,x as p}from"./@inertiajs-DtbEXzlC.js";import{t as m}from"./FormInput-Do2f6xDZ.js";import{t as h}from"./PiDrawParser-Bi7X5RGd.js";import{n as g}from"./pidraw-C5nEyMwt.js";import{t as _}from"./Card-BE2DSKzd.js";import{t as v}from"./FormTextarea-Bxc92dn-.js";var y={class:`grid grid-cols-1 md:grid-cols-3 gap-3`},b={class:`col-span-2`},x=[`innerHTML`],S={class:`grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3`},C={class:`flex justify-between items-baseline`},w={class:`font-code text-xs`},T={class:`font-code text-xs pb-2`},E=u({__name:`DevPiDraw`,setup(u){o(`blockScript`,{data:{b:-1}});let E=l(`$a=-5,-4,...,5/0.1=3
+%T1
+d=AB
+
+%title 4 \\(\\sin(\\alpha)\\)
+c=circ A,3
+
+%-FG-
+A($a,1)
+B(2,$b)->label`),D=l(``),O=s(()=>({code:E.value,parameters:D.value}));return(o,s)=>(a(),f(`article`,null,[p(`div`,y,[t(_,null,{default:d(()=>[t(m,{xs:``,type:`text`,label:`paramètres`,modelValue:D.value,"onUpdate:modelValue":s[0]||=e=>D.value=e},null,8,[`modelValue`]),t(v,{xs:``,label:`code`,modelValue:E.value,"onUpdate:modelValue":s[1]||=e=>E.value=e,rows:`15`},null,8,[`modelValue`])]),_:1}),p(`div`,b,[t(h,{draw:O.value,class:`bg-white w-full`,theme:`geometrie`},null,8,[`draw`])])]),p(`div`,null,[p(`pre`,{class:`font-code text-xs`,innerHTML:D.value},null,8,x)]),p(`div`,null,[s[2]||=p(`h2`,{class:`text-xl my-5 font-semibold`},` Données `,-1),p(`div`,S,[(a(!0),f(c,null,r(e(g).documentation(),(e,t)=>(a(),i(_,{key:t},{header:d(()=>[p(`div`,C,[p(`div`,null,n(e.name),1),p(`div`,w,n(t),1)])]),footer:d(()=>[p(`div`,T,[p(`div`,null,n(e.code),1),p(`div`,null,n(e.parameters.length>0?e.parameters.join(`, `):``),1)])]),default:d(()=>[p(`div`,null,n(e.description),1)]),_:2},1024))),128))])])]))}});export{E as default};

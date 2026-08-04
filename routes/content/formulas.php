@@ -35,6 +35,10 @@ Route::middleware('api')
 		               ->shallow()
 		               ->only(['store', 'destroy']);
 
+		          // Rattacher une formule existante à un chapitre (partage multi-chapitres).
+		          Route::post('chapters/{chapter}/formulas/{formula}', [FormulaApiController::class, 'attach'])
+		               ->name('chapters.formulas.attach');
+
 		          // Détacher une formule d'un chapitre (sans supprimer la formule canonique).
 		          Route::delete('chapters/{chapter}/formulas/{formula}', [FormulaApiController::class, 'detach'])
 		               ->name('chapters.formulas.detach');

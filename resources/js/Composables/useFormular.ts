@@ -42,15 +42,22 @@ export function useFormular(chapterId?: number) {
 	function load(chapterId?: number) {
 		loadingState.value = true
 
-		if (chapterId === undefined) {
+		// Contexte chapitre : l'id explicite prime, sinon celui passé à useFormular().
+		const id = chapterId ?? currentChapterId.value
+
+		// Aucun chapitre courant : on charge la bibliothèque globale (toutes les formules).
+		if (id === null) {
 			storeFormular.getAll()
 				.then((data) => {
 					formular.value = data
 				})
+				.finally(() => {
+					loadingState.value = false
+				})
 			return
 		}
 
-		storeFormular.getChapterData(chapterId ?? currentChapterId.value)
+		storeFormular.getChapterData(id)
 			.then((data) => {
 				formular.value = data.formular
 
@@ -113,6 +120,40 @@ export function useFormular(chapterId?: number) {
 		storeFormular.removeFormula(id)
 	}
 
+	// Rattache une formule existante au chapitre courant (partage multi-chapitres).
+	function attachFormula(formulaId: number) {
+		const chapterId = currentChapterId.value
+		if (chapterId === null) {
+			return
+		}
+
+		axios
+			.post(route("api.admin.chapters.formulas.attach", [chapterId, formulaId]))
+			.then((res: AxiosResponseModel<FormulaInterface>) => {
+				flash.success("La formule a été rattachée à ce chapitre.")
+				formular.value.push(res.data)
+				storeFormular.invalidateChapter(chapterId)
+			})
+			.catch(() => {
+				flash.error("Erreur lors du rattachement de la formule.")
+			})
+	}
+
+	// Supprime définitivement une formule orpheline depuis la bibliothèque globale.
+	// Le backend refuse (422) si la formule est encore rattachée à un chapitre.
+	function deleteOrphan(id: number) {
+		axios
+			.delete(route("api.admin.formulas.destroy", id))
+			.then(() => {
+				flash.success("La formule orpheline a été supprimée.")
+				storeFormular.removeFormula(id)
+				formular.value = formular.value.filter(x => x.id !== id)
+			})
+			.catch(() => {
+				flash.error("Impossible de supprimer : détachez-la d'abord de tous ses chapitres.")
+			})
+	}
+
 	// Détache la formule du chapitre courant : elle survit dans la bibliothèque globale.
 	function detachFormula(id: number) {
 		const chapterId = currentChapterId.value
@@ -145,7 +186,9 @@ export function useFormular(chapterId?: number) {
 			add: addFormula,
 			update: updateFormula,
 			destroy: destroyFormula,
-			detach: detachFormula
+			detach: detachFormula,
+			attach: attachFormula,
+			deleteOrphan: deleteOrphan
 		}
 	}
 }

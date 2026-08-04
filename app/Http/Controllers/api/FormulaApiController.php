@@ -65,6 +65,24 @@ class FormulaApiController extends Controller
 	}
 
 	/**
+	 * Rattache une formule existante (source de vérité) à un chapitre supplémentaire.
+	 * Idempotent : un second rattachement ne duplique pas la ligne pivot. La position
+	 * est propre au chapitre cible (fin de liste).
+	 */
+	public function attach(Chapter $chapter, Formula $formula)
+	{
+		$maxOrder = $chapter->formulas()->max('chapter_formula.order') ?? 0;
+
+		$chapter->formulas()->syncWithoutDetaching([
+			$formula->id => ['order' => $maxOrder + 1],
+		]);
+
+		return FormulaResource::make($formula->load('chapters'))
+			->response()
+			->setStatusCode(201);
+	}
+
+	/**
 	 * Détache une formule d'un chapitre sans la supprimer : la formule reste vivante
 	 * dans la bibliothèque globale (source de vérité) et dans ses autres chapitres.
 	 */
@@ -76,11 +94,18 @@ class FormulaApiController extends Controller
 	}
 
 	/**
-	 * Suppression globale : détruit la formule canonique. La cascade du pivot retire
-	 * automatiquement tous ses rattachements.
+	 * Suppression globale : détruit la formule canonique. Réservée aux orphelines
+	 * (aucun chapitre rattaché) pour éviter la destruction accidentelle d'une formule
+	 * partagée ; il faut d'abord la détacher de tous ses chapitres.
 	 */
 	public function destroy(Formula $formula)
 	{
+		abort_if(
+			$formula->chapters()->exists(),
+			422,
+			'Détachez la formule de tous ses chapitres avant de la supprimer.'
+		);
+
 		$formula->delete();
 	}
 

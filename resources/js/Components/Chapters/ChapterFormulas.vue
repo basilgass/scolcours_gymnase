@@ -6,9 +6,10 @@ Affichage d'un formulaire, avec la possibilité de passer d'un formulaire du th�
 	setup
 >
 import FormulaShow from "@/Components/Blocks/FormulaShow.vue"
+import FormulaPicker from "@/Components/Chapters/FormulaPicker.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import {ChapterInterface, FormulaInterface} from "@/types/modelInterfaces.ts"
-import {onMounted} from "vue"
+import {computed, onMounted, ref} from "vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {useFormular} from "@/Composables/useFormular.ts"
 import {useIsAdmin} from "@/Composables/useHelpers.ts"
@@ -24,6 +25,11 @@ const props = withDefaults(defineProps<{
 const editMode = useStoreEditMode()
 
 const book = useFormular(props.chapter.id)
+
+const showPicker = ref(false)
+
+// Formules déjà rattachées au chapitre courant : exclues du picker de rattachement.
+const attachedIds = computed(() => book.formular.value.map(f => f.id))
 
 onMounted(() => {
 	book.load()
@@ -96,28 +102,41 @@ onMounted(() => {
 							@detach="book.formula.detach(element.id)"
 						/>
 					</template>
-					<template #footer>
-						<footer>
-							<div
-								v-show="editMode.enable"
-								v-admin
-							>
-								<sc-button
-									type="add"
-									@click="book.formula.add(book.currentChapterId.value ?? 0)"
-								>
-									Ajouter une formule
-								</sc-button>
-							</div>
-						</footer>
-					</template>
 				</draggable>
+
+				<!-- Actions d'édition : hors du <draggable> (ce ne sont pas des items triables). -->
+				<footer
+					v-show="editMode.enable"
+					v-admin
+					class="flex flex-wrap gap-3 mt-5"
+				>
+					<sc-button
+						type="add"
+						@click="book.formula.add(book.currentChapterId.value ?? 0)"
+					>
+						Ajouter une formule
+					</sc-button>
+					<sc-button
+						type="add"
+						outline
+						@click="showPicker = true"
+					>
+						Rattacher une formule existante
+					</sc-button>
+				</footer>
 			</div>
 
 			<div
 				v-if="book.errors.value !== ''"
 				class="text-red font-code text-xs"
 				v-text="book.errors.value"
+			/>
+
+			<formula-picker
+				v-if="showPicker"
+				v-model="showPicker"
+				:exclude-ids="attachedIds"
+				@attach="book.formula.attach"
 			/>
 		</div>
 	</section>

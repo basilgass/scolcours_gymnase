@@ -75,6 +75,12 @@ export interface FormulaInterface {
 		slug: string,
 		title: string
 	}
+	chapters: {
+		id: number,
+		title: string,
+		theme_id: number,
+		active: boolean
+	}[]
 	id: number
 	order: number
 	theme_id: number
