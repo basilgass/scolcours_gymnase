@@ -11,24 +11,39 @@ const props = withDefaults(defineProps<{
 	formula: FormulaInterface,
 	// En mode bibliothèque globale (pas de chapitre courant) : les actions propres
 	// au chapitre (déplacer, détacher) n'ont pas de sens et sont masquées.
-	library?: boolean
+	library?: boolean,
+	// Chapitre courant : sert à afficher l'ordre pivot du bon chapitre et à exclure
+	// ce chapitre de la mention « Aussi dans… ».
+	chapterContext?: number | null
 }>(), {
-	library: false
+	library: false,
+	chapterContext: null
 })
 
 const emits = defineEmits<{
-	destroy: [event: number]
+	moved: [event: number]
 	detach: [event: number]
+	selectChapter: [id: number]
 }>()
 
 // Autres chapitres où la formule est utilisée. En contexte chapitre, on exclut le chapitre
 // courant (« aussi dans… »). Le public ne voit que les chapitres actifs ; l'admin voit tout.
 const displayChapters = computed(() => {
-	const base = props.library
+	const currentId = props.chapterContext
+	const base = currentId == null
 		? props.formula.chapters
-		: props.formula.chapters.filter(c => c.id !== props.formula.chapter?.id)
+		: props.formula.chapters.filter(c => c.id !== currentId)
 
 	return useIsAdmin() ? base : base.filter(c => c.active)
+})
+
+// Ordre pivot affiché : celui du chapitre courant si présent, sinon l'ordre contextuel global.
+const displayOrder = computed(() => {
+	const currentId = props.chapterContext
+	if (currentId == null) {
+		return props.formula.order
+	}
+	return props.formula.chapters.find(c => c.id === currentId)?.order ?? props.formula.order
 })
 
 // La corbeille détache la formule du chapitre courant (elle survit dans la bibliothèque
@@ -48,7 +63,7 @@ function detachFormula() {
 			<div class="text-xs flex gap-3 items-baseline">
 				<i class="bi bi-arrows-move cursor-move draggable-handle" />
 				<div class="font-code">
-					F: {{ formula.id }} / B: {{ formula.block.id }} / O: {{ formula.order }}
+					F: {{ formula.id }} / B: {{ formula.block.id }} / O: {{ displayOrder }}
 				</div>
 			</div>
 		</template>
@@ -59,7 +74,7 @@ function detachFormula() {
 					source="formula"
 					:source-id="formula.id"
 					target="chapter"
-					@moved="emits('destroy', formula.id)"
+					@moved="emits('moved', formula.id)"
 				/>
 				<InertiaLink
 					class="text-xs"
@@ -97,13 +112,14 @@ function detachFormula() {
 					class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs opacity-70"
 				>
 					<span>{{ library ? 'Utilisée dans :' : 'Aussi dans :' }}</span>
-					<InertiaLink
+					<button
 						v-for="chapter of displayChapters"
 						:key="chapter.id"
 						v-theme.text="chapter.theme_id"
-						:href="route('chapters.show', chapter.id)"
-						class="hover:underline"
+						type="button"
+						class="hover:underline cursor-pointer"
 						:class="chapter.active ? '' : 'opacity-40 italic'"
+						@click="emits('selectChapter', chapter.id)"
 					>
 						<span v-katex.auto="chapter.title" />
 						<i
@@ -111,7 +127,7 @@ function detachFormula() {
 							class="bi bi-eye-slash ml-1"
 							title="chapitre désactivé"
 						/>
-					</InertiaLink>
+					</button>
 				</div>
 			</div>
 		</template>

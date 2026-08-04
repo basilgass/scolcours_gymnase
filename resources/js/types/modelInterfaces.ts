@@ -79,7 +79,8 @@ export interface FormulaInterface {
 		id: number,
 		title: string,
 		theme_id: number,
-		active: boolean
+		active: boolean,
+		order: number
 	}[]
 	id: number
 	order: number

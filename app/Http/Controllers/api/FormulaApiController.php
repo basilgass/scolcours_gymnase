@@ -65,6 +65,23 @@ class FormulaApiController extends Controller
 	}
 
 	/**
+	 * Crée une formule orpheline (aucun chapitre) dans la bibliothèque globale. Elle vit
+	 * comme source de vérité et pourra être rattachée à un ou plusieurs chapitres ensuite.
+	 */
+	public function storeOrphan()
+	{
+		$formula = Formula::create();
+
+		$formula->blocks()->create([
+			'body' => 'A modifier...',
+		]);
+
+		return FormulaResource::make($formula->load('chapters'))
+			->response()
+			->setStatusCode(201);
+	}
+
+	/**
 	 * Rattache une formule existante (source de vérité) à un chapitre supplémentaire.
 	 * Idempotent : un second rattachement ne duplique pas la ligne pivot. La position
 	 * est propre au chapitre cible (fin de liste).

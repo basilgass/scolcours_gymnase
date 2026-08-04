@@ -46,6 +46,10 @@ Route::middleware('api')
 		          Route::prefix('formulas')
 		               ->as('formulas.')
 		               ->group(function () {
+			               // Crée une formule orpheline (aucun chapitre) dans la bibliothèque globale.
+			               Route::post('/', [FormulaApiController::class, 'storeOrphan'])
+			                    ->name('store');
+
 			               Route::post('updateOrder', [FormulaApiController::class, 'updateOrder'])
 			                    ->name('order');
 

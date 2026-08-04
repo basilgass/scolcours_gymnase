@@ -73,6 +73,21 @@ class FormulaApiTest extends TestCase
         $this->assertSame(2, $chapter->formulas()->count());
     }
 
+    public function test_admin_can_create_an_orphan_formula(): void
+    {
+        $this->actingAsAdmin();
+
+        // Création globale : formule non rattachée, avec son block par défaut.
+        $this->postJson(route('api.admin.formulas.store'))
+            ->assertStatus(201)
+            ->assertJsonPath('chapter', null)
+            ->assertJsonCount(0, 'chapters')
+            ->assertJsonPath('block.body', 'A modifier...');
+
+        $this->assertSame(1, Formula::count());
+        $this->assertSame(0, Formula::first()->chapters()->count());
+    }
+
     public function test_admin_can_destroy_an_orphan_formula(): void
     {
         $this->actingAsAdmin();
@@ -145,7 +160,7 @@ class FormulaApiTest extends TestCase
         $this->getJson(route('api.formulas.show', $formula))
             ->assertStatus(200)
             ->assertJsonCount(2, 'chapters')
-            ->assertJsonStructure(['chapters' => [['id', 'title', 'theme_id', 'active']]])
+            ->assertJsonStructure(['chapters' => [['id', 'title', 'theme_id', 'active', 'order']]])
             ->assertJsonFragment(['id' => $active->id, 'active' => true])
             ->assertJsonFragment(['id' => $inactive->id, 'active' => false]);
     }
@@ -263,6 +278,7 @@ class FormulaApiTest extends TestCase
         $formula = Formula::factory()->create();
 
         $this->postJson(route('api.admin.chapters.formulas.store', $chapter))->assertStatus(401);
+        $this->postJson(route('api.admin.formulas.store'))->assertStatus(401);
         $this->postJson(route('api.admin.chapters.formulas.attach', [$chapter, $formula]))->assertStatus(401);
         $this->deleteJson(route('api.admin.formulas.destroy', $formula))->assertStatus(401);
         $this->deleteJson(route('api.admin.chapters.formulas.detach', [$chapter, $formula]))->assertStatus(401);
@@ -272,6 +288,7 @@ class FormulaApiTest extends TestCase
 
         $this->actingAsUser();
         $this->postJson(route('api.admin.chapters.formulas.store', $chapter))->assertForbidden();
+        $this->postJson(route('api.admin.formulas.store'))->assertForbidden();
         $this->postJson(route('api.admin.chapters.formulas.attach', [$chapter, $formula]))->assertForbidden();
         $this->deleteJson(route('api.admin.formulas.destroy', $formula))->assertForbidden();
         $this->deleteJson(route('api.admin.chapters.formulas.detach', [$chapter, $formula]))->assertForbidden();
