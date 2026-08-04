@@ -24,6 +24,6 @@ class FormulaWebTest extends TestCase
         $formula = Formula::factory()->create();
 
         $this->get(route('formulas.show', $formula))
-            ->assertRedirect(route('chapters.show', $formula->chapter));
+            ->assertRedirect(route('chapters.show', $formula->chapters()->first()));
     }
 }

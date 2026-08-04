@@ -138,7 +138,8 @@
       "Bash(cat)",
       "Bash(rm -f _probe.mjs)",
       "Bash(echo \"EXIT=$?\")",
-      "PowerShell(npx vitest run tests/ts/Components/Ui/markdownLinks.test.ts)"
+      "PowerShell(npx vitest run tests/ts/Components/Ui/markdownLinks.test.ts)",
+      "Bash(Select-Object -First 8)"
     ]
   },
   "enableAllProjectMcpServers": true,

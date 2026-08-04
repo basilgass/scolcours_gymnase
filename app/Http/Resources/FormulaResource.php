@@ -25,16 +25,22 @@ class FormulaResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
+		// « Le » chapitre = celui du pivot contextuel (formule chargée via $chapter->formulas),
+		// sinon le premier chapitre rattaché (liste globale). L'ordre est propre au pivot.
+		$chapter = $this->pivot
+			? ($this->chapters->firstWhere('id', $this->pivot->chapter_id) ?? $this->chapters->first())
+			: $this->chapters->first();
+
 		return [
-			'id' => $this->id,
-            'theme_id' => $this->chapter->theme_id,
-            'chapter' => [
-                "id"=> $this->chapter->id,
-                "slug" => $this->chapter->slug,
-                "title" => $this->chapter->title,
-            ],
-			'order' => $this->order,
-			'block' => BlockResource::make($this->blocks[0])
+			'id'       => $this->id,
+			'theme_id' => $chapter?->theme_id,
+			'chapter'  => $chapter ? [
+				"id"    => $chapter->id,
+				"slug"  => $chapter->slug,
+				"title" => $chapter->title,
+			] : null,
+			'order'    => $this->pivot?->order ?? $chapter?->pivot?->order,
+			'block'    => BlockResource::make($this->blocks[0]),
 		];
 	}
 }

@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 
@@ -120,8 +119,11 @@ class Theme extends Model
         return $this->hasMany(Generator::class);
     }
 
-    public function formulas(): HasManyThrough
+    public function formulas(): Builder
     {
-        return $this->hasManyThrough(Formula::class, Chapter::class);
+        return Formula::whereHas(
+            'chapters',
+            fn (Builder $query) => $query->where('theme_id', $this->id)
+        );
     }
 }

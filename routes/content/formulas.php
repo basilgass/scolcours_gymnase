@@ -35,6 +35,10 @@ Route::middleware('api')
 		               ->shallow()
 		               ->only(['store', 'destroy']);
 
+		          // Détacher une formule d'un chapitre (sans supprimer la formule canonique).
+		          Route::delete('chapters/{chapter}/formulas/{formula}', [FormulaApiController::class, 'detach'])
+		               ->name('chapters.formulas.detach');
+
 		          Route::prefix('formulas')
 		               ->as('formulas.')
 		               ->group(function () {

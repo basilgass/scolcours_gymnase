@@ -93,6 +93,7 @@ onMounted(() => {
 						<formula-show
 							:formula="element"
 							@destroy="book.formula.destroy(element.id)"
+							@detach="book.formula.detach(element.id)"
 						/>
 					</template>
 					<template #footer>

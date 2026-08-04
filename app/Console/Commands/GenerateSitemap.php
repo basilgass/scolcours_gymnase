@@ -65,7 +65,7 @@ class GenerateSitemap extends Command
                 ));
             });
 
-        Formula::whereHas('chapter', fn ($q) => $q->where('active', true))
+        Formula::whereHas('chapters', fn ($q) => $q->where('active', true))
             ->get()
             ->each(fn (Formula $formula) => $sitemap->add(
                 Url::create(route('formulas.show', $formula->id))

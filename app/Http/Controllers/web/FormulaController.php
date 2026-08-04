@@ -18,7 +18,7 @@ class FormulaController extends Controller
 	public function show(Formula $formula)
 	{
 		return redirect()->route('chapters.show', [
-			"chapter" => $formula->chapter
+			"chapter" => $formula->chapters()->first()
 		]);
 	}
 

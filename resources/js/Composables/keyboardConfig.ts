@@ -338,7 +338,7 @@ export const keyboards: Record<string, KeyboardObjectType> = {
 		layout: [
 			"1", "2", "3", "+", "x", "x^2",
 			"4", "5", "6", "-", "x^3", "x^4",
-			"7", "8", "9", "*", "", "",
+			"7", "8", "9", "*", "y", "z",
 			"(", ")", "0", "/", "^2", "^"
 		],
 		formatters: [formatFractionShortcut],

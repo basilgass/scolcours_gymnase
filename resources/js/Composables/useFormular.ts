@@ -23,6 +23,7 @@ export function useFormular(chapterId?: number) {
 	function updateOrder() {
 		axios
 			.post(route("api.admin.formulas.order"), {
+				chapter_id: currentChapterId.value,
 				order: formular.value.map((x, index) => {
 					return {id: x.id, order: index}
 				})
@@ -112,6 +113,25 @@ export function useFormular(chapterId?: number) {
 		storeFormular.removeFormula(id)
 	}
 
+	// Détache la formule du chapitre courant : elle survit dans la bibliothèque globale.
+	function detachFormula(id: number) {
+		const chapterId = currentChapterId.value
+		if (chapterId === null) {
+			return
+		}
+
+		axios
+			.delete(route("api.admin.chapters.formulas.detach", [chapterId, id]))
+			.then(() => {
+				flash.success("La formule a été détachée de ce chapitre.")
+				formular.value = formular.value.filter(x => x.id !== id)
+				storeFormular.invalidateChapter(chapterId)
+			})
+			.catch(() => {
+				flash.error("Erreur lors du détachement de la formule.")
+			})
+	}
+
 	return {
 		updateOrder,
 		update,
@@ -124,7 +144,8 @@ export function useFormular(chapterId?: number) {
 		formula: {
 			add: addFormula,
 			update: updateFormula,
-			destroy: destroyFormula
+			destroy: destroyFormula,
+			detach: detachFormula
 		}
 	}
 }

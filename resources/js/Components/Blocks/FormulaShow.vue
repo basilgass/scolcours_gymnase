@@ -3,11 +3,7 @@
 import BlockShow from "@/Components/Blocks/BlockShow.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import {FormulaInterface} from "@/types/modelInterfaces.ts"
-import axios from "axios"
 import MoveItemTo from "@/Components/MoveItemTo.vue"
-import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
-
-const flash = useStoreFlashMessage()
 
 const props = defineProps<{
 	formula: FormulaInterface
@@ -15,16 +11,13 @@ const props = defineProps<{
 
 const emits = defineEmits<{
 	destroy: [event: number]
+	detach: [event: number]
 }>()
 
-function deleteFormula() {
-	const id = props.formula.id
-	axios.post(route('api.admin.formulas.destroy', [props.formula.id]), {
-		_method: "delete"
-	}).then(() => {
-		flash.success('La formule a bien été supprimée.')
-		emits('destroy', id)
-	})
+// La corbeille détache la formule du chapitre courant (elle survit dans la bibliothèque
+// globale). Ce composant ne connaît pas le chapitre : le parent effectue l'appel API.
+function detachFormula() {
+	emits('detach', props.formula.id)
 }
 </script>
 
@@ -59,7 +52,7 @@ function deleteFormula() {
 				<confirm-button
 					xs
 					btn-class=""
-					@confirm="deleteFormula"
+					@confirm="detachFormula"
 				>
 					<i class="bi bi-trash" />
 					<template #confirm>

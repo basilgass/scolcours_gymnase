@@ -94,12 +94,14 @@ class Chapter extends Model
 		return $this->hasMany(Post::class)->orderBy('order')->orderBy('id');
 	}
 
-	public function formulas(): HasMany
+	public function formulas(): BelongsToMany
 	{
 		return $this
-			->hasMany(Formula::class)
-			->orderBy('order')
-			->orderBy('id');
+			->belongsToMany(Formula::class)
+			->withPivot('order')
+			->withTimestamps()
+			->orderByPivot('order')
+			->orderBy('formulas.id');
 	}
 
 	public function challenges(): HasMany
