@@ -15,6 +15,14 @@ describe('normalizeExpression - étapes de base', () => {
 		expect(normalizeExpression('root(3)(x+1)')).toBe('nthrt(x+1,3)')
 	})
 
+	test('transforme root(n)x^m en nthrt(x,n)^(m)', () => {
+		expect(normalizeExpression('root(3)x^5')).toBe('nthrt(x,3)^(5)')
+	})
+
+	test('transforme root(n)45 en nthrt(45,n)', () => {
+		expect(normalizeExpression('root(3)45')).toBe('nthrt(45,3)')
+	})
+
 	test('gère les racines n-ièmes imbriquées', () => {
 		expect(normalizeExpression('root(2)(root(3)(x))')).toBe('nthrt(nthrt(x,3),2)')
 	})

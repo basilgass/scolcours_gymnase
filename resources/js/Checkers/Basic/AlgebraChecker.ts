@@ -56,11 +56,12 @@ export class AlgebraChecker extends CheckerAbstract {
 					if (result >= 3) break
 				}
 			} catch (e) {
-				console.log(e)
+				console.warn(e)
 				return makeCheckerResult("La réponse n'est pas une expression reconnue (valeurs)")
 			}
 
-		} catch {
+		} catch (e) {
+			console.warn(e)
 			return makeCheckerResult("La réponse n'est pas une expression reconnue.")
 		}
 

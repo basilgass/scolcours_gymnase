@@ -7,9 +7,12 @@
 
 ## 1. Vue d'ensemble
 
-Un **Generator** est une fonction JavaScript stockée en base de données qui produit dynamiquement des questions mathématiques. Le code est exécuté côté **client uniquement** via `new Function(...)`. Un générateur est attaché à un ou plusieurs `generatorable` (`ChallengeLevel`, `Evaluation`, etc.) via la table pivot `generatorables`.
+Un **Generator** est une fonction JavaScript stockée en base de données qui produit dynamiquement des questions
+mathématiques. Le code est exécuté côté **client uniquement** via `new Function(...)`. Un générateur est attaché à un ou
+plusieurs `generatorable` (`ChallengeLevel`, `Evaluation`, etc.) via la table pivot `generatorables`.
 
 Le code du générateur reçoit en argument :
+
 - `PiMath` — la lib mathématique principale
 - `PiMathExt` — les extensions locales
 - `params` — un objet de paramètres résolus (voir §4)
@@ -22,29 +25,29 @@ Et doit retourner un objet `generatedQuestionInterface` (`{question, answer, tit
 
 ### Table `generators`
 
-| Colonne              | Type     | Notes                                              |
-|----------------------|----------|----------------------------------------------------|
-| `id`                 | int      |                                                    |
-| `theme_id`           | int      | FK vers `themes`                                   |
-| `slug`               | string?  | identifiant URL                                    |
-| `title`              | string   |                                                    |
-| `body`               | string   | description (LaTeX/markdown)                       |
-| `template`           | string?  | template KaTeX du rendu : `\[question = answer\]`  |
-| `keyboard`           | string   | clavier par défaut                                 |
-| `code`               | string   | corps de la `Function` JS exécutée                 |
-| `parameters_schema`  | json?    | **schéma des paramètres acceptés** (voir §4)       |
-| `created_at`/`updated_at` | timestamps |                                              |
+| Colonne                   | Type       | Notes                                             |
+|---------------------------|------------|---------------------------------------------------|
+| `id`                      | int        |                                                   |
+| `theme_id`                | int        | FK vers `themes`                                  |
+| `slug`                    | string?    | identifiant URL                                   |
+| `title`                   | string     |                                                   |
+| `body`                    | string     | description (LaTeX/markdown)                      |
+| `template`                | string?    | template KaTeX du rendu : `\[question = answer\]` |
+| `keyboard`                | string     | clavier par défaut                                |
+| `code`                    | string     | corps de la `Function` JS exécutée                |
+| `parameters_schema`       | json?      | **schéma des paramètres acceptés** (voir §4)      |
+| `created_at`/`updated_at` | timestamps |                                                   |
 
 ### Table pivot `generatorables` (polymorphique)
 
-| Colonne                | Type     | Rôle                                                  |
-|------------------------|----------|-------------------------------------------------------|
-| `generator_id`         | int      | FK vers `generators`                                  |
-| `generatorable_id`     | int      | FK polymorphique (ChallengeLevel, Evaluation, ...)    |
-| `generatorable_type`   | string   | type polymorphique                                    |
-| `order`                | int      | ordre d'affichage dans le parent                      |
-| `config`               | json?    | **config UX/runtime** (ex: `time_per_question`)       |
-| `parameters`           | json?    | **valeurs de paramètres** pour cette instance         |
+| Colonne              | Type   | Rôle                                               |
+|----------------------|--------|----------------------------------------------------|
+| `generator_id`       | int    | FK vers `generators`                               |
+| `generatorable_id`   | int    | FK polymorphique (ChallengeLevel, Evaluation, ...) |
+| `generatorable_type` | string | type polymorphique                                 |
+| `order`              | int    | ordre d'affichage dans le parent                   |
+| `config`             | json?  | **config UX/runtime** (ex: `time_per_question`)    |
+| `parameters`         | json?  | **valeurs de paramètres** pour cette instance      |
 
 > **Distinction critique** entre les trois champs JSON :
 > - `generators.parameters_schema` = **définition** des paramètres acceptés (typage, defaults)
@@ -76,14 +79,24 @@ Aplatit le pivot dans la réponse JSON :
 
 ```json
 {
-    "id": 1,
-    "slug": "...",
-    "title": "...",
-    "code": "...",
-    "parameters_schema": { "domain": {"format":"set", "default":"-5..5", "description":"..."} },
-    "order": 1,
-    "config": { "time_per_question": 30 },
-    "parameters": { "domain": "-3..3" }
+	"id": 1,
+	"slug": "...",
+	"title": "...",
+	"code": "...",
+	"parameters_schema": {
+		"domain": {
+			"format": "set",
+			"default": "-5..5",
+			"description": "..."
+		}
+	},
+	"order": 1,
+	"config": {
+		"time_per_question": 30
+	},
+	"parameters": {
+		"domain": "-3..3"
+	}
 }
 ```
 
@@ -97,11 +110,15 @@ Stocké sur `generators`. Format JSON :
 
 ```json
 {
-    "<key>": {
-        "format": "number" | "string" | "set",
-        "default": "string brute",
-        "description": "optionnel"
-    }
+	"<key>": {
+		"format": "number"
+		|
+		"string"
+		|
+		"set",
+		"default": "string brute",
+		"description": "optionnel"
+	}
 }
 ```
 
@@ -109,13 +126,14 @@ Stocké sur `generators`. Format JSON :
 
 ### Formats supportés
 
-| Format   | Cast côté client                       | Exemple de valeur brute |
-|----------|----------------------------------------|-------------------------|
-| `number` | `Number(raw)`                          | `"3"` → `3`             |
-| `string` | identité                               | `"hello"` → `"hello"`   |
+| Format   | Cast côté client                       | Exemple de valeur brute  |
+|----------|----------------------------------------|--------------------------|
+| `number` | `Number(raw)`                          | `"3"` → `3`              |
+| `string` | identité                               | `"hello"` → `"hello"`    |
 | `set`    | `parseNumberSet(raw).values: number[]` | `"-5..5"` → `[-5,...,5]` |
 
 **Pour ajouter un format** : 3 endroits à toucher
+
 1. `resources/js/types/challengeInterfaces.ts` — type `GeneratorParameterFormat`
 2. `app/Http/Requests/GeneratorRequest.php` — règle `in:number,string,set,...`
 3. `resources/js/Composables/useGeneratorParameters.ts` — `switch` dans `castParameterValue`
@@ -129,17 +147,22 @@ Stocké sur `generators`. Format JSON :
 3. Caste selon `schema[key].format`
 4. Retourne un `GeneratorParams` prêt à être passé à la `Function`
 
-Si `schema` est `null`/absent → les overrides sont passés bruts (strings) sans casting. Comportement de fallback pour les générateurs legacy.
+Si `schema` est `null`/absent → les overrides sont passés bruts (strings) sans casting. Comportement de fallback pour
+les générateurs legacy.
 
-**Où se fait la résolution** : **à l'intérieur de `useGenerator.randomQuestion()`**, automatiquement. Tous les callers (`GeneratorDisplay`, `GeneratorsExamples`, futurs) bénéficient des defaults sans rien faire. Un caller qui appelle `gen.question()` sans argument obtient déjà les defaults du schéma castés.
+**Où se fait la résolution** : **à l'intérieur de `useGenerator.randomQuestion()`**, automatiquement. Tous les callers (
+`GeneratorDisplay`, `GeneratorsExamples`, futurs) bénéficient des defaults sans rien faire. Un caller qui appelle
+`gen.question()` sans argument obtient déjà les defaults du schéma castés.
 
 ### Source des overrides (`GeneratorDisplay.vue`)
 
 Deux sources, fusionnées avec priorité :
+
 1. Querystring `?domain=-3..3` (priorité basse)
 2. Props `:parameters="..."` passées par le parent (priorité haute) — typiquement `gen.parameters` (valeur du pivot)
 
-Le composant ne fait QUE collecter ces overrides et les passer à `useGenerator(generator).question(undefined, overrides)`. La résolution est déléguée au composable.
+Le composant ne fait QUE collecter ces overrides et les passer à
+`useGenerator(generator).question(undefined, overrides)`. La résolution est déléguée au composable.
 
 ---
 
@@ -148,6 +171,7 @@ Le composant ne fait QUE collecter ces overrides et les passer à `useGenerator(
 ### `useGenerator.ts` (Composable)
 
 Expose :
+
 - `question(value?, params?)` — produit une `QuestionDynamicInterface` consommable par `QuestionShow`
 - `random(params?)` — produit une question brute
 - `list(n, params?)` — produit N questions distinctes
@@ -161,7 +185,8 @@ Cœur : `randomQuestion()` instancie `new Function("PiMath", "PiMathExt", "param
 
 ### `GeneratorDisplay.vue` (Composant)
 
-Composant racine pour afficher un générateur en mode interactif (challenge, démo). Lit `props.generator` et `props.parameters`, applique `resolveParameters`, génère une question, la passe à `QuestionShow`.
+Composant racine pour afficher un générateur en mode interactif (challenge, démo). Lit `props.generator` et
+`props.parameters`, applique `resolveParameters`, génère une question, la passe à `QuestionShow`.
 
 ### `GeneratorsExamples.vue` (Composant)
 
@@ -190,7 +215,8 @@ Affiche N exemples de questions générées (preview, admin). Utilisé dans `Gen
 
 ### Paramétrer dynamiquement via URL (démo, lien direct)
 
-`?domain=-3..3&level=2` — keys du schéma, valeurs en string brute. Plus de suffixe `.set` (obsolète, supprimé le 2026-05-18).
+`?domain=-3..3&level=2` — keys du schéma, valeurs en string brute. Plus de suffixe `.set` (obsolète, supprimé le
+2026-05-18).
 
 ---
 
@@ -208,22 +234,29 @@ Affiche N exemples de questions générées (preview, admin). Utilisé dans `Gen
 
 ### Validation des valeurs (`parameters` du pivot)
 
-**Aucune validation backend.** Décision design : un seul endroit de logique (le front, qui détient la définition des formats). Les valeurs malformées sont gérées gracieusement par les cast functions (`Number("abc")` → `NaN`, `parseNumberSet` retourne `errors`).
+**Aucune validation backend.** Décision design : un seul endroit de logique (le front, qui détient la définition des
+formats). Les valeurs malformées sont gérées gracieusement par les cast functions (`Number("abc")` → `NaN`,
+`parseNumberSet` retourne `errors`).
 
 ---
 
 ## 8. Pièges connus
 
-- **`new Function(...)` exécute du code arbitraire** stocké en DB. Seuls les admins doivent pouvoir éditer `code`. Le risque XSS est contenu côté client (pas d'eval serveur).
-- **`pimath` + Vue reactivity** : les classes pimath utilisent des champs privés `#field` qui cassent le Proxy Vue. Toujours `markRaw()` avant de stocker une instance dans un ref/reactive. Voir mémoire `project_pimath_vue_reactivity`.
-- **Aplatissement du pivot** dans `GeneratorResource` : `config`, `parameters`, `order` apparaissent au niveau racine du JSON, **pas** sous `pivot.`. Code TS adapté en conséquence (`gen.config` et non `gen.pivot.config`).
-- **Le `template`** doit contenir `question` et `answer` comme placeholders littéraux remplacés par `useGenerator.question()`.
+- **`new Function(...)` exécute du code arbitraire** stocké en DB. Seuls les admins doivent pouvoir éditer `code`. Le
+  risque XSS est contenu côté client (pas d'eval serveur).
+- **`pimath` + Vue reactivity** : les classes pimath utilisent des champs privés `#field` qui cassent le Proxy Vue.
+  Toujours `markRaw()` avant de stocker une instance dans un ref/reactive. Voir mémoire `project_pimath_vue_reactivity`.
+- **Aplatissement du pivot** dans `GeneratorResource` : `config`, `parameters`, `order` apparaissent au niveau racine du
+  JSON, **pas** sous `pivot.`. Code TS adapté en conséquence (`gen.config` et non `gen.pivot.config`).
+- **Le `template`** doit contenir `question` et `answer` comme placeholders littéraux remplacés par
+  `useGenerator.question()`.
 
 ---
 
 ## 9. Fichiers de référence
 
 ### Backend
+
 - `app/Models/Generator.php`
 - `app/Http/Requests/GeneratorRequest.php` (+ `StoreGeneratorRequest`, `UpdateGeneratorRequest`)
 - `app/Http/Resources/GeneratorResource.php`
@@ -232,6 +265,7 @@ Affiche N exemples de questions générées (preview, admin). Utilisé dans `Gen
 - `database/migrations/2026_05_18_120000_add_parameters_to_generatorables_table.php`
 
 ### Frontend
+
 - `resources/js/Composables/useGenerator.ts`
 - `resources/js/Composables/useGeneratorParameters.ts`
 - `resources/js/Composables/useNumberSet.ts`
@@ -241,7 +275,8 @@ Affiche N exemples de questions générées (preview, admin). Utilisé dans `Gen
 - `resources/js/types/challengeInterfaces.ts` (interface + types params)
 
 ### Doc connexes
-- `.claude/docs/challenge_claude.md` — Contexte des challenges qui utilisent les générateurs
+
+- `.claude/docs/challenge.md` — Contexte des challenges qui utilisent les générateurs
 - `.claude/docs/question.md` — Système de questions consommant la sortie des générateurs
 
 ---

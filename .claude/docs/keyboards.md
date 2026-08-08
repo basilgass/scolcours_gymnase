@@ -1,7 +1,7 @@
 # Créer un nouveau clavier — SCOLCOURS
 
 > Guide pas-à-pas. Issu du lot **K6** du refactoring claviers/checkers
-> (`.claude/specs/2026-07-07-refactoring-claviers-checkers.md`).
+> (`.claude/specs/finished/2026-07-07-refactoring-claviers-checkers.md`).
 > Docs liées : `.claude/docs/checkers.md` (tableaux de contrôle des checkers),
 > `.claude/docs/question.md` (consommation runtime des claviers côté question).
 > Skill à activer avant toute modif dans `Components/Questions/` : `question-system`.

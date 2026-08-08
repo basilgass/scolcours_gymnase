@@ -147,7 +147,12 @@
       "PowerShell(npx eslint resources/js/Composables/useFormular.ts 2>&1)",
       "PowerShell(npx eslint resources/js/Components/FormulaSearch.vue resources/js/Components/Chapters/ChapterFormulas.vue resources/js/Components/Blocks/FormulaShow.vue 2>&1)",
       "PowerShell(npx eslint resources/js/Components/FormulaSearch.vue 2>&1; if \\($LASTEXITCODE -eq 0\\) { \"ESLint OK\" })",
-      "PowerShell(npx eslint resources/js/stores/useStoreFormular.ts resources/js/Composables/useFormular.ts resources/js/Components/FormulaSearch.vue resources/js/Components/Blocks/FormulaShow.vue 2>&1; if \\($LASTEXITCODE -eq 0\\) { \"ESLint OK\" })"
+      "PowerShell(npx eslint resources/js/stores/useStoreFormular.ts resources/js/Composables/useFormular.ts resources/js/Components/FormulaSearch.vue resources/js/Components/Blocks/FormulaShow.vue 2>&1; if \\($LASTEXITCODE -eq 0\\) { \"ESLint OK\" })",
+      "Bash(git check-ignore *)",
+      "Bash(cd *)",
+      "Bash(cp CLAUDE.md CLAUDE.md.bak)",
+      "Bash(tail -n +109 CLAUDE.md.bak)",
+      "Bash(rm CLAUDE.md.bak)"
     ]
   },
   "enableAllProjectMcpServers": true,

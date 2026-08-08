@@ -1,3 +1,6 @@
+<laravel-boost-guidelines>
+=== .ai/scolcours rules ===
+
 # Instructions du projet SCOLCOURS
 
 Ce document contient les règles et workflows spécifiques à ce projet.
@@ -7,7 +10,27 @@ Ce document contient les règles et workflows spécifiques à ce projet.
 Les documentations pour le site sont placés dans `./.claude/docs`. Analyse ces informations avant de faire des
 changements structurels.
 
-Pour toute modification concernant les challenges, consulte `./.claude/docs/challenge_claude.md`.
+### Documentation par domaine
+
+Avant de travailler sur l'un de ces types d'éléments, tu DOIS consulter le fichier correspondant dans `.claude/docs` :
+
+| Type d'élément | Fichier à consulter                |
+|----------------|------------------------------------|
+| générateurs    | `.claude/docs/generators.md`       |
+| challenges     | `.claude/docs/challenge.md`        |
+| checkers       | `.claude/docs/checkers.md`         |
+| formMaker      | `.claude/docs/formMaker.md`        |
+| keyboards      | `.claude/docs/keyboards.md`        |
+| question       | `.claude/docs/question.md`         |
+
+### Documentation transversale
+
+À consulter pour toute question de structure, d'organisation ou de routage :
+
+- `.claude/docs/structure_global.md` — structure globale du projet.
+- `.claude/docs/ROUTES.md` — inventaire des routes.
+- `.claude/docs/STRUCTURE.md` — structure détaillée (⚠️ potentiellement incomplet ou peu à jour : à recouper avec le
+  code réel avant de s'y fier).
 
 # workflow-instructions
 
@@ -31,7 +54,6 @@ Une fois toutes les questions répondues, présente un plan détaillé et numér
 - Les changements de code spécifiques (ancienne valeur → nouvelle valeur) pour les modifications importantes
 - Les risques potentiels identifiés
 - Les tests à exécuter après les modifications
-- Pose la question sur l'acceptation du plan tel que présenté.
 
 ### Étape 3 : Validation et exécution
 
@@ -45,6 +67,7 @@ Une fois toutes les questions répondues, présente un plan détaillé et numér
 Le plan doit suivre ce format :
 
 ```markdown
+
 # Plan de modification : [Titre de la tâche]
 
 ## Questions préalables (si applicable)
@@ -76,13 +99,6 @@ Fichiers concernés : chemin/vers/fichier.ext Action : [Créer / Modifier / Supp
 - X fichiers à modifier
 - Y classes/fonctions impactées
 - Temps estimé : Z minutes
-
-## Action
-
-Acceptes-tu ce plan ?
-
-- oui
-- non
 ```
 
 ## Exceptions
@@ -106,7 +122,6 @@ Lorsqu'une tâche de refactoring issue du fichier `.claude/docs/refactoring_plan
   tâche, le titre, la date de la fin de la tâche et une brève description de ce qui a été fait.
 - Si non : ne rien faire et passer à la suite
 
-<laravel-boost-guidelines>
 === foundation rules ===
 
 # Laravel Boost Guidelines
@@ -122,13 +137,14 @@ This application is a Laravel application and its main Laravel ecosystems packag
 - laravel/framework (LARAVEL) - v13
 - laravel/prompts (PROMPTS) - v0
 - laravel/sanctum (SANCTUM) - v4
-- laravel/telescope (TELESCOPE) - v5
 - tightenco/ziggy (ZIGGY) - v2
+- larastan/larastan (LARASTAN) - v3
 - laravel/boost (BOOST) - v2
 - laravel/breeze (BREEZE) - v2
 - laravel/mcp (MCP) - v0
 - laravel/sail (SAIL) - v1
-- phpunit/phpunit (PHPUNIT) - v12
+- laravel/telescope (TELESCOPE) - v5
+- phpunit/phpunit (PHPUNIT) - v13
 - @inertiajs/vue3 (INERTIA_VUE) - v3
 - eslint (ESLINT) - v10
 - tailwindcss (TAILWINDCSS) - v4
@@ -136,11 +152,7 @@ This application is a Laravel application and its main Laravel ecosystems packag
 
 ## Skills Activation
 
-This project has domain-specific skills available. You MUST activate the relevant skill whenever you work in that domain—don't wait until you're stuck.
-
-- `laravel-best-practices` — Apply this skill whenever writing, reviewing, or refactoring Laravel PHP code. This includes creating or modifying controllers, models, migrations, form requests, policies, jobs, scheduled commands, service classes, and Eloquent queries. Triggers for N+1 and query performance issues, caching strategies, authorization and security patterns, validation, error handling, queue and job configuration, route definitions, and architectural decisions. Also use for Laravel code reviews and refactoring existing Laravel code to follow best practices. Covers any task involving Laravel backend PHP code patterns.
-- `inertia-vue-development` — Develops Inertia.js v3 Vue client-side applications. Activates when creating Vue pages, forms, or navigation; using <Link>, <Form>, useForm, useHttp, setLayoutProps, or router; working with deferred props, prefetching, optimistic updates, instant visits, or polling; or when user mentions Vue with Inertia, Vue pages, Vue forms, or Vue navigation.
-- `tailwindcss-development` — Always invoke when the user's message includes 'tailwind' in any form. Also invoke for: building responsive grid layouts (multi-column card grids, product grids), flex/grid page structures (dashboards with sidebars, fixed topbars, mobile-toggle navs), styling UI components (cards, tables, navbars, pricing sections, forms, inputs, badges), adding dark mode variants, fixing spacing or typography, and Tailwind v3/v4 work. The core use case: writing or fixing Tailwind utility classes in HTML templates (Blade, JSX, Vue). Skip for backend PHP logic, database queries, API routes, JavaScript with no HTML/CSS component, CSS file audits, build tool configuration, and vanilla CSS.
+This project has domain-specific skills available in `**/skills/**`. You MUST activate the relevant skill whenever you work in that domain—don't wait until you're stuck.
 
 ## Conventions
 
@@ -200,7 +212,6 @@ This project has domain-specific skills available. You MUST activate the relevan
 - Run Artisan commands directly via the command line (e.g., `php artisan route:list`). Use `php artisan list` to discover available commands and `php artisan [command] --help` to check parameters.
 - Inspect routes with `php artisan route:list`. Filter with: `--method=GET`, `--name=users`, `--path=api`, `--except-vendor`, `--only-vendor`.
 - Read configuration values using dot notation: `php artisan config:show app.name`, `php artisan config:show database.default`. Or read config files directly from the `config/` directory.
-- To check environment variables, read the `.env` file directly.
 
 ## Tinker
 
@@ -224,6 +235,13 @@ This project has domain-specific skills available. You MUST activate the relevan
 # Deployment
 
 - Laravel can be deployed using [Laravel Cloud](https://cloud.laravel.com/), which is the fastest way to deploy and scale production Laravel applications.
+
+=== tests rules ===
+
+# Test Enforcement
+
+- Every change must be programmatically tested. Write a new test or update an existing test, then run the affected tests to make sure they pass.
+- Run the minimum number of tests needed to ensure code quality and speed. Use `php artisan test --compact` with a specific filename or filter.
 
 === inertia-laravel/core rules ===
 

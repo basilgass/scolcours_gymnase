@@ -28,3 +28,14 @@ public function reset(Score $score)
 		return ScoreResource::make($score);
 	}
 ```
+
+# tools
+
+## tracer_un_graphe.vue
+
+Un composant `tools` qui permet de tracer une courbe sans passer par l'expression fonctionnelle.
+
+- ajouter des repères (AV, AH, AO, points, min/max/replat)
+- tracer les courbes en utilisant des courbes de bézier.
+- 
+
