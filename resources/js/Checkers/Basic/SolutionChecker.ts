@@ -149,7 +149,7 @@ export class SolutionChecker extends CheckerAbstract {
 			const expA = new NumExp(givenValues[0])
 			const expB = new NumExp(givenValues[1])
 
-			if (expA.isValid && expB.isValid) {
+			if (expA.isValid() && expB.isValid()) {
 				const a = expA.evaluate()
 				const b = expB.evaluate()
 

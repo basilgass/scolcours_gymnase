@@ -44,7 +44,7 @@ export class ExactChecker extends CheckerAbstract {
 		const toNumber = (expression: string): number | null => {
 			try {
 				const exp = new NumExp(expression)
-				return exp.isValid ? exp.evaluate() : null
+				return exp.isValid() ? exp.evaluate() : null
 			} catch {
 				return null
 			}
