@@ -199,7 +199,7 @@ function historyBack() {
 			<generators-examples
 				:generator="theGenerator"
 				:questions-number="5"
-				class="min-w-62.5"
+				class="min-w-62.5 max-w-1/2"
 				generate-on-mounted
 			/>
 		</div>
