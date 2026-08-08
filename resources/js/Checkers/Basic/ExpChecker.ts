@@ -1,7 +1,7 @@
 import {CheckerAbstract, CheckerResult, CHECKERS, makeCheckerResult} from "@/Checkers"
 import {splitAtSigns, splitIfOutsideParentheses, stripParenthesis} from "../checkerHelperFunctions.ts"
 import {normalizeExpression} from "@/Checkers/normalizeExpression"
-import {NumExp} from "piexpression"
+import {NumExp} from "pimath"
 
 const description = `exp,[paramètres]
 

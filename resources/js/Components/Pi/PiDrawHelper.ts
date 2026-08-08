@@ -1,6 +1,6 @@
 import {computed, onMounted, ref, watch} from "vue"
 import {WidgetPropsInterface} from "@/types/modelInterfaces.ts"
-import {NumExp} from "piexpression"
+import {NumExp} from "pimath"
 
 export interface IPiDrawProps {
 	draw: WidgetPropsInterface

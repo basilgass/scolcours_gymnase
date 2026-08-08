@@ -152,7 +152,8 @@
       "Bash(cd *)",
       "Bash(cp CLAUDE.md CLAUDE.md.bak)",
       "Bash(tail -n +109 CLAUDE.md.bak)",
-      "Bash(rm CLAUDE.md.bak)"
+      "Bash(rm CLAUDE.md.bak)",
+      "Bash(npm install *)"
     ]
   },
   "enableAllProjectMcpServers": true,

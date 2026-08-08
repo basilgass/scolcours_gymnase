@@ -1,7 +1,7 @@
 import AsciiMathParser from "@/asciimath2tex.ts"
 import {CheckerAbstract, CheckerResult, CHECKERS, makeCheckerResult} from "@/Checkers"
 import {ExactChecker} from "@/Checkers/Basic/ExactChecker"
-import {NumExp} from "piexpression"
+import {NumExp} from "pimath"
 
 // const name = "solutions"
 const description = `solution|sol,[paramètres]

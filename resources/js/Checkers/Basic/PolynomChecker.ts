@@ -1,5 +1,6 @@
 import {CheckerAbstract, CheckerResult, CHECKERS, checkPolynomIsFactorized, makeCheckerResult} from "@/Checkers"
 import {isPolynom, isPolynomPeak} from "@/Checkers/checkMathString.ts"
+import {normalizeExpression} from "@/Checkers/normalizeExpression.ts"
 
 // const name = "polynom"
 const description = `polynom,[paramètres]
@@ -49,14 +50,14 @@ export class PolynomChecker extends CheckerAbstract {
 	}
 
 	override checkFormat(value: string): string {
-		return isPolynom(value)
+		return isPolynom(normalizeExpression(value))
 			? ""
 			: "le polynôme n'est pas formé correctement."
 	}
 
 	override checkValue(value: string): CheckerResult {
-		const A = isPolynom(value)
-		const Q = isPolynom(this.answer)
+		const A = isPolynom(normalizeExpression(value))
+		const Q = isPolynom(normalizeExpression(this.answer))
 
 		if (A === false) {
 			return makeCheckerResult("le polynôme n'est pas formé correctement.")

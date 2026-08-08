@@ -61,9 +61,6 @@ describe("PolynomChecker", () => {
 	test('polynôme entièrement factorisé', () => {
 		const chk = new PolynomChecker('F')
 		chk.answer = '-15/4(x-1)(x+1)'
-
-		console.log(chk.checkValue('-15/4(x+1)(x-1)'))
-
 		expect(chk.checkValue('-15/4(x+1)(x-1)').result).toBe(true)
 	})
 })
