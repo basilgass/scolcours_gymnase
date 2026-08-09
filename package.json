@@ -7,8 +7,7 @@
 		"deps": "vite serve --force",
 		"build": "vue-tsc && vite build",
 		"ide-helper": "php artisan ide-helper:generate && php artisan ide-helper:meta && php artisan ide-helper:models -R -W",
-		"test": "vitest",
-		"typecheck:strict": "vue-tsc -p tsconfig.strict.json --noEmit"
+		"test": "vitest"
 	},
 	"devDependencies": {
 		"@headlessui/vue": "^1.7.23",
