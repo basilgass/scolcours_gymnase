@@ -173,7 +173,14 @@
       "Bash(git *)",
       "Bash(grep \"\\\\.snap$\")",
       "Read(//c/websites/scolcours_gymnase/**)",
-      "Bash(mv .claude/specs/2026-08-05-strategie-tests-coverage-frontend.md .claude/specs/finished/)"
+      "Bash(mv .claude/specs/2026-08-05-strategie-tests-coverage-frontend.md .claude/specs/finished/)",
+      "PowerShell(php artisan make:migration add_parameters_to_lessons_table --no-interaction)",
+      "PowerShell(php artisan migrate --no-interaction 2>&1 | Select-Object -Last 8)",
+      "PowerShell(php artisan route:list --path=generator --json 2>$null | ConvertFrom-Json | Where-Object { $_.method -match 'GET' } | Select-Object method, uri, name | Format-Table -AutoSize)",
+      "PowerShell(php artisan test --compact tests/Feature/Lessons/LessonApiTest.php 2>&1 | Select-Object -Last 25)",
+      "PowerShell(npx vue-tsc --noEmit 2>&1 | Select-Object -Last 40)",
+      "PowerShell(npx vitest run tests/ts/Composables/useGeneratorParameters.test.ts 2>&1 | Select-Object -Last 35)",
+      "PowerShell(npx vue-tsc --noEmit 2>&1 | Select-Object -Last 25)"
     ]
   },
   "enableAllProjectMcpServers": true,

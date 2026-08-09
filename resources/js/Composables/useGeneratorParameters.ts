@@ -7,12 +7,14 @@ export type GeneratorParameterRawValue = string
 function castParameterValue(
 	raw: GeneratorParameterRawValue,
 	format: GeneratorParameterFormat
-): string | number | number[] {
+): string | number | boolean | number[] {
 	switch (format) {
 		case 'number':
 			return Number(raw)
 		case 'set':
 			return parseNumberSet(raw).values
+		case 'boolean':
+			return raw === 'true'
 		case 'choices':
 		case 'string':
 		default:

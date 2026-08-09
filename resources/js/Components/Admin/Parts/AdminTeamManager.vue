@@ -8,10 +8,9 @@ import {AxiosErrorMessage, AxiosResponseModel} from "@/types"
 import Card from "@/Components/Ui/Card.vue"
 import {useStoreEditMode} from "@/stores/useStoreEditMode.ts"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
-import DialogModal
-	from "../../../../../.claude/worktrees/f0-frontend-outillage/resources/js/Components/Ui/DialogModal.vue"
 import {router} from "@inertiajs/vue3"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
+import DialogModal from "@/Components/Ui/DialogModal.vue"
 
 const editMode = useStoreEditMode()
 const flash = useStoreFlashMessage()

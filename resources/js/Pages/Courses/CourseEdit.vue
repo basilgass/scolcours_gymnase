@@ -34,6 +34,8 @@ const theCourse = ref<CourseInterface>(props.course)
 const lessons = ref<LessonInterface[]>(props.course.lessons)
 const lessonable: lessonableClassName[] = ['Post', 'Deck', 'Challenge', 'Generator']
 
+const showDescription = ref<boolean>(false)
+
 function updateCourse() {
 	axios.patch(route('api.admin.courses.update', {course: theCourse.value.id}), {
 		title: theCourse.value.title,
@@ -115,7 +117,7 @@ function addAllPosts() {
 		.filter((lesson) => {
 			return lesson.lessonable_type === 'Post'
 		}).map(lesson => lesson.lessonable_id)
-			.filter((id): id is number => id !== null)
+		.filter((id): id is number => id !== null)
 
 	const newPostIds = posts.value.filter(post => !coursesPostIds.includes(post.id))
 		.map(post => post.id)
@@ -218,10 +220,20 @@ function updateLessonsOrder() {
 				url: route('admin.courses.index')
 			}"
 			:title="course.title"
-			prefix="édition"
-		/>
+		>
+			<template #right>
+				<sc-button
+					type="edit"
+					icon
+					sm
+					@click="showDescription=!showDescription"
+				>
+					description
+				</sc-button>
+			</template>
+		</article-title>
 
-		<Card>
+		<Card v-if="showDescription">
 			<div class="flex flex-col gap-3">
 				<FormInput v-model="theCourse.title" />
 				<FormInput

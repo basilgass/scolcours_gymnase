@@ -98,6 +98,7 @@ class LessonApiController extends Controller
 		$validated = $request->validate([
 			'requires'   => ['sometimes', 'string', 'nullable'],
 			'scoreRules' => ['sometimes', 'array', 'nullable'],
+			'parameters' => ['sometimes', 'array', 'nullable'],
 			'label'      => ['sometimes', 'string', 'nullable']
 		]);
 

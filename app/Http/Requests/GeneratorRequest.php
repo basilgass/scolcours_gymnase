@@ -18,7 +18,7 @@ abstract class GeneratorRequest extends FormRequest
 			'body'                            => ['nullable', 'string'],
 			'parameters_schema'               => ['nullable', 'array'],
 			'parameters_schema.*'             => ['array:format,default,description,choices'],
-			'parameters_schema.*.format'      => ['required', 'string', 'in:number,string,set,choices'],
+			'parameters_schema.*.format'      => ['required', 'string', 'in:number,string,set,choices,boolean'],
 			'parameters_schema.*.default'     => ['required', 'string'],
 			'parameters_schema.*.description' => ['nullable', 'string'],
 			'parameters_schema.*.choices'     => ['nullable', 'string'],

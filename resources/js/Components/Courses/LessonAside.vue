@@ -9,6 +9,7 @@ import DialogModal from "@/Components/Ui/DialogModal.vue"
 import LessonAsideScore from "@/Components/Courses/LessonAsideScore.vue"
 import {lessonableModel} from "@/types/lessonInterfaces.ts"
 import {Link as InertiaLink} from "@inertiajs/vue3"
+import {useTitleLabel} from "@/Composables/useTitleLabel.ts"
 
 const props = defineProps<{
 	course: CourseInterface,
@@ -103,10 +104,10 @@ const nextCounter = computed(() => {
 						>
 							<lesson-type-icon :lesson="prevLesson" />
 							<InertiaLink
-								v-katex.auto="prevLesson.label ?? prevLesson.title"
-								class="flex-1 whitespace-nowrap overflow-hidden overflow-ellipsis"
+								v-katex.auto="useTitleLabel(prevLesson)"
+								class="flex-1 whitespace-nowrap overflow-hidden text-ellipsis"
 								:href="route('students.lessons.show', {course: course.slug, lesson: prevLesson.id})"
-								:title="prevLesson.title"
+								:title="useTitleLabel(prevLesson)"
 							/>
 						</div>
 
@@ -116,10 +117,10 @@ const nextCounter = computed(() => {
 						>
 							<lesson-type-icon :lesson="lesson" />
 							<InertiaLink
-								v-katex.auto="lesson.label ?? lesson.title"
-								class="flex-1 whitespace-nowrap overflow-hidden overflow-ellipsis"
+								v-katex.auto="useTitleLabel(lesson)"
+								class="flex-1 whitespace-nowrap overflow-hidden text-ellipsis"
 								:href="route('students.lessons.show', {course: course.slug, lesson: lesson.id})"
-								:title="lesson.title"
+								:title="useTitleLabel(lesson)"
 							/>
 						</div>
 
@@ -129,10 +130,10 @@ const nextCounter = computed(() => {
 						>
 							<lesson-type-icon :lesson="nextLesson" />
 							<InertiaLink
-								v-katex.auto="nextLesson.label ?? nextLesson.title"
-								class="flex-1 whitespace-nowrap overflow-hidden overflow-ellipsis"
+								v-katex.auto="useTitleLabel(nextLesson)"
+								class="flex-1 whitespace-nowrap overflow-hidden text-ellipsis"
 								:href="route('students.lessons.show', {course: course.slug, lesson: nextLesson.id})"
-								:title="nextLesson.title"
+								:title="useTitleLabel(nextLesson)"
 							/>
 						</div>
 
@@ -167,10 +168,10 @@ const nextCounter = computed(() => {
 						>
 							<lesson-type-icon :lesson="l" />
 							<InertiaLink
-								v-katex.auto="l.label ?? l.title"
-								class="flex-1 whitespace-nowrap overflow-hidden overflow-ellipsis"
+								v-katex.auto="useTitleLabel(l)"
+								class="flex-1 whitespace-nowrap overflow-hidden text-ellipsis"
 								:href="route('students.lessons.show', {course: course.slug, lesson: l.id})"
-								:title="l.title"
+								:title="useTitleLabel(l)"
 							/>
 						</div>
 					</div>

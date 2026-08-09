@@ -64,6 +64,8 @@ class LessonResource extends JsonResource
 			'lessonable_type' => class_basename($this->lessonable_type),
 			'lessonable_tag'  => $this->lessonable->type ?? null,
 			'scoreRules'      => $this->scoreRules,
+			// Config libre du lessonable (overrides d'un générateur aujourd'hui, autre modèle demain).
+			'parameters'      => $this->parameters,
 			'remaining_time'  => $scheduled_at?->diffForHumans(),
 			'scheduled_at'    => $scheduled_at,
 			'homework'        => $calendar?->homework ?? false,

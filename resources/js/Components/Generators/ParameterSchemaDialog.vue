@@ -23,7 +23,14 @@ const FORMAT_CHOICES: Record<GeneratorParameterFormat, string> = {
 	number: 'number',
 	string: 'string',
 	set: 'set',
-	choices: 'choices'
+	choices: 'choices',
+	boolean: 'boolean'
+}
+
+// clé === valeur : FormSelect stocke la valeur, pas la clé (garde "true"/"false" en string)
+const BOOLEAN_CHOICES: Record<string, string> = {
+	false: 'false',
+	true: 'true'
 }
 
 const KEY_REGEX = /^[a-zA-Z_][a-zA-Z0-9_]*$/
@@ -44,6 +51,13 @@ watch(isOpen, (open) => {
 		descriptionInput.value = props.entry?.description ?? ''
 		choicesInput.value = props.entry?.choices ?? ''
 		nextTick(() => keyRef.value?.focus?.())
+	}
+})
+
+// Au passage en format booléen, garantir un default valide ("true"/"false").
+watch(formatInput, (format) => {
+	if (format === 'boolean' && defaultInput.value !== 'true' && defaultInput.value !== 'false') {
+		defaultInput.value = 'false'
 	}
 })
 
@@ -163,6 +177,15 @@ function cancel() {
 					label-class="w-[100px]"
 					name="paramDefault"
 				/>
+				<FormSelect
+					v-else-if="formatInput === 'boolean'"
+					v-model="defaultInput"
+					:choices="BOOLEAN_CHOICES"
+					inline-label
+					label="défaut"
+					label-class="w-[100px]"
+					name="paramDefault"
+				/>
 				<FormInput
 					v-else
 					ref="defaultRef"
@@ -175,7 +198,7 @@ function cancel() {
 				/>
 				<p
 					v-if="defaultError"
-					class="text-red-600 text-xs ml-[100px] mt-1"
+					class="text-red-600 text-xs ml-25 mt-1"
 				>
 					{{ defaultError }}
 				</p>

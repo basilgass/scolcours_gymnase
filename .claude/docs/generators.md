@@ -126,17 +126,22 @@ Stocké sur `generators`. Format JSON :
 
 ### Formats supportés
 
-| Format   | Cast côté client                       | Exemple de valeur brute  |
-|----------|----------------------------------------|--------------------------|
-| `number` | `Number(raw)`                          | `"3"` → `3`              |
-| `string` | identité                               | `"hello"` → `"hello"`    |
-| `set`    | `parseNumberSet(raw).values: number[]` | `"-5..5"` → `[-5,...,5]` |
+| Format    | Cast côté client                       | Exemple de valeur brute      |
+|-----------|----------------------------------------|------------------------------|
+| `number`  | `Number(raw)`                          | `"3"` → `3`                  |
+| `string`  | identité                               | `"hello"` → `"hello"`        |
+| `set`     | `parseNumberSet(raw).values: number[]` | `"-5..5"` → `[-5,...,5]`     |
+| `choices` | identité (string brute)                | `"b"` → `"b"` (parmi `a,b,c`) |
+| `boolean` | `raw === 'true'`                       | `"true"` → `true`            |
 
-**Pour ajouter un format** : 3 endroits à toucher
+**Pour ajouter un format** : 6 endroits à toucher
 
 1. `resources/js/types/challengeInterfaces.ts` — type `GeneratorParameterFormat`
-2. `app/Http/Requests/GeneratorRequest.php` — règle `in:number,string,set,...`
+2. `resources/js/Composables/useGenerator.ts` — type de retour `GeneratorParams` (si le cast introduit un nouveau type de valeur)
 3. `resources/js/Composables/useGeneratorParameters.ts` — `switch` dans `castParameterValue`
+4. `app/Http/Requests/GeneratorRequest.php` — règle `in:number,string,set,choices,...`
+5. `resources/js/Components/Generators/GeneratorConfigurator.vue` — branche de rendu (consommation joueur/preview)
+6. `resources/js/Components/Generators/ParameterSchemaDialog.vue` — `FORMAT_CHOICES` + saisie du `default` (et badge dans `ParametersSchemaEditor.vue`)
 
 ### Résolution au runtime
 
@@ -226,10 +231,11 @@ Affiche N exemples de questions générées (preview, admin). Utilisé dans `Gen
 
 ```php
 'parameters_schema'               => ['nullable', 'array'],
-'parameters_schema.*'             => ['array:format,default,description'],
-'parameters_schema.*.format'      => ['required', 'string', 'in:number,string,set'],
+'parameters_schema.*'             => ['array:format,default,description,choices'],
+'parameters_schema.*.format'      => ['required', 'string', 'in:number,string,set,choices,boolean'],
 'parameters_schema.*.default'     => ['required', 'string'],
 'parameters_schema.*.description' => ['nullable', 'string'],
+'parameters_schema.*.choices'     => ['nullable', 'string'],
 ```
 
 ### Validation des valeurs (`parameters` du pivot)

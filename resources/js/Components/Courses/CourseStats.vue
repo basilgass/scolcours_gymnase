@@ -12,6 +12,7 @@ import axios from "axios"
 import {AxiosErrorMessage, AxiosResponseModel} from "@/types"
 import dayjs from "dayjs"
 import {lessonableClassName} from "@/types/lessonInterfaces.ts"
+import {useTitleLabel} from "@/Composables/useTitleLabel.ts"
 
 const props = defineProps<{
 	course: CourseInterface,
@@ -148,7 +149,9 @@ onUnmounted(() => {
 			<div class="flex items-baseline gap-3">
 				<h3 class="text-lg uppercase">
 					statistiques de
-					{{ selected_user_id === 0 ? team.name : users.find(user => user.id === selected_user_id)?.fullname }}
+					{{
+						selected_user_id === 0 ? team.name : users.find(user => user.id === selected_user_id)?.fullname
+					}}
 				</h3>
 				<div class="flex gap-2 text-xs">
 					<lesson-type-icon
@@ -220,7 +223,7 @@ onUnmounted(() => {
 						xs
 					/>
 					<div
-						v-katex.auto="lesson.label ?? lesson.title"
+						v-katex.auto="useTitleLabel(lesson)"
 						class="text-xs whitespace-nowrap overflow-hidden"
 					/>
 				</div>

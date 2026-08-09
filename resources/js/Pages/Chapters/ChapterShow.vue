@@ -103,7 +103,7 @@ function onIntersectionObserver([entry]: IntersectionObserverEntry[]) {
 			<div>
 				<sc-button
 					theme
-					class="aspect-square w-[120px]
+					class="aspect-square w-30
 						grid place-items-center
 						hover:rounded-[20px]"
 					@click="showTheorem = true; currentTab = 'theorems'"
@@ -113,6 +113,7 @@ function onIntersectionObserver([entry]: IntersectionObserverEntry[]) {
 						<p>théorie</p>
 					</div>
 				</sc-button>
+				
 				<!-- liste des théorèmes -->
 				<chapter-theorems
 					v-if="showTheorem"

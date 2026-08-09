@@ -39,6 +39,7 @@ defineProps<{
 		<suspense v-else-if="lesson.lessonable_type==='Generator'">
 			<generator-display
 				:generator="lessonable as GeneratorInterface"
+				:parameters="lesson.parameters ?? undefined"
 			/>
 		</suspense>
 		<suspense v-else-if="lesson.lessonable_type==='Deck'">

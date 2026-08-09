@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import FormInput from "@/Components/Form/FormInput.vue"
-import GeneratorConfigurator from "@/Components/Challenges/GeneratorConfigurator.vue"
+import GeneratorConfigurator from "@/Components/Generators/GeneratorConfigurator.vue"
 import {GeneratorInterface} from "@/types/modelInterfaces"
 import {GeneratorParameterRawValue} from "@/Composables/useGeneratorParameters.ts"
 import axios from "axios"

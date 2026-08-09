@@ -11,6 +11,7 @@ import ChallengeDisplay from "@/Components/Challenges/ChallengeDisplay.vue"
 import {useScrollTo} from "@/Composables/useHelpers.ts"
 import {GeneratorInterface} from "@/types/challengeInterfaces.ts"
 import Card from "@/Components/Ui/Card.vue"
+import {useTitleLabel} from "@/Composables/useTitleLabel.ts"
 
 defineOptions({layout: LayoutMain})
 
@@ -128,7 +129,7 @@ function onSelect(generator: GeneratorInterface | null) {
 								>
 									<i class="bi bi-calculator text-sm shrink-0" />
 									<span
-										v-katex.auto="gen.label ? gen.label : gen.title"
+										v-katex.auto="useTitleLabel(gen)"
 										class="text-sm"
 									/>
 								</div>

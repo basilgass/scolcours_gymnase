@@ -4,9 +4,10 @@ import {ref} from "vue"
 import Card from "@/Components/Ui/Card.vue"
 import {LessonInterface, TeamInterface} from "@/types/modelInterfaces.ts"
 import LessonTypeIcon from "@/Components/Courses/LessonTypeIcon.vue"
+import {useTitleLabel} from "@/Composables/useTitleLabel.ts"
 
 
-const props = defineProps<{
+defineProps<{
 	teamLessons: {
 		team: TeamInterface
 		lesson: LessonInterface
@@ -65,10 +66,10 @@ function onDragEnd() {
 					class="bg-content border rounded item-draggable text-xs flex gap-2 items-top p-1 overflow-hidden cursor-move"
 					draggable="true"
 					@dragend="onDragEnd"
-					@dragstart="event => onDragStart(event, item)"
+					@dragstart="(event: DragEvent) => onDragStart(event, item)"
 				>
 					<lesson-type-icon :lesson="item?.lesson??null" />
-					{{ item.lesson.label ?? item.lesson.title }} ({{ item.team.name }})
+					{{ useTitleLabel(item.lesson) }} ({{ item.team.name }})
 				</div>
 			</div>
 		</div>

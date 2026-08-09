@@ -52,6 +52,8 @@ export interface LessonInterface<T extends LessonScoreRulesInterface = LessonSco
 	label?: string,
 	updated_at: string,
 	user: ScoreInterface<ScoreLessonDataInterface>,
+	// Config libre du lessonable, par instance de leçon (overrides d'un générateur aujourd'hui, autre modèle demain).
+	parameters?: Record<string, string> | null,
 }
 
 // Interfaces non encore déplacées dans un fichier domaine

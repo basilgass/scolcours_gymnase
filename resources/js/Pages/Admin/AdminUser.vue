@@ -11,9 +11,8 @@ import DialogModal from "@/Components/Ui/DialogModal.vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 import LayoutAdmin from "@/Layouts/LayoutAdmin.vue"
-import ArticleTitle
-	from "../../../../.claude/worktrees/f0-frontend-outillage/resources/js/Components/Ui/ArticleTitle.vue"
 import FormTextarea from "@/Components/Form/FormTextarea.vue"
+import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 
 // TODO: créer un composant pour chaque utilisateur - plus propre ?
 

@@ -65,8 +65,8 @@ interface IAdminCard {
 const cards: IAdminCard[] = [
 	{label: "utilisateurs", href: route('admin.users.index')},
 	{label: "équipes", href: route('admin.teams.index')},
-	{label: "agenda", href: route('admin.agenda')},
 	{label: "cours", href: route('admin.courses.index')},
+	{label: "agenda", href: route('admin.agenda')},
 	{label: "générateurs", href: route('admin.generators.index')},
 	{label: "challenges", href: route('admin.challenges.index')},
 	{label: "quizz", href: route('admin.quizzes.index')},

@@ -2,7 +2,7 @@ import type {BlockInterface} from "@/types/blockInterfaces.ts"
 import type {ChapterInterface} from "@/types/chapterInterfaces.ts"
 import type {ScoreGeneratorDataInterface, ScoreInterface} from "@/types/scoreInterfaces.ts"
 
-export type GeneratorParameterFormat = 'number' | 'string' | 'set' | 'choices'
+export type GeneratorParameterFormat = 'number' | 'string' | 'set' | 'choices' | 'boolean'
 
 export interface GeneratorParameterSchemaEntry {
 	format: GeneratorParameterFormat;

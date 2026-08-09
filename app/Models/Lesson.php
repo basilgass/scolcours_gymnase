@@ -22,6 +22,7 @@ class Lesson extends Model
 		"requires",
 		"order",
 		"scoreRules",
+		"parameters",
 		"lessonable_type",
 		"lessonable_id"
 	];
@@ -33,6 +34,7 @@ class Lesson extends Model
 	{
 		return [
 			'scoreRules'   => 'array',
+			'parameters'   => 'array',
 			'scheduled_at' => 'datetime'
 		];
 	}

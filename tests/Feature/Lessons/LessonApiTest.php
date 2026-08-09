@@ -109,6 +109,31 @@ class LessonApiTest extends TestCase
         $this->assertSame(['min' => 10], $lesson->scoreRules);
     }
 
+    public function test_admin_can_update_free_parameters(): void
+    {
+        $this->actingAsAdmin();
+        $lesson = Lesson::factory()->create();
+
+        $this->patchJson(route('api.admin.lessons.update', $lesson), [
+            'parameters' => ['domain' => '-3..3', 'level' => '2'],
+        ])->assertStatus(200)
+            ->assertJsonPath('parameters.domain', '-3..3');
+
+        $lesson->refresh();
+        $this->assertSame(['domain' => '-3..3', 'level' => '2'], $lesson->parameters);
+    }
+
+    public function test_parameters_default_to_null_and_are_exposed(): void
+    {
+        $this->actingAsAdmin();
+        $lesson = Lesson::factory()->create();
+
+        // Entrée libre non renseignée : présente dans la Resource, à null.
+        $this->getJson(route('api.admin.lessons.show', $lesson))
+            ->assertStatus(200)
+            ->assertJsonPath('parameters', null);
+    }
+
     public function test_admin_can_delete_a_lesson(): void
     {
         $this->actingAsAdmin();
