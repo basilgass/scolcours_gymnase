@@ -4,7 +4,7 @@ import type {GeneratorParams} from "@/Composables/useGenerator.ts"
 
 export type GeneratorParameterRawValue = string
 
-export function castParameterValue(
+function castParameterValue(
 	raw: GeneratorParameterRawValue,
 	format: GeneratorParameterFormat
 ): string | number | number[] {

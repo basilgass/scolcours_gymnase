@@ -76,7 +76,7 @@ export const chartPropDefaults = {
 /**
  * Couleurs de dataset selon le jeu de couleurs demandé.
  */
-export function chartColors(colorset?: string | null): Partial<ChartInputDataset> {
+function chartColors(colorset?: string | null): Partial<ChartInputDataset> {
 	if (colorset === "graduate") {
 		return {
 			backgroundColor: graduateBackgroundColor,
@@ -93,7 +93,7 @@ export function chartColors(colorset?: string | null): Partial<ChartInputDataset
  * - liste de datasets → passthrough
  * - `number[]` brut → un unique dataset coloré selon `colorset`
  */
-export function normalizeDatasets(input: ChartInput, colorset?: string | null): ChartInputDataset[] {
+function normalizeDatasets(input: ChartInput, colorset?: string | null): ChartInputDataset[] {
 	if (Array.isArray(input) && typeof input[0] === "object") {
 		return input as ChartInputDataset[]
 	}

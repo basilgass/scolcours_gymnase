@@ -1,9 +1,51 @@
-import {expect, test} from "vitest"
+import {expect, test, vi} from "vitest"
 import {CHECKERS} from "@/Checkers/checker.config.ts"
 import {PiChecker} from "@/Checkers/PiChecker.ts"
 import {CHECKER_CLASSES} from "@/Checkers/checkerRegistry.ts"
 import {splitIfOutsideParentheses} from "@/Checkers/checkerHelperFunctions.ts"
 import {isEquationCircle, isEquationReduced, sortPartsByVariable} from "@/Checkers/checkMathString.ts"
+import {NumberChecker} from "@/Checkers/Basic/NumberChecker"
+
+test('PiChecker : secondaryChecker par défaut = exact', () => {
+	// pas de "checker:" et secondaryChecker null -> version exact par défaut
+	const checker = new PiChecker('number,2')
+
+	expect(checker.secondaryChecker?.type).toBe(CHECKERS.EXACT)
+})
+
+test('PiChecker : nom inconnu -> checker STRING (défaut de résolution)', () => {
+	// NOTE caractérisation : checkerNameToEnum renvoie CHECKERS.STRING pour tout
+	// nom inconnu, et STRING existe dans CHECKER_CLASSES. La branche défensive
+	// "checker null -> warn + fallback EXACT" de PiChecker est donc inatteignable
+	// via la résolution de nom normale (aucun warn attendu ici).
+	const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+
+	const checker = new PiChecker('inexistant')
+
+	expect(checker.checker.type).toBe(CHECKERS.STRING)
+	expect(warn).not.toHaveBeenCalled()
+
+	warn.mockRestore()
+})
+
+test('PiChecker : getters answer / description / format', () => {
+	const pi = new PiChecker('number,2')
+
+	// answer est défini par check()
+	pi.check('2', '2')
+	expect(pi.answer).toBe('2')
+
+	expect(typeof pi.description).toBe('string')
+	expect(pi.description.length).toBeGreaterThan(0)
+	expect(typeof pi.format).toBe('string')
+})
+
+test('PiChecker : setter secondaryChecker', () => {
+	const pi = new PiChecker('number,2')
+	pi.secondaryChecker = new NumberChecker('3')
+
+	expect(pi.secondaryChecker?.type).toBe(CHECKERS.NUMBER)
+})
 
 test('PiChecker should parse a single checker', () => {
 	const config = 'number,2'

@@ -42,7 +42,7 @@ function isInMath(state: import("@codemirror/state").EditorState): boolean {
 // ── Greek mode state ──
 
 const setGreek = StateEffect.define<boolean>()
-export const greekModeField = StateField.define<boolean>({
+const greekModeField = StateField.define<boolean>({
 	create: () => false,
 	update: (v, tr) => {
 		for (const e of tr.effects) if (e.is(setGreek)) return e.value

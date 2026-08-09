@@ -4,11 +4,11 @@ import {IllustrationInterface} from "@/types/blockInterfaces.ts"
 
 const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-export function makeKey(i: number): string {
+function makeKey(i: number): string {
 	return `\\$${alphabet[i]}`
 }
 
-export function replace_abc_toTex(md: string, index: number, key: string, answer: keyboardEventInterface, color: string): string {
+function replace_abc_toTex(md: string, index: number, key: string, answer: keyboardEventInterface, color: string): string {
 	// $a, $b, ...
 	// console.log(md)
 	// console.log(key)
@@ -27,7 +27,7 @@ export function replace_abc_toTex(md: string, index: number, key: string, answer
 		}}}`)
 }
 
-export function replace_ABC_toBlock(md: string, index: number, key: string, answer: keyboardEventInterface, color: string): string {
+function replace_ABC_toBlock(md: string, index: number, key: string, answer: keyboardEventInterface, color: string): string {
 	// $A, $B, ...
 	return md.replaceAll(
 		new RegExp(`\n${key}`, "gm"),
@@ -39,7 +39,7 @@ export function replace_ABC_toBlock(md: string, index: number, key: string, answ
 		}\n\n</div>`)
 }
 
-export function replace_ABC_inline(md: string, index: number, key: string, answer: keyboardEventInterface, color: string): string {
+function replace_ABC_inline(md: string, index: number, key: string, answer: keyboardEventInterface, color: string): string {
 	// $A, $B, ... inline
 	return md.replaceAll(
 		new RegExp(`${key}`, "gm"),
@@ -50,7 +50,7 @@ export function replace_ABC_inline(md: string, index: number, key: string, answe
 		}</span>`)
 }
 
-export function replace_ABC_inline_no_div(md: string, index: number, key: string, answer: keyboardEventInterface, color: string): string {
+function replace_ABC_inline_no_div(md: string, index: number, key: string, answer: keyboardEventInterface, color: string): string {
 	// $A, $B, ... inline
 	return md.replaceAll(
 		new RegExp(`_${key}`, "gm"),
@@ -60,7 +60,7 @@ export function replace_ABC_inline_no_div(md: string, index: number, key: string
 	)
 }
 
-export function replace_ABC_without_placeholder(md: string, index: number, key: string, answer: keyboardEventInterface, color: string): string {
+function replace_ABC_without_placeholder(md: string, index: number, key: string, answer: keyboardEventInterface, color: string): string {
 	// @$A, @$B, ...
 	return md.replaceAll(
 		new RegExp(`@(${key})`, "gm"),

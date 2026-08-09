@@ -90,7 +90,7 @@ export class EquationChecker extends CheckerAbstract {
 			return makeCheckerResult("l'équation n'est pas juste.")
 		}
 
-		if (this.#isReduced && isEquationReduced(value)) {
+		if (this.#isReduced && !isEquationReduced(value)) {
 			return makeCheckerResult("l'équation n'est pas réduite.")
 		}
 

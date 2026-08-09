@@ -286,7 +286,7 @@ function makePidrawLanguage(autocomplete: (ctx: CompletionContext) => Completion
 	})
 }
 
-export const pidrawLanguage = makePidrawLanguage(pidrawCompletionSource)
+const pidrawLanguage = makePidrawLanguage(pidrawCompletionSource)
 export const pidrawParamsLanguage = makePidrawLanguage(pidrawParamsCompletionSource)
 
 // ── Decorations: defs (bold), dups (red), refs (blue background) ──

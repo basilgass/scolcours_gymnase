@@ -75,7 +75,7 @@ export function makeStudyFromPolynoms(numerator: string, denominator: string): E
 	return makeStudyFromPolyFactor(fx)
 }
 
-export function makeStudyFromPolyFactor(value: PolyFactor): ETUDE_DE_FONCTION_RATIONNELLE {
+function makeStudyFromPolyFactor(value: PolyFactor): ETUDE_DE_FONCTION_RATIONNELLE {
 	const factorized = value.factorize()
 	const reduced = factorized.clone().reduce()
 
@@ -419,80 +419,4 @@ function getBBox(...items: { x: number, y: number }[]): {
 		}
 	}
 }
-
-export function makeStudyFromCode(code: string, showCoords: boolean, displayMode?: boolean) {
-	const exactTex = keyboards.exact.tex
-	if (exactTex === undefined) throw new Error("Le clavier 'exact' doit définir tex")
-
-	const [zeroes, signs, grows, coords] = code.split("@")
-
-	if (grows !== undefined) {
-		const extremes: Record<string, { tex: { x: number, y: number }, type: string, value: { x: number, y: number }, label: string }> = {}
-		const zeroesValues = zeroes.split(",")
-		let extremesValues = coords ? coords.split(",") : []
-
-
-		if (!showCoords) {
-			extremesValues = []
-		}
-
-		for (const i in zeroesValues) {
-			const z = zeroesValues[i]
-			const g = grows[2 * (+i) + 1]
-
-			if (g !== undefined) {
-				let t = ""
-				if (g === "M") {
-					t = "max"
-				} else if (g === "m") {
-					t = "min"
-				} else if (g === "_") {
-					t = "replat"
-				}
-
-				let label = " "
-
-				if (extremesValues[i] !== undefined) {
-					// if in writing mode, show a question mark
-					if (displayMode) {
-						if (extremesValues[i] !== "") {
-							label = `\\left(${z};${asciiToTex(extremesValues[i])}\\right)`
-						}
-
-					} else {
-						label = `\\left(${z};${extremesValues[i] === "" ? "?" : asciiToTex(extremesValues[i])}\\right)`
-					}
-				}
-
-				extremes[exactTex(z)] = {
-					tex: {x: 1, y: 2},
-					type: t,
-					value: {x: 1, y: 2},
-					label
-				}
-			}
-		}
-
-		return {
-			zeroes: zeroes.split(",").map(x => {
-				return {tex: exactTex(x)}
-			}).filter(x => x.tex !== ""),
-			factors: [] as { tex: string }[],
-			extremes,
-			type: "grows",
-			grows: [...grows.split("")],
-			signs: [
-				["", ...signs.split(""), ""],
-				["", ...signs.split(""), ""]
-			]
-		}
-	}
-
-	return {
-		zeroes: zeroes.split(",").map(x => {
-			return {tex: exactTex(x)}
-		}).filter(x => x.tex !== ""),
-		factors: [] as { tex: string }[],
-		signs: [["", ...signs.split(""), ""]]
-	}
-}
+

@@ -269,3 +269,39 @@ describe('mode silent', () => {
 		expect(errors.value).toHaveLength(0)
 	})
 })
+
+// ─── reduce — agrégation des validations ──────────────────────────────────────
+
+describe('reduce', () => {
+	test('true seulement si toutes les validations passent', () => {
+		const {reduce} = useQuestionValidation(makeQuestionData([makeValidator('42')], ['42']))
+
+		expect(reduce([{result: true}, {result: true}] as any)).toBe(true)
+		expect(reduce([{result: true}, {result: false}] as any)).toBe(false)
+	})
+})
+
+// ─── Validation interne (question.validation via new Function) ────────────────
+
+describe('validation interne', () => {
+	test('force le succès quand le code retourne vrai malgré une réponse fausse', () => {
+		const data = makeQuestionData([makeValidator('42')], ['99'])
+		data.question.value.validation = 'return true'
+		const {validate, result, errors} = useQuestionValidation(data)
+
+		validate()
+
+		expect(result.value.result).toBe(true)
+		expect(errors.value).toHaveLength(0)
+	})
+
+	test('laisse l\'échec quand le code retourne faux', () => {
+		const data = makeQuestionData([makeValidator('42')], ['99'])
+		data.question.value.validation = 'return false'
+		const {validate, result} = useQuestionValidation(data)
+
+		validate()
+
+		expect(result.value.result).toBe(false)
+	})
+})

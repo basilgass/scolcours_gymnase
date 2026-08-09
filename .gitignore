@@ -4,6 +4,7 @@
 /public/sitemap.xml
 /storage/*.key
 /storage/coverage
+/storage/coverage-ts
 /vendor
 .env
 .env.backup

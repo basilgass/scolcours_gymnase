@@ -12,7 +12,7 @@ export type {
 	IllustrationMinInterface, IllustrationInterface, BlockMinInterface, BlockInterface
 } from "@/types/blockInterfaces.ts"
 export type {
-	ThemeNameInterface, ThemeInterface, ChapterInterface, ChapterShowInterface
+	ThemeInterface, ChapterInterface, ChapterShowInterface
 } from "@/types/chapterInterfaces.ts"
 export type {
 	QuestionDynamicInterface,
@@ -24,13 +24,10 @@ export type {
 } from "@/types/postInterfaces.ts"
 export type {
 	GeneratorInterface,
-	ChallengeScoreInterface,
 	ChallengeGameState,
 	ChallengeMinInterface,
 	ChallengeInterface,
-	ChallengeLevelInterface,
-	ChallengeAnswerInterface,
-	ChallengeGameInterface
+	ChallengeLevelInterface
 } from "@/types/challengeInterfaces.ts"
 export type {CardInterface, CardInterfaceExtended, DeckInterface, provideDeckData} from "@/types/deckInterfaces.ts"
 export type {EvaluationInterface, EvaluationAdminInterface} from "@/types/evaluationInterfaces.ts"

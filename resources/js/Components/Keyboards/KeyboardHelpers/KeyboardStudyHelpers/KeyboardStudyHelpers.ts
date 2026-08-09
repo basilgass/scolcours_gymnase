@@ -39,11 +39,6 @@ export interface studyConfigInterface {
 export const studyButtonKeys = ["av", "ah", "ao", "!", "p", "z", "o", "t", "m", "M", "_"] as const
 export type studyButtonsKeysType = typeof studyButtonKeys[number]
 
-export interface studyItemType {
-	display: string
-	key: string,
-}
-
 export enum ITEM_TYPES {
 	POINT = "point",
 	AO = "ao",
@@ -52,7 +47,7 @@ export enum ITEM_TYPES {
 	TRACE = "trace"
 }
 
-export const STUDY_CONTROLS_KEYS = ["LT", "RT", "LB", "RB"] as const
+const STUDY_CONTROLS_KEYS = ["LT", "RT", "LB", "RB"] as const
 
 export interface ASYMPTOTES_CONTROLS {
 	"LB": Point
