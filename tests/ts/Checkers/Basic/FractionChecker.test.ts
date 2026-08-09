@@ -1,5 +1,54 @@
 import {expect, test} from "vitest"
-import {FractionChecker} from "@/Checkers"
+import {FractionChecker} from "@/Checkers/Basic/FractionChecker"
+
+test('getter format : sans option', () => {
+	expect(new FractionChecker('').format).toBe("réponse sous forme de fraction")
+})
+
+test('getter format : réduite', () => {
+	expect(new FractionChecker('r').format).toContain("réduite")
+})
+
+test('checkFormat : numérateur non numérique', () => {
+	const checker = new FractionChecker('')
+	const result = checker.check('a/3', '1/3')
+
+	expect(result.result).toBe(false)
+	expect(result.message).toBe("Le numérateur n'est pas un nombre.")
+})
+
+test('checkFormat : dénominateur non numérique', () => {
+	const checker = new FractionChecker('')
+	const result = checker.check('1/b', '1/3')
+
+	expect(result.result).toBe(false)
+	expect(result.message).toBe("Le dénominateur n'est pas un nombre.")
+})
+
+test('checkFormat : fraction vide refusée', () => {
+	const checker = new FractionChecker('')
+	// '1/2=' -> la seconde partie est vide
+	const result = checker.check('1/2=', '1/2')
+
+	expect(result.result).toBe(false)
+	expect(result.message).toBe("merci de donner une fraction...")
+})
+
+test('chaîne d\'égalités équivalentes acceptée', () => {
+	const checker = new FractionChecker('')
+	// 2/4 = 1/2 : toutes équivalentes, dernière valeur = réponse
+	const result = checker.check('2/4=1/2', '1/2')
+
+	expect(result.result).toBe(true)
+})
+
+test('chaîne d\'égalités non équivalentes signalée', () => {
+	const checker = new FractionChecker('')
+	const result = checker.check('1/2=1/3', '1/3')
+
+	expect(result.result).toBe(false)
+	expect(result.message).toContain('ne sont pas équivalents')
+})
 
 test('detect exact value', () => {
 	const config = ''

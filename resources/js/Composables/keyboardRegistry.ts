@@ -97,9 +97,9 @@ const RAW_REGISTRY: RawKeyboardDescriptor[] = [
 ]
 
 /** Composant par défaut lorsqu'aucun descripteur ne correspond. */
-export const DEFAULT_COMPONENT = "Basic"
+const DEFAULT_COMPONENT = "Basic"
 
-export const KEYBOARD_REGISTRY: KeyboardDescriptor[] = RAW_REGISTRY.map((raw) => ({
+const KEYBOARD_REGISTRY: KeyboardDescriptor[] = RAW_REGISTRY.map((raw) => ({
 	aliases: raw.aliases,
 	component: raw.component ?? DEFAULT_COMPONENT,
 	layout: raw.layout ?? null,
@@ -120,7 +120,7 @@ const ALIAS_MAP: Map<string, KeyboardDescriptor> = (() => {
  * Retourne le descripteur pour un token de code, ou `undefined` s'il est inconnu.
  * La recherche est sensible à la casse (les alias sont en minuscules).
  */
-export function findKeyboardDescriptor(token: string): KeyboardDescriptor | undefined {
+function findKeyboardDescriptor(token: string): KeyboardDescriptor | undefined {
 	return ALIAS_MAP.get(token)
 }
 

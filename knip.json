@@ -1,0 +1,19 @@
+{
+	"$schema": "https://unpkg.com/knip@6/schema.json",
+	"project": ["resources/js/**/*.{ts,vue}"],
+	"ignoreBinaries": ["php"],
+	"ignoreDependencies": [
+		"@tailwindcss/typography",
+		"tailwind-scrollbar",
+		"bootstrap-icons",
+		"@inertiajs/core",
+		"ziggy-js"
+	],
+	"vite": {
+		"config": ["vite.config.js"]
+	},
+	"vitest": {
+		"config": ["vitest.config.js"],
+		"entry": ["tests/ts/**/*.test.ts"]
+	}
+}

@@ -49,7 +49,7 @@ export interface OperationsPriorityConfig {
 
 // ===== Presets par niveau (à la place d'un seul paramètre "complexité") =====
 
-export const LEVEL_PRESETS: Record<number, OperationsPriorityConfig> = {
+const LEVEL_PRESETS: Record<number, OperationsPriorityConfig> = {
 	1: {
 		operationsCount: 2,
 		numberRange: [1, 10],
@@ -147,7 +147,7 @@ function generateNode(remainingOps: number, cfg: OperationsPriorityConfig): Expr
 
 // ===== Évaluation (parcours d'arbre, pas de reparsing) =====
 
-export function evaluate(node: ExprNode): number {
+function evaluate(node: ExprNode): number {
 	if (node.kind === "num") return node.value
 	const l = evaluate(node.left)
 	const r = evaluate(node.right)
@@ -183,7 +183,7 @@ function renderNode(node: ExprNode, parentPrec: number, isRightChild: boolean): 
 	return needsParens ? `(${inner})` : inner
 }
 
-export function render(node: ExprNode): string {
+function render(node: ExprNode): string {
 	return renderNode(node, 0, false)
 }
 

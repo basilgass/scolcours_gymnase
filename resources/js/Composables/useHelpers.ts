@@ -258,17 +258,4 @@ export const useKatexMacros: Record<string, string> = {
 	"\\dx": "\\hspace{0.5em}\\text{d}x"
 }
 
-
-export function useTheme(id: number) {
-	const theme = usePage().props.themes.find(theme => +theme.id === +id)
-
-	return theme ?? {
-		id: null,
-		slug: null,
-		title: null,
-		order: null,
-		color: null,
-		icon: null,
-		enabled: null
-	}
-}
+

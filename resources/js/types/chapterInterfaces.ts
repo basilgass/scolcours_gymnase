@@ -1,10 +1,5 @@
 import type {BlockInterface} from "@/types/blockInterfaces.ts"
 
-export interface ThemeNameInterface {
-	id: number,
-	slug: string
-}
-
 export interface ThemeInterface {
 	color: string
 	enabled: boolean

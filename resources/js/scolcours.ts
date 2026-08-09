@@ -1,21 +1,18 @@
 import {type AsyncComponentLoader, defineAsyncComponent} from "vue"
 
-export const ToolsModules = import.meta.glob("./Components/Tools/*.vue", {
+const ToolsModules = import.meta.glob("./Components/Tools/*.vue", {
 	eager: false,
 })
-export const KeyboardsModules = import.meta.glob([
+const KeyboardsModules = import.meta.glob([
 	"./Components/Keyboards/*.vue",
 	"!./Components/Keyboards/KeyboardDisplay.vue",
 ])
-export const IllustrationsModules = import.meta.glob([
-	"./Components/Posts/Illustrations/Elements/*.vue",
-])
-export const WidgetsModules = import.meta.glob([
+const WidgetsModules = import.meta.glob([
 	"./Components/Widgets/*.vue",
 	"./Components/Widgets/*/*.vue",
 ])
 
-export const DevsModules = import.meta.glob("./Components/Devs/*.vue")
+const DevsModules = import.meta.glob("./Components/Devs/*.vue")
 
 const dynamicModules = {
 	tools: {
@@ -25,10 +22,6 @@ const dynamicModules = {
 	keyboards: {
 		path: "./Components/Keyboards/",
 		modules: KeyboardsModules,
-	},
-	illustrations: {
-		path: "./Components/Posts/Illustrations/Elements/",
-		modules: IllustrationsModules,
 	},
 	widgets: {
 		path: "./Components/Widgets/",
@@ -44,7 +37,6 @@ const moduleCache = new Map<string, ReturnType<typeof defineAsyncComponent>>()
 
 
 export enum MODULE_TYPES {
-	ILLUSTRATION = "illustrations",
 	WIDGET = "widgets",
 	TOOLS = "tools",
 	KEYBOARD = "keyboards",

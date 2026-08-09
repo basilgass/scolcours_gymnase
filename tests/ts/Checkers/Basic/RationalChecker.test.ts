@@ -1,7 +1,55 @@
 import {describe, expect, test} from "vitest"
-import {RationalChecker} from "@/Checkers"
+import {RationalChecker} from "@/Checkers/Basic/RationalChecker"
 import {Fraction, Polynom} from "pimath"
 import {splitIfOutsideParentheses} from "@/Checkers/checkerHelperFunctions.ts"
+
+describe("RationalChecker — checkValue", () => {
+	test('marqueur d\'erreur !! signalé', () => {
+		const checker = new RationalChecker('')
+		const result = checker.check('!!', 'x/(x+1)')
+
+		expect(result.result).toBe(false)
+		expect(result.message).toBe("Il semble qu'il y ait une erreur quelque part...")
+	})
+
+	test('getter format : entièrement factorisée réduite', () => {
+		expect(new RationalChecker('F,r').format).toContain("entièrement factorisée")
+		expect(new RationalChecker('F,r').format).toContain("réduite")
+		expect(new RationalChecker('d').format).toContain("développée")
+	})
+
+	test('numérateur incorrect signalé', () => {
+		const checker = new RationalChecker('')
+		const result = checker.check('x/(x+1)', '(x+2)/(x+1)')
+
+		expect(result.result).toBe(false)
+		expect(result.message).toBe("le numérateur ne correspond pas à la réponse")
+	})
+
+	test('dénominateur incorrect signalé', () => {
+		const checker = new RationalChecker('')
+		const result = checker.check('x/(x+1)', 'x/(x+2)')
+
+		expect(result.result).toBe(false)
+		expect(result.message).toBe("le dénominateur ne correspond pas à la réponse")
+	})
+
+	test('config développée : numérateur factorisé refusé', () => {
+		const checker = new RationalChecker('d')
+		const result = checker.check('(x+1)(x+1)/(x-1)', '(x^2+2x+1)/(x-1)')
+
+		expect(result.result).toBe(false)
+		expect(result.message).toBe("le numérateur n'est pas développé")
+	})
+
+	test('config réduite : fraction non réduite refusée', () => {
+		const checker = new RationalChecker('r')
+		const result = checker.check('(x+1)(x-1)/(x-1)', 'x+1')
+
+		expect(result.result).toBe(false)
+		expect(result.message).toBe("la fraction rationnelle n'est pas réduite !")
+	})
+})
 
 function getFactorsFromPolynom(value: string, isNumerator = true) {
 	const matches = value
