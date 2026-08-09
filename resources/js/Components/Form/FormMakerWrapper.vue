@@ -6,6 +6,7 @@ import {computed} from "vue"
 interface FormMakerWrapperInterface extends FormMakerBaseProps {
 	errors?: string[]
 	labelClass?: string
+	fill?: boolean
 }
 
 const props = withDefaults(defineProps<FormMakerWrapperInterface>(),
@@ -22,6 +23,7 @@ const props = withDefaults(defineProps<FormMakerWrapperInterface>(),
 		sm: false,
 		xs: false,
 		inputClass: false,
+		fill: false,
 		errors: () => []
 	})
 
@@ -48,11 +50,12 @@ const inputClassComputed = computed(() => {
 	<div
 		class="w-full flex"
 		:class="{
-			'mt-[1.5rem]': !inlineLabel && label,
+			'mt-6': !inlineLabel && label,
 			'text-xs': xs,
 			'text-sm': sm,
 			'text-xl': xl,
 			'opacity-50 pointer-events-none select-none': disabled,
+				'self-stretch min-h-0': fill,
 		}"
 	>
 		<div
@@ -68,6 +71,7 @@ const inputClassComputed = computed(() => {
 		</div>
 		<div
 			class="flex-1 relative"
+			:class="{'flex flex-col min-h-0 h-full': fill}"
 		>
 			<div
 				class="absolute left-0 right-0 whitespace-nowrap"
@@ -81,7 +85,10 @@ const inputClassComputed = computed(() => {
 				/>
 			</div>
 
-			<div class="w-full flex items-baseline">
+			<div
+				class="w-full flex"
+				:class="fill ? 'flex-1 min-h-0 items-stretch' : 'items-baseline'"
+			>
 				<div
 					class="flex-1 flex
 							appearance-none transition
@@ -117,7 +124,10 @@ const inputClassComputed = computed(() => {
 							@click="value=''"
 						><i class="bi bi-x-lg" />
 						</span>
-						<div class="w-full">
+						<div
+							class="w-full"
+							:class="{'h-full': fill}"
+						>
 							<slot />
 						</div>
 					</div>
@@ -130,7 +140,7 @@ const inputClassComputed = computed(() => {
 					<button
 						class="h-full px-2
 									bg-slate-200 dark:bg-slate-700
-								hover:bg-slate-300 dark:bg-slate-600
+								hover:bg-slate-300 hover:dark:bg-slate-600
 								rounded-r
 								transition-colors
 								cursor-pointer"

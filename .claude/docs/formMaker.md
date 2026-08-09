@@ -164,6 +164,7 @@ Zone de texte multi-lignes. Utilise `FormMakerWrapper` + `useTextEditor`.
 | Prop spécifique | Type | Défaut | Description |
 |---|---|---|---|
 | `catchTab` | `boolean` | — | Intercepte la touche Tab pour insérer une indentation au lieu de changer de focus |
+| `fill` | `boolean` | `false` | Le textarea remplit toute la hauteur disponible (au lieu de `rows`/hauteur fixe). Propage la chaîne de hauteur à travers `FormMakerWrapper`. **Requiert un parent flex** (ex: `<div class="flex-1 flex h-full">`) : le dimensionnement vertical s'appuie sur le stretch flex, qui déduit correctement la marge `mt-6` du label (contrairement à `h-full` qui déborderait). Fonctionne avec ou sans `label`. |
 
 ---
 

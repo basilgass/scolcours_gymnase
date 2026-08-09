@@ -9,9 +9,11 @@ import type {TeamInterface, UserInterface} from "@/types/modelInterfaces"
 import type {AxiosErrorMessage, AxiosResponseModel} from "@/types"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
-import AdminTeamManager from "@/Components/Admin/Parts/AdminTeamManager.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 import LayoutAdmin from "@/Layouts/LayoutAdmin.vue"
+import ArticleTitle
+	from "../../../../.claude/worktrees/f0-frontend-outillage/resources/js/Components/Ui/ArticleTitle.vue"
+import FormTextarea from "@/Components/Form/FormTextarea.vue"
 
 // TODO: créer un composant pour chaque utilisateur - plus propre ?
 
@@ -21,6 +23,11 @@ const props = defineProps<{
 	users: UserInterface[],
 	teams: TeamInterface[]
 }>()
+
+interface UserTeamInterface {
+	id: number,
+	name: string
+}
 
 const theUsers = ref(props.users)
 const theTeams = ref(props.teams)
@@ -34,7 +41,6 @@ const usersEmailsList = computed(() => {
 })
 
 
-const addMode = ref(false)
 const form = useForm<{
 	users: string[],
 	password: string
@@ -70,8 +76,7 @@ function destroyUser(id: number) {
 	})
 }
 
-const usersTeams = computed(() => {
-
+const usersTeams = computed<string[]>(() => {
 	return [
 		...new Set([...theUsers.value
 			.filter(user => user.teams)
@@ -92,6 +97,8 @@ const selectedUsers = computed(() => {
 		return theUsers.value.filter(user => (user.teams ?? []).find(team => team.name === selectedTeam.value))
 	}
 })
+
+const createUsersShow = ref(false)
 
 
 const editUserShow = ref(false)
@@ -155,63 +162,20 @@ function updateUserTeam(userId: number, teamId: number) {
 </script>
 <template>
 	<main class="scolcours-container">
-		<div class="flex justify-between items-baseline">
-			<h1 class="text-3xl pt-5">
-				Gestion des utilisateurs
-			</h1>
-			<sc-button
-				type="add"
-				xs
-				@click="addMode=!addMode"
-			>
-				ajouter des utilisateurs
-			</sc-button>
-		</div>
-
-		<section
-			v-show="addMode"
-			class="my-10 bg-gray-100 rounded-xl border border-gray-400 px-3 py-5"
+		<article-title
+			title="utilisateurs"
 		>
-			<h2 class="text-lg">
-				Ajouter des utilisateurs
-			</h2>
+			<template #right>
+				<sc-button
+					type="add"
+					xs
+					@click="createUsersShow=true"
+				>
+					ajouter des utilisateurs
+				</sc-button>
+			</template>
+		</article-title>
 
-			<div class="grid grid-cols-2 gap-3">
-				<textarea
-					v-model="usersEmails"
-					class="p-3"
-					rows="10"
-				/>
-				<div>
-					<div
-						v-for="email of usersEmailsList"
-						:key="email"
-					>
-						{{ email }}
-					</div>
-				</div>
-			</div>
-
-			<FormInput
-				v-model="form.password"
-				label="mot de passe"
-				name="password"
-			/>
-			<sc-button
-				type="primary"
-				@click="addUsers"
-			>
-				Ajouter {{ usersEmailsList.length }} utilisateur(s)
-			</sc-button>
-		</section>
-
-		<!-- gestion des équipes -->
-		<admin-team-manager
-			class="max-w-xl mx-auto"
-			:teams
-			@destroy-team="theTeams = theTeams.filter(team=>team.id!==$event)"
-			@store-team="theTeams.push($event)"
-		/>
 		<section>
 			<!-- titre -->
 			<div class="flex justify-between">
@@ -219,18 +183,20 @@ function updateUserTeam(userId: number, teamId: number) {
 					Utilisateurs
 				</h2>
 
-				<FormSwitch
-					v-model="deleteMode"
-					label="mode suppression"
-					name="deleteSwitch"
-					sm
-				/>
-				<FormSwitch
-					v-model="teamsMode"
-					label="assignation des équipes"
-					name="teamsSwitch"
-					sm
-				/>
+				<div class="flex flex-col gap-3 items-end">
+					<FormSwitch
+						v-model="deleteMode"
+						label="mode suppression"
+						name="deleteSwitch"
+						sm
+					/>
+					<FormSwitch
+						v-model="teamsMode"
+						label="assignation des équipes"
+						name="teamsSwitch"
+						sm
+					/>
+				</div>
 			</div>
 
 			<!-- choix des team -->
@@ -329,7 +295,7 @@ function updateUserTeam(userId: number, teamId: number) {
 							<sc-button
 								v-for="team of theTeams"
 								:key="`team-${user.id}-${team.id}`"
-								:active="!!(user.teams ?? []).find(search=>search.name===team.name)"
+								:active="!!(user.teams ?? []).find((search: UserTeamInterface)=>search.name===team.name)"
 								xs
 								@click="updateUserTeam(user.id, team.id)"
 							>
@@ -342,31 +308,59 @@ function updateUserTeam(userId: number, teamId: number) {
 		</section>
 	</main>
 
-	<dialog-modal v-model="editUserShow">
-		<template
-			#header
-		>
-			<div class="px-5 py-3 border-b flex justify-between">
+	<dialog-modal
+		v-model="createUsersShow"
+		title="importer des utilisateurs"
+		class="w-200 h-[95vh]"
+	>
+		<div class="h-full p-3 flex flex-col space-y-3">
+			<FormInput
+				v-model="form.password"
+				label="mot de passe"
+				name="password"
+			/>
+
+			<div class="flex-1 flex gap-3 h-full">
+				<FormTextarea
+					v-model="usersEmails"
+					fill
+					class="flex-1"
+					label="utilisateurs"
+				/>
+				<div class="w-75">
+					<h2 class="text-lg pb-3">
+						emails détectés
+					</h2>
+					<div
+						v-for="email of usersEmailsList"
+						:key="email"
+						class="font-code text-sm"
+					>
+						{{ email }}
+					</div>
+				</div>
+			</div>
+		</div>
+		<template #footer>
+			<div class="p-3 flex justify-center">
+				<sc-button
+					type="primary"
+					@click="addUsers"
+				>
+					Ajouter {{ usersEmailsList.length }} utilisateur(s)
+				</sc-button>
+			</div>
+		</template>
+	</dialog-modal>
+	<dialog-modal
+		v-model="editUserShow"
+		class="w-100 "
+	>
+		<template #header>
+			<div class="px-5 py-3 flex justify-between">
 				<h2 class="text-lg ">
 					Édition de l'utilisateur
 				</h2>
-
-				<div class="flex gap-3">
-					<sc-button
-						type="primary"
-						xs
-						@click="editUserStore"
-					>
-						enregistrer
-					</sc-button>
-					<sc-button
-						type="cancel"
-						xs
-						@click="editUserShow=false"
-					>
-						annuler
-					</sc-button>
-				</div>
 			</div>
 		</template>
 
@@ -380,5 +374,24 @@ function updateUserTeam(userId: number, teamId: number) {
 				label="nom"
 			/>
 		</div>
+
+		<template #footer>
+			<div class="flex gap-3 justify-end px-5 py-2">
+				<sc-button
+					type="primary"
+					xs
+					@click="editUserStore"
+				>
+					enregistrer
+				</sc-button>
+				<sc-button
+					type="cancel"
+					xs
+					@click="editUserShow=false"
+				>
+					annuler
+				</sc-button>
+			</div>
+		</template>
 	</dialog-modal>
 </template>

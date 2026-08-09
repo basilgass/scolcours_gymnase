@@ -9,8 +9,8 @@ import {router} from "@inertiajs/vue3"
 import {computed, ref} from "vue"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import FormSwitch from "@/Components/Form/FormSwitch.vue"
-import FormInput from "@/Components/Form/FormInput.vue"
 import LayoutAdmin from "@/Layouts/LayoutAdmin.vue"
+import AdminTeamManager from "@/Components/Admin/Parts/AdminTeamManager.vue"
 
 defineOptions({layout: LayoutAdmin})
 
@@ -50,6 +50,11 @@ const inactiveTeams = computed(() => {
 				/>
 			</template>
 		</article-title>
+
+		<admin-team-manager
+			class="max-w-xl mx-auto"
+			:teams
+		/>
 
 		<div>
 			<filtered-list

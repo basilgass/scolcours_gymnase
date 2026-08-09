@@ -23,7 +23,7 @@ const isAbsolute = computed(() => {
 })
 
 const props = withDefaults(defineProps<{
-	active?: boolean
+	active?: boolean | null
 	theme?: boolean | string | number
 	type?: ButtonAction | ButtonColor
 	icon?: boolean | string
@@ -41,7 +41,7 @@ const props = withDefaults(defineProps<{
 	append?: boolean,
 	prepend?: boolean
 }>(), {
-	active: false,
+	active: null,
 	theme: false,
 	type: undefined,
 	icon: false,
@@ -87,6 +87,9 @@ const resolveVariant = computed<ButtonVariant>(() => {
 	if (props.outline) return 'outline'
 	if (props.ghost) return 'ghost'
 
+	if (props.active === false) return 'outline'
+	if (props.active === true) return 'solid'
+
 	return props.variant
 })
 
@@ -102,6 +105,7 @@ const resolveColor = computed<Record<ButtonVariant, string> | null>(() => {
 		return buttonColorMap[resolveAction.value.color]
 	}
 
+	if (props.active !== null) return buttonColorMap['active']
 
 	return buttonColorMap["default"]
 })

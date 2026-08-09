@@ -43,7 +43,7 @@ class ChallengeApiController extends Controller
 
 		// Le block par défaut est créé par Challenge::booted() (événement created).
 
-		return redirect()->route('challenges.show', $challenge);
+		return redirect()->route('admin.challenges.edit', $challenge);
 	}
 
 	public function update(Challenge $challenge, Request $request)

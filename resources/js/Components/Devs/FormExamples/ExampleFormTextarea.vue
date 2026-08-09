@@ -9,6 +9,7 @@ const baseProps = inject<FormMakerBaseProps>('formBaseProps', {})
 const value = ref("Ceci est un exemple\nde textarea multi-lignes.")
 const catchTab = ref(true)
 const rows = ref(4)
+const fill = ref(false)
 </script>
 
 <template>
@@ -31,16 +32,30 @@ const rows = ref(4)
 						min="1"
 					>
 				</label>
+				<label class="flex items-center gap-2 text-xs cursor-pointer">
+					<input
+						v-model="fill"
+						type="checkbox"
+					>
+					fill
+				</label>
 			</div>
+			<p class="text-xs text-gray-500">
+				fill : le textarea occupe toute la hauteur disponible du parent flex (ignore rows).
+			</p>
 		</template>
 
 		<template #default="{ baseProps: bp }">
-			<FormTextarea
-				v-bind="bp"
-				v-model="value"
-				:catch-tab="catchTab"
-				:rows="rows"
-			/>
+			<div :class="fill ? 'h-48 flex' : ''">
+				<FormTextarea
+					v-bind="bp"
+					v-model="value"
+					:catch-tab="catchTab"
+					:rows="rows"
+					:fill="fill"
+					class="flex-1"
+				/>
+			</div>
 		</template>
 
 		<template #value>

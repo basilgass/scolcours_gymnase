@@ -6,6 +6,11 @@ Utilisé principalement pour l'édition des blocks
 
 import {useMagicKeys} from "@vueuse/core"
 
+withDefaults(defineProps<{
+	title?: string | null
+}>(), {
+	title: null
+})
 const showModal = defineModel<boolean>()
 
 const emits = defineEmits<{
@@ -40,24 +45,27 @@ function doCancel() {
 			@mousedown.self="doCancel"
 		>
 			<div
-				class="bg-content rounded-lg
-				overflow-auto overscroll-contain"
+				class="rounded-lg bg-content
+				overflow-auto overscroll-contain
+				flex flex-col divide-y max-w-[95vw] max-h-[95vh]"
 				v-bind="$attrs"
 			>
-				<div class="w-full h-full flex flex-col">
-					<div v-if="$slots.header">
-						<slot name="header" />
-					</div>
-					<div class="flex-1 overflow-y-auto">
-						<slot />
-					</div>
-					<div
-						v-if="$slots.footer"
-						class="mt-3"
-					>
-						<slot name="footer" />
-					</div>
+				<slot name="header">
+					<h2
+						v-if="title"
+						v-katex.auto="title"
+						class="text-xl lg:text-2xl p-3"
+					/>
+				</slot>
+
+				<div class="flex-1 overflow-y-auto min-h-0">
+					<slot />
 				</div>
+
+				<slot
+					v-if="$slots.footer"
+					name="footer"
+				/>
 			</div>
 		</div>
 	</Teleport>

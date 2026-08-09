@@ -8,6 +8,7 @@ defineOptions({inheritAttrs: false})
 
 interface Props extends FormMakerBaseProps {
 	catchTab?: boolean
+	fill?: boolean
 }
 
 const props = defineProps<Props>()
@@ -28,6 +29,7 @@ defineExpose<FormElementExpose>(expose)
 			v-model="textareaValue"
 			:disabled="props.disabled"
 			class="px-2 py-1 w-full focus:outline-hidden focus:ring-0"
+			:class="{'h-full resize-none': props.fill}"
 			v-bind="$attrs"
 		/>
 	</form-maker-wrapper>
