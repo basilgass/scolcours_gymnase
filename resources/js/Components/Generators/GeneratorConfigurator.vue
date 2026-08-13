@@ -116,7 +116,7 @@ onMounted(async () => {
 					v-else-if="value.format === 'boolean'"
 					:model-value="parameters[key] === 'true'"
 					:label="value.description"
-					@update:model-value="(v:string) => { parameters[key] = v ? 'true' : 'false'; emit('change') }"
+					@update:model-value="(v:boolean | number | undefined) => { parameters[key] = v ? 'true' : 'false'; emit('change') }"
 				/>
 			</div>
 		</div>
