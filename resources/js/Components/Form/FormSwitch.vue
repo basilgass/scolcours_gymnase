@@ -20,8 +20,8 @@ defineExpose<FormElementExpose>(expose)
 const enabledLabel = computed(() => props.label?.split(",")[0] ?? '')
 const disabledLabel = computed(() => props.label?.split(",")[1] ?? '')
 
-const enabledClass = computed(() => useAttrs()['enabled-class'] as string ?? 'bg-blue-700')
-const disabledClass = computed(() => useAttrs()['disabled-class'] as string ?? 'bg-red-700')
+const enabledClass = computed(() => useAttrs()['enabled-class'] as string ?? 'bg-blue-700 border-blue-700')
+const disabledClass = computed(() => useAttrs()['disabled-class'] as string ?? 'bg-red-700 border-red-700')
 
 const resolveValue = computed(() => props.invert ? !value.value : value.value)
 

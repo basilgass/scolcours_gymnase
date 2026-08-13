@@ -180,7 +180,8 @@
       "PowerShell(php artisan test --compact tests/Feature/Lessons/LessonApiTest.php 2>&1 | Select-Object -Last 25)",
       "PowerShell(npx vue-tsc --noEmit 2>&1 | Select-Object -Last 40)",
       "PowerShell(npx vitest run tests/ts/Composables/useGeneratorParameters.test.ts 2>&1 | Select-Object -Last 35)",
-      "PowerShell(npx vue-tsc --noEmit 2>&1 | Select-Object -Last 25)"
+      "PowerShell(npx vue-tsc --noEmit 2>&1 | Select-Object -Last 25)",
+      "Bash(grep -nA4 \"paths\" tsconfig.json)"
     ]
   },
   "enableAllProjectMcpServers": true,

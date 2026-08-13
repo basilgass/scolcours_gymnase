@@ -1,6 +1,9 @@
-# Idées et choses à faire
+# Todo
 
-Liste des petites choses à faire.
+- dans la page `/...theme...`, on charge les challenges. La requête charge également les générateurs, de manière
+  inutile.
+
+# Liste des petites choses à faire.
 
 ## Keyboards
 

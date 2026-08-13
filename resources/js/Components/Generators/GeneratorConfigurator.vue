@@ -74,7 +74,8 @@ onMounted(async () => {
 	>
 		<template #header>
 			<div>
-				<i class="bi bi-info-circle mr-3" />Le générateur <code>{{ theGenerator?.title }}</code> est paramétrable.
+				<i class="bi bi-info-circle mr-3" />Le générateur <code>{{ theGenerator?.title }}</code> est
+				paramétrable.
 			</div>
 		</template>
 		<div
@@ -107,7 +108,7 @@ onMounted(async () => {
 				<form-select
 					v-else-if="value.format === 'choices'"
 					v-model="parameters[key]"
-					:choices="(value.choices ?? '').split(',').map(s => s.trim()).filter(Boolean)"
+					:choices="(value.choices ?? '').split(',').map((s:string) => s.trim()).filter(Boolean)"
 					:label="value.description"
 					@update="emit('change')"
 				/>
@@ -115,7 +116,7 @@ onMounted(async () => {
 					v-else-if="value.format === 'boolean'"
 					:model-value="parameters[key] === 'true'"
 					:label="value.description"
-					@update:model-value="(v) => { parameters[key] = v ? 'true' : 'false'; emit('change') }"
+					@update:model-value="(v:string) => { parameters[key] = v ? 'true' : 'false'; emit('change') }"
 				/>
 			</div>
 		</div>
