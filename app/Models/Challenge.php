@@ -23,19 +23,24 @@ use Znck\Eloquent\Traits\BelongsToThrough;
  * @property string $title
  * @property int $active
  * @property string $type
- * @property int $lives
  * @property int $time_limit
+ * @property int $lives
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Collection<int, \App\Models\Block> $blocks
  * @property-read int|null $blocks_count
  * @property-read \App\Models\Chapter|null $chapter
+ * @property-read Collection<int, \App\Models\Lesson> $lessons
+ * @property-read int|null $lessons_count
  * @property-read Collection<int, \App\Models\ChallengeLevel> $levels
  * @property-read int|null $levels_count
- * @property-read mixed $running
+ * @property-read \App\Models\Score|null $scoreForAuth
  * @property-read Collection<int, \App\Models\Score> $scores
  * @property-read int|null $scores_count
  * @property-read mixed $url
+ * @property-read Collection<int, \App\Models\User> $users
+ * @property-read int|null $users_count
+ * @method static \Database\Factories\ChallengeFactory factory($count = null, $state = [])
  * @method static Builder<static>|Challenge newModelQuery()
  * @method static Builder<static>|Challenge newQuery()
  * @method static Builder<static>|Challenge query()

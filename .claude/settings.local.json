@@ -181,7 +181,12 @@
       "PowerShell(npx vue-tsc --noEmit 2>&1 | Select-Object -Last 40)",
       "PowerShell(npx vitest run tests/ts/Composables/useGeneratorParameters.test.ts 2>&1 | Select-Object -Last 35)",
       "PowerShell(npx vue-tsc --noEmit 2>&1 | Select-Object -Last 25)",
-      "Bash(grep -nA4 \"paths\" tsconfig.json)"
+      "Bash(grep -nA4 \"paths\" tsconfig.json)",
+      "PowerShell(php artisan make:migration link_team_calendars_to_school_timetable --no-interaction)",
+      "PowerShell(php artisan test --compact tests/Feature/Calendars/CalendarApiTest.php)",
+      "PowerShell(php artisan test --compact tests/Feature/Posts/PostWebTest.php tests/Feature/Formulas/FormulaWebTest.php tests/Feature/Chapters/ChapterWebTest.php tests/Feature/System/GenerateSitemapTest.php)",
+      "PowerShell(php artisan sitemap:generate)",
+      "PowerShell(php artisan test --compact)"
     ]
   },
   "enableAllProjectMcpServers": true,

@@ -27,27 +27,33 @@ use Znck\Eloquent\Traits\BelongsToThrough;
  * @property int $order
  * @property string|null $questionsGrid
  * @property int $active
+ * @property int|null $calculator
  * @property string $script
  * @property string|null $switch
+ * @property int $revise
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Collection<int, \App\Models\Block> $blocks
  * @property-read int|null $blocks_count
  * @property-read \App\Models\Chapter $chapter
+ * @property-read Collection<int, \App\Models\Lesson> $lessons
+ * @property-read int|null $lessons_count
  * @property-read Collection<int, \App\Models\Question> $questions
  * @property-read int|null $questions_count
- * @property-read Collection<int, \App\Models\Score> $scores
- * @property-read int|null $scores_count
  * @property-read mixed $url
+ * @property-read \App\Models\Theme|null $theme
+ * @method static \Database\Factories\PostFactory factory($count = null, $state = [])
  * @method static Builder<static>|Post newModelQuery()
  * @method static Builder<static>|Post newQuery()
  * @method static Builder<static>|Post query()
  * @method static Builder<static>|Post whereActive($value)
+ * @method static Builder<static>|Post whereCalculator($value)
  * @method static Builder<static>|Post whereChapterId($value)
  * @method static Builder<static>|Post whereCreatedAt($value)
  * @method static Builder<static>|Post whereId($value)
  * @method static Builder<static>|Post whereOrder($value)
  * @method static Builder<static>|Post whereQuestionsGrid($value)
+ * @method static Builder<static>|Post whereRevise($value)
  * @method static Builder<static>|Post whereScript($value)
  * @method static Builder<static>|Post whereSwitch($value)
  * @method static Builder<static>|Post whereTitle($value)

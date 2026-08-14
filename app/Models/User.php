@@ -22,19 +22,18 @@ use Laravel\Sanctum\PersonalAccessToken;
  * @property string $name
  * @property string $firstname
  * @property string $email
+ * @property string|null $pseudo
+ * @property bool $show_real_name
  * @property string|null $role
  * @property Carbon|null $email_verified_at
  * @property string $password
  * @property string|null $remember_token
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property-read mixed $admin
  * @property-read Collection<int, \App\Models\Card> $cards
  * @property-read int|null $cards_count
- * @property-read Collection<int, \App\Models\Chapter> $chapters
- * @property-read int|null $chapters_count
- * @property-read Collection<int, \App\Models\UserDeck> $decks
- * @property-read int|null $decks_count
- * @property-read mixed $admin
+ * @property-read mixed $courses
  * @property-read DatabaseNotificationCollection<int, DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
  * @property-read Collection<int, \App\Models\Question> $questions
@@ -58,8 +57,10 @@ use Laravel\Sanctum\PersonalAccessToken;
  * @method static Builder<static>|User whereId($value)
  * @method static Builder<static>|User whereName($value)
  * @method static Builder<static>|User wherePassword($value)
+ * @method static Builder<static>|User wherePseudo($value)
  * @method static Builder<static>|User whereRememberToken($value)
  * @method static Builder<static>|User whereRole($value)
+ * @method static Builder<static>|User whereShowRealName($value)
  * @method static Builder<static>|User whereUpdatedAt($value)
  * @mixin Eloquent
  */

@@ -13,24 +13,23 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  * @property int $id
  * @property int|null $chapter_id
  * @property string $title
- * @property string $body
- * @property string $outro
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Block> $blocks
+ * @property-read int|null $blocks_count
  * @property-read \App\Models\Chapter|null $chapter
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Question> $questions
  * @property-read int|null $questions_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\QuizzSession> $sessions
  * @property-read int|null $sessions_count
  * @property-read \App\Models\Theme|null $theme
+ * @method static \Database\Factories\QuizzFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quizz newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quizz newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quizz query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Quizz whereBody($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quizz whereChapterId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quizz whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quizz whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Quizz whereOutro($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quizz whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quizz whereUpdatedAt($value)
  * @mixin \Eloquent

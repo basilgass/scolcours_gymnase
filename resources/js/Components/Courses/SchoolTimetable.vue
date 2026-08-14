@@ -30,28 +30,26 @@ onMounted(() => {
 				})
 		})
 		.catch((res: AxiosErrorMessage) => {
-			console.log(res)
 			console.warn(res.response.data.message)
 		})
 })
 
 const itemsInTimetable = computed(() => {
-	const arr: Record<number, Record<string, string>> = {}
+	const arr: Record<number, Record<number, string>> = {}
 	for (let day = 1; day <= 5; day++) {
 		arr[day] = {}
 		timetable.value.forEach(item => {
-			arr[day][item.start] = getItem(day, item.start)
+			arr[day][item.id] = getItem(day, item.id)
 		})
 	}
-
 	return arr
 })
 
-function getItem(day: number, start_time: string): string {
+function getItem(day: number, timetableId: number): string {
 	if (!theItems.value || theItems.value.length === 0) return ""
 
 	const calendar = theItems.value.find(
-		item => item.day === day && item.time === start_time
+		item => item.day === day && item.school_timetable_id === timetableId
 	)
 
 	if (!calendar) return ""
@@ -61,6 +59,25 @@ function getItem(day: number, start_time: string): string {
 
 const isDragging = ref(false)
 const hoveredCells = ref<Record<string, boolean>>({})
+const isOverTrash = ref(false)
+
+interface DragSource {
+	day: number | null
+	school_timetable_id: number | null
+}
+
+function parseDragSource(e: DragEvent): DragSource | null {
+	if (!e.dataTransfer) return null
+	try {
+		return JSON.parse(e.dataTransfer.getData("application/json")) as DragSource
+	} catch {
+		return null
+	}
+}
+
+function findCalendarItem(source: DragSource): TeamCalendarInterface | undefined {
+	return theItems.value.find(item => item.day === source.day && item.school_timetable_id === source.school_timetable_id)
+}
 
 function cellKey(day: number, item: timetableInterface) {
 	return `${day}-${item.start}-${item.period}`
@@ -73,9 +90,9 @@ function isHovered(day: number, item: timetableInterface) {
 function onDragStart(e: DragEvent, sourceDay: number | null, item: timetableInterface | null) {
 	if (!e.dataTransfer) return
 
-	const payload = (sourceDay === null || item === null)
-		? {day: null, start: null, period: null}
-		: {day: sourceDay, start: item.start, period: item.period}
+	const payload: DragSource = (sourceDay === null || item === null)
+		? {day: null, school_timetable_id: null}
+		: {day: sourceDay, school_timetable_id: item.id}
 
 	e.dataTransfer.setData("application/json", JSON.stringify(payload))
 	e.dataTransfer.effectAllowed = "move"
@@ -95,6 +112,36 @@ function onDragLeave(e: DragEvent, day: number, item: timetableInterface) {
 function onDragEnd() {
 	isDragging.value = false
 	hoveredCells.value = {}
+	isOverTrash.value = false
+}
+
+function onTrashDragEnter(e: DragEvent) {
+	if (e.dataTransfer) e.dataTransfer.dropEffect = "move"
+	isOverTrash.value = true
+}
+
+function onTrashDragLeave() {
+	isOverTrash.value = false
+}
+
+function onTrashDrop(e: DragEvent) {
+	e.preventDefault()
+	isOverTrash.value = false
+
+	const source = parseDragSource(e)
+	// Un nouvel item (source.day === null) n'est pas encore en DB : rien à supprimer
+	if (!source || source.day === null) return
+
+	const item = findCalendarItem(source)
+	if (!item) return
+
+	axios.delete(route('api.admin.calendars.destroy', item.id))
+		.then(() => {
+			theItems.value = theItems.value.filter(current => current.id !== item.id)
+		})
+		.catch((res: AxiosErrorMessage) => {
+			console.warn(res.response.data.message)
+		})
 }
 
 function onDragOver(e: DragEvent) {
@@ -104,24 +151,15 @@ function onDragOver(e: DragEvent) {
 
 function onDrop(e: DragEvent, targetDay: number, targetItem: timetableInterface) {
 	e.preventDefault()
-	if (!e.dataTransfer) return
 
-	const dataJson = e.dataTransfer.getData("application/json")
-	let source: { day: number; start: string; period: number } | null = null
-
-	try {
-		source = JSON.parse(dataJson)
-	} catch {
-		source = null
-	}
-
+	const source = parseDragSource(e)
 	if (!source) return
 
 	if (source.day === null) {
 		// Nouvel élément
 		axios.post(route('api.admin.teams.calendars.store', {team: props.team.id}), {
 			day: targetDay,
-			time: targetItem.start
+			school_timetable_id: targetItem.id
 		})
 			.then((res: AxiosResponseModel<TeamCalendarInterface>) => {
 				theItems.value.push(res.data)
@@ -131,24 +169,20 @@ function onDrop(e: DragEvent, targetDay: number, targetItem: timetableInterface)
 			})
 		return
 	}
-	const item = theItems.value.find(item => item.day === source.day && item.time === source.start)
+
+	const item = findCalendarItem(source)
 	if (!item) return
 
 	axios.patch(route('api.admin.calendars.update', {id: item.id}), {
 		day: targetDay,
-		time: targetItem.start
+		school_timetable_id: targetItem.id
 	})
-		.then((res) => {
-			theItems.value = theItems.value.map(item => {
-				if (item.day === source.day && item.time === source.start) {
-					item.day = targetDay
-					item.time = targetItem.start
-				}
-
-				return item
-			})
+		.then((res: AxiosResponseModel<TeamCalendarInterface>) => {
+			theItems.value = theItems.value.map(current => current.id === item.id ? res.data : current)
 		})
-
+		.catch((res: AxiosErrorMessage) => {
+			console.warn(res.response.data.message)
+		})
 }
 
 </script>
@@ -199,26 +233,26 @@ function onDrop(e: DragEvent, targetDay: number, targetItem: timetableInterface)
 							'bg-blue-100 transition-colors duration-150': isHovered(day, item)
 						}
 					]"
-					@dragenter="event => onDragEnter(event, day, item)"
-					@dragleave="event => onDragLeave(event, day, item)"
-					@drop="event => onDrop(event, day, item)"
+					@dragenter="(event: DragEvent) => onDragEnter(event, day, item)"
+					@dragleave="(event: DragEvent) => onDragLeave(event, day, item)"
+					@drop="(event: DragEvent) => onDrop(event, day, item)"
 					@dragover.prevent="onDragOver"
 				>
 					<div
-						v-show="itemsInTimetable[day][item.start]"
-						class="text-center bg-content border rounded-full item-draggable"
+						v-show="itemsInTimetable[day][item.id]"
+						class="text-center bg-content border rounded-full item-draggable cursor-pointer"
 						draggable="true"
 						@dragend="onDragEnd"
-						@dragstart="event => onDragStart(event, day, item)"
+						@dragstart="(event: DragEvent) => onDragStart(event, day, item)"
 					>
-						{{ itemsInTimetable[day][item.start] }}
+						{{ itemsInTimetable[day][item.id] }}
 					</div>
 				</td>
 			</tr>
 		</tbody>
 	</table>
 
-	<div class="mt-3">
+	<div class="mt-3 flex justify-between">
 		<sc-button
 			id="new-calendar-item"
 			class="item-draggable"
@@ -231,6 +265,19 @@ function onDrop(e: DragEvent, targetDay: number, targetItem: timetableInterface)
 		>
 			ajouter une période
 		</sc-button>
+
+		<div
+			class="border-2 border-red-500 border-dashed w-32 rounded text-center text-red-500 transition-colors duration-150"
+			:class="{ 'bg-red-100': isOverTrash }"
+			@dragenter="onTrashDragEnter"
+			@dragleave="onTrashDragLeave"
+			@dragover.prevent="onDragOver"
+			@drop="onTrashDrop"
+		>
+			<span class="pointer-events-none">
+				<i class="bi bi-trash mr-2" /> supprimer
+			</span>
+		</div>
 	</div>
 </template>
 

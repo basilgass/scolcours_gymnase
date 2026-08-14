@@ -22,6 +22,8 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $blocks_count
  * @property-read Collection<int, \App\Models\Chapter> $chapters
  * @property-read int|null $chapters_count
+ * @property-read mixed $url
+ * @method static \Database\Factories\FormulaFactory factory($count = null, $state = [])
  * @method static Builder<static>|Formula newModelQuery()
  * @method static Builder<static>|Formula newQuery()
  * @method static Builder<static>|Formula query()

@@ -46,7 +46,7 @@ Disallow: /latex/
 # /                       page d'accueil
 # /{theme}                index par thème
 # /{theme}/{chapter}      page de chapitre
-# /formulaire/...         formulaire / formules
+# /formulaire             index des formules (les /formulaire/{id} redirigent en 301)
 # /tools/...              outils publics
 # /decks/...              decks publics
 # /challenges/...         challenges

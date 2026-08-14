@@ -27,25 +27,28 @@ class TeamCalendarApiController extends Controller
 	public function store(Request $request, Team $team)
 	{
 		$validated = $request->validate([
-			"day"  => ['required', 'integer', 'between:1,5'],
-			"time" => ['required', 'date_format:H:i:s']
+			"day"                 => ['required', 'integer', 'between:1,5'],
+			"school_timetable_id" => ['required', 'integer', 'exists:school_timetable,id']
 		]);
 
-		return TeamCalendarResource::make($team->calendars()->create($validated));
+		$cal = $team->calendars()->create($validated);
+		$cal->load('schoolTimetable');
+
+		return TeamCalendarResource::make($cal);
 	}
 
 	public function update(Request $request, Team $team, TeamCalendar $calendar)
 	{
 		$validated = $request->validate([
-			"day"  => ['required', 'integer', 'between:1,5'],
-			"time" => ['required', 'date_format:H:i:s']
+			"day"                 => ['required', 'integer', 'between:1,5'],
+			"school_timetable_id" => ['required', 'integer', 'exists:school_timetable,id']
 		]);
 
 		$calendar->day = $validated["day"];
-		$calendar->time = $validated["time"];
+		$calendar->school_timetable_id = $validated["school_timetable_id"];
 		$calendar->save();
 
-		$calendar->refresh();
+		$calendar->load('schoolTimetable');
 
 		return TeamCalendarResource::make($calendar);
 	}

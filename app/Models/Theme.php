@@ -25,12 +25,11 @@ use Illuminate\Support\Facades\Cache;
  * @property Carbon|null $updated_at
  * @property-read Collection<int, \App\Models\Chapter> $chapters
  * @property-read int|null $chapters_count
- * @property-read Collection<int, \App\Models\Formula> $formulas
- * @property-read int|null $formulas_count
  * @property-read Collection<int, \App\Models\Generator> $generators
  * @property-read int|null $generators_count
  * @property-read Collection<int, \App\Models\Widget> $widgets
  * @property-read int|null $widgets_count
+ * @method static \Database\Factories\ThemeFactory factory($count = null, $state = [])
  * @method static Builder<static>|Theme newModelQuery()
  * @method static Builder<static>|Theme newQuery()
  * @method static Builder<static>|Theme query()

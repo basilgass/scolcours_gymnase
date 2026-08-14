@@ -15,17 +15,21 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
  * @property string $slug
  * @property string $title
  * @property string $body
- * @property int $user_id
- * @property int $randomOrder
+ * @property bool $randomOrder
+ * @property bool $auto_control
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Generator> $generators
  * @property-read int|null $generators_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Question> $questions
  * @property-read int|null $questions_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Team> $teams
+ * @property-read int|null $teams_count
+ * @method static \Database\Factories\EvaluationFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Evaluation newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Evaluation newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Evaluation query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Evaluation whereAutoControl($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Evaluation whereBody($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Evaluation whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Evaluation whereId($value)
@@ -33,7 +37,6 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Evaluation whereSlug($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Evaluation whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Evaluation whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Evaluation whereUserId($value)
  * @mixin \Eloquent
  */
 class Evaluation extends Model

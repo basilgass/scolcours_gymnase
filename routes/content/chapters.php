@@ -13,10 +13,11 @@ Route::middleware('web')
 
 	     // ROUTE: Rendre les choses plus logique (dans le Controller, et déplacer le "slide" dans une autre fonction.
 	     Route::get('chapters/{chapter}', function (Chapter $chapter) {
-		     return redirect()->route('themes.chapters.show', [
+		     // 301 : le raccourci /chapters/{id} pointe définitivement vers l'URL canonique.
+		     return redirect(route('themes.chapters.show', [
 			     "theme"   => $chapter->theme,
 			     "chapter" => $chapter
-		     ]);
+		     ]), 301);
 	     })->name('chapters.show');
 
 	     // Public routes

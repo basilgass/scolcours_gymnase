@@ -13,16 +13,18 @@ use Illuminate\Support\Str;
  * @property int $id
  * @property int $quizz_id
  * @property string $shortcode
- * @property int $enable
+ * @property bool $enable
  * @property int $index
+ * @property bool|null $show_answer
+ * @property string|null $projection_template
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read mixed $question
  * @property-read string $status
- * @property-read mixed $total
  * @property-read \App\Models\Quizz $quizz
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $users
  * @property-read int|null $users_count
+ * @method static \Database\Factories\QuizzSessionFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|QuizzSession newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|QuizzSession newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|QuizzSession query()
@@ -30,8 +32,10 @@ use Illuminate\Support\Str;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|QuizzSession whereEnable($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|QuizzSession whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|QuizzSession whereIndex($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|QuizzSession whereProjectionTemplate($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|QuizzSession whereQuizzId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|QuizzSession whereShortcode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|QuizzSession whereShowAnswer($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|QuizzSession whereUpdatedAt($value)
  * @mixin \Eloquent
  */

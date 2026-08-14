@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\URL;
  * @property bool|null $merge
  * @property string|null $title
  * @property string|null $body
- * @property string $type
+ * @property string|null $type
  * @property string|null $template
  * @property string|null $illustrationsGrid
  * @property string|null $script
@@ -37,6 +37,7 @@ use Illuminate\Support\Facades\URL;
  * @property-read Collection<int, \App\Models\Illustration> $illustrations
  * @property-read int|null $illustrations_count
  * @property-read mixed $url
+ * @method static \Database\Factories\BlockFactory factory($count = null, $state = [])
  * @method static Builder<static>|Block newModelQuery()
  * @method static Builder<static>|Block newQuery()
  * @method static Builder<static>|Block query()

@@ -18,15 +18,27 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property string $slug
  * @property string $title
+ * @property bool $active
  * @property int|null $chapter_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection<int, Card> $cards
+ * @property-read Collection<int, \App\Models\Card> $cards
  * @property-read int|null $cards_count
- * @property-read Chapter|null $chapter
+ * @property-read \App\Models\Chapter|null $chapter
+ * @property-read Collection<int, \App\Models\Lesson> $lessons
+ * @property-read int|null $lessons_count
+ * @property-read \App\Models\Score|null $scoreForAuth
+ * @property-read Collection<int, \App\Models\Score> $scores
+ * @property-read int|null $scores_count
+ * @property-read Collection<int, Deck> $usedDecks
+ * @property-read int|null $used_decks_count
+ * @property-read Collection<int, \App\Models\User> $users
+ * @property-read int|null $users_count
+ * @method static \Database\Factories\DeckFactory factory($count = null, $state = [])
  * @method static Builder<static>|Deck newModelQuery()
  * @method static Builder<static>|Deck newQuery()
  * @method static Builder<static>|Deck query()
+ * @method static Builder<static>|Deck whereActive($value)
  * @method static Builder<static>|Deck whereChapterId($value)
  * @method static Builder<static>|Deck whereCreatedAt($value)
  * @method static Builder<static>|Deck whereId($value)

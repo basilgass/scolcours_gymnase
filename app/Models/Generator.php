@@ -20,13 +20,22 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $template
  * @property string $keyboard
  * @property string $code
+ * @property array<array-key, mixed>|null $parameters_schema
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ChallengeLevel> $challengeLevels
  * @property-read int|null $challenge_levels_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Evaluation> $evaluations
  * @property-read int|null $evaluations_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Lesson> $lessons
+ * @property-read int|null $lessons_count
+ * @property-read \App\Models\Score|null $scoreForAuth
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Score> $scores
+ * @property-read int|null $scores_count
  * @property-read \App\Models\Theme $theme
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $users
+ * @property-read int|null $users_count
+ * @method static \Database\Factories\GeneratorFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Generator newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Generator newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Generator query()
@@ -35,6 +44,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Generator whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Generator whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Generator whereKeyboard($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Generator whereParametersSchema($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Generator whereSlug($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Generator whereTemplate($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Generator whereThemeId($value)

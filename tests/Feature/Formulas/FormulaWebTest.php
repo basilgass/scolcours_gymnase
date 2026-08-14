@@ -19,11 +19,27 @@ class FormulaWebTest extends TestCase
                 ->component('Formulas/FormulaIndex'));
     }
 
-    public function test_show_redirects_to_the_chapter(): void
+    public function test_show_redirects_permanently_to_the_canonical_chapter_url(): void
     {
         $formula = Formula::factory()->create();
+        $chapter = $formula->chapters()->first();
+
+        // Redirection directe (301) vers l'URL canonique du chapitre, sans
+        // passer par le raccourci chapters.show (évite la double redirection).
+        $this->get(route('formulas.show', $formula))
+            ->assertStatus(301)
+            ->assertRedirect(route('themes.chapters.show', [
+                $chapter->theme,
+                $chapter,
+            ]));
+    }
+
+    public function test_show_falls_back_to_the_index_for_an_orphan_formula(): void
+    {
+        $formula = Formula::factory()->create();
+        $formula->chapters()->detach();
 
         $this->get(route('formulas.show', $formula))
-            ->assertRedirect(route('chapters.show', $formula->chapters()->first()));
+            ->assertRedirect(route('formulas.index'));
     }
 }

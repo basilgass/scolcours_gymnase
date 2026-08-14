@@ -39,11 +39,12 @@ class PostController extends Controller
 
 
 		// Find the chapter for this post and redirect to it !
+		// 301 (permanent) : la version canonique du post est la page du chapitre.
 		return redirect(route('themes.chapters.posts.show', [
 			$post->chapter->theme,
 			$post->chapter,
 			$post->order
-		]));
+		]), 301);
 	}
 
 	public function edit(Post $post)
@@ -65,7 +66,7 @@ class PostController extends Controller
 			$post->order,
 			'block',
 			$block->id
-		]));
+		]), 301);
 	}
 
 }

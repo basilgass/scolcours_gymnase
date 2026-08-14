@@ -17,9 +17,20 @@ class FormulaController extends Controller
 
 	public function show(Formula $formula)
 	{
-		return redirect()->route('chapters.show', [
-			"chapter" => $formula->chapters()->first()
-		]);
+		$chapter = $formula->chapters()->first();
+
+		// Formule orpheline (rattachée à aucun chapitre) : repli sur la liste.
+		if ($chapter === null) {
+			return redirect(route('formulas.index'));
+		}
+
+		// 301 (permanent) : la formule n'a pas de page propre, sa version
+		// canonique est la page du chapitre. Redirection directe (pas via
+		// chapters.show) pour éviter une double redirection.
+		return redirect(route('themes.chapters.show', [
+			"theme"   => $chapter->theme,
+			"chapter" => $chapter,
+		]), 301);
 	}
 
 }

@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Illustration> $illustration
  * @property-read int|null $illustration_count
  * @property-read \App\Models\Theme|null $theme
+ * @method static \Database\Factories\WidgetFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Widget newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Widget newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Widget query()

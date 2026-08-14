@@ -62,6 +62,16 @@ class ChapterWebTest extends TestCase
                 ->where('chapter.id', $chapter->id));
     }
 
+    public function test_chapters_shortcut_redirects_permanently_to_the_canonical_url(): void
+    {
+        $chapter = Chapter::factory()->create();
+
+        // /chapters/{id} est un raccourci : 301 vers l'URL canonique {theme}/{chapter}.
+        $this->get(route('chapters.show', $chapter))
+            ->assertStatus(301)
+            ->assertRedirect(route('themes.chapters.show', [$chapter->theme, $chapter]));
+    }
+
     public function test_slide_renders_a_post_by_order_publicly(): void
     {
         $chapter = Chapter::factory()->create();

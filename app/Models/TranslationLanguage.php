@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 /**
- * 
- *
  * @property int $id
  * @property string $slug
  * @property string $name

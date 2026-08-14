@@ -26,7 +26,8 @@ export interface UserInterface {
 export interface TeamCalendarInterface {
 	id: number,
 	day: number, // 0, 1, 2, 3, 4, 5, 6, 7
-	time: string // hh:mm:ss
+	school_timetable_id: number, // créneau lié (période)
+	time: string // hh:mm — dérivé du créneau lié, conservé pour l'affichage
 }
 
 export interface TeamInterface {

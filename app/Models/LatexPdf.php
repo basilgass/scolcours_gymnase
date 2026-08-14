@@ -17,6 +17,7 @@ use Illuminate\Support\Carbon;
  * @property string $url
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @method static \Database\Factories\LatexPdfFactory factory($count = null, $state = [])
  * @method static Builder<static>|LatexPdf newModelQuery()
  * @method static Builder<static>|LatexPdf newQuery()
  * @method static Builder<static>|LatexPdf query()

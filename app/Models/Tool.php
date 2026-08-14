@@ -19,6 +19,7 @@ use Illuminate\Support\Carbon;
  * @property int|null $theme_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @method static \Database\Factories\ToolFactory factory($count = null, $state = [])
  * @method static Builder<static>|Tool newModelQuery()
  * @method static Builder<static>|Tool newQuery()
  * @method static Builder<static>|Tool query()

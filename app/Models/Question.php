@@ -20,10 +20,10 @@ use Illuminate\Support\Facades\Cache;
  *
  * @property int $id
  * @property int $order
- * @property string|null $displayif
+ * @property string|null $display_if
  * @property string|null $css
  * @property string|null $answer
- * @property string|null $checker
+ * @property string|null $validation
  * @property string|null $keyboard
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -32,22 +32,27 @@ use Illuminate\Support\Facades\Cache;
  * @property-read Collection<int, \App\Models\Block> $blocks
  * @property-read int|null $blocks_count
  * @property-read Model|\Eloquent $questionable
+ * @property-read \App\Models\Score|null $scoreForAuth
+ * @property-read Collection<int, \App\Models\Score> $scores
+ * @property-read int|null $scores_count
+ * @property-read mixed $url
  * @property-read Collection<int, \App\Models\User> $users
  * @property-read int|null $users_count
+ * @method static \Database\Factories\QuestionFactory factory($count = null, $state = [])
  * @method static Builder<static>|Question newModelQuery()
  * @method static Builder<static>|Question newQuery()
  * @method static Builder<static>|Question query()
  * @method static Builder<static>|Question whereAnswer($value)
- * @method static Builder<static>|Question whereChecker($value)
  * @method static Builder<static>|Question whereCreatedAt($value)
  * @method static Builder<static>|Question whereCss($value)
- * @method static Builder<static>|Question whereDisplayif($value)
+ * @method static Builder<static>|Question whereDisplayIf($value)
  * @method static Builder<static>|Question whereId($value)
  * @method static Builder<static>|Question whereKeyboard($value)
  * @method static Builder<static>|Question whereOrder($value)
  * @method static Builder<static>|Question whereQuestionableId($value)
  * @method static Builder<static>|Question whereQuestionableType($value)
  * @method static Builder<static>|Question whereUpdatedAt($value)
+ * @method static Builder<static>|Question whereValidation($value)
  * @mixin Eloquent
  */
 class Question extends Model

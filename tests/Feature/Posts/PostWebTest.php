@@ -12,11 +12,12 @@ class PostWebTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_show_redirects_to_the_chapter_post_route(): void
+    public function test_show_redirects_permanently_to_the_chapter_post_route(): void
     {
         $post = Post::factory()->create(['order' => 3]);
 
         $this->get(route('posts.show', $post))
+            ->assertStatus(301)
             ->assertRedirect(route('themes.chapters.posts.show', [
                 $post->chapter->theme,
                 $post->chapter,
@@ -24,12 +25,13 @@ class PostWebTest extends TestCase
             ]));
     }
 
-    public function test_anchor_redirects_to_the_block_anchor_route(): void
+    public function test_anchor_redirects_permanently_to_the_block_anchor_route(): void
     {
         $post = Post::factory()->create(['order' => 2]);
         $block = Block::factory()->forBlockable($post)->create();
 
         $this->get(route('posts.blocks.anchor', [$post, $block]))
+            ->assertStatus(301)
             ->assertRedirect(route('themes.chapters.posts.anchor', [
                 $post->chapter->theme,
                 $post->chapter,

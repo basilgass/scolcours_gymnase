@@ -14,7 +14,7 @@ import axios from "axios"
 const props = withDefaults(defineProps<{
 	// Générateur fourni directement (avec son parameters_schema)…
 	generator?: GeneratorInterface
-	// …ou simplement son id : le schéma est alors résolu via l'API (contexte admin).
+	// ou simplement son id : le schéma est alors résolu via l'API (contexte admin).
 	generatorId?: number
 	readQuery?: boolean
 	showReload?: boolean

@@ -49,7 +49,7 @@ Route::middleware('api')
 	          ->prefix('admin')
 	          ->group(function () {
 		          Route::apiResource('teams.calendars', TeamCalendarApiController::class)
-		               ->only(['store', 'update'])
+		               ->only(['store', 'update', 'destroy'])
 		               ->shallow();
 
 	          });

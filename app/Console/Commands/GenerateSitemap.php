@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use App\Models\Challenge;
 use App\Models\Chapter;
 use App\Models\Deck;
-use App\Models\Formula;
 use App\Models\Generator;
 use App\Models\Theme;
 use App\Models\Tool;
@@ -65,14 +64,9 @@ class GenerateSitemap extends Command
                 ));
             });
 
-        Formula::whereHas('chapters', fn ($q) => $q->where('active', true))
-            ->get()
-            ->each(fn (Formula $formula) => $sitemap->add(
-                Url::create(route('formulas.show', $formula->id))
-                    ->setLastModificationDate($formula->updated_at)
-                    ->setPriority(0.6)
-                    ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
-            ));
+        // Les formules n'ont pas de page propre : /formulaire/{id} redirige (301)
+        // vers son chapitre. On ne liste donc que l'index /formulaire (via
+        // $indexRoutes), jamais les URLs individuelles qui redirigeraient.
 
         Tool::all()->each(fn (Tool $tool) => $sitemap->add(
             Url::create(route('tools.show', $tool->slug))

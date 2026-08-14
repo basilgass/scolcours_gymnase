@@ -30,7 +30,6 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $blocks_count
  * @property-read Collection<int, \App\Models\Challenge> $challenges
  * @property-read int|null $challenges_count
- * @property-read mixed $component
  * @property-read Collection<int, \App\Models\Deck> $decks
  * @property-read int|null $decks_count
  * @property-read Collection<int, \App\Models\Formula> $formulas
@@ -45,8 +44,6 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $relations_count
  * @property-read \App\Models\Theme $theme
  * @property-read mixed $url
- * @property-read Collection<int, \App\Models\User> $users
- * @property-read int|null $users_count
  * @method static \Database\Factories\ChapterFactory factory($count = null, $state = [])
  * @method static Builder<static>|Chapter newModelQuery()
  * @method static Builder<static>|Chapter newQuery()

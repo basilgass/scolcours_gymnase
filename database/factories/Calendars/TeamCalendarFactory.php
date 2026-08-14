@@ -3,6 +3,7 @@
 namespace Database\Factories\Calendars;
 
 use App\Models\Calendars\TeamCalendar;
+use App\Models\SchoolTimetable;
 use App\Models\Team;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -13,9 +14,9 @@ class TeamCalendarFactory extends Factory
     public function definition(): array
     {
         return [
-            'team_id' => Team::factory(),
-            'day'     => $this->faker->numberBetween(1, 5),
-            'time'    => $this->faker->time('H:i:s'),
+            'team_id'             => Team::factory(),
+            'day'                 => $this->faker->numberBetween(1, 5),
+            'school_timetable_id' => SchoolTimetable::factory(),
         ];
     }
 

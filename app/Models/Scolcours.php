@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $title
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Database\Factories\ScolcoursFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Scolcours newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Scolcours newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Scolcours query()
