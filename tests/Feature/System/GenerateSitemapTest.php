@@ -43,4 +43,24 @@ class GenerateSitemapTest extends TestCase
             $xml
         );
     }
+
+    public function test_generated_sitemap_matches_the_entries_provider(): void
+    {
+        Theme::factory()->create(['enabled' => true]);
+        \App\Models\Tool::factory()->create();
+
+        $this->artisan('sitemap:generate')->assertSuccessful();
+
+        $xml = file_get_contents(public_path('sitemap.xml'));
+        preg_match_all('/<loc>([^<]+)<\/loc>/', $xml, $matches);
+        $locs = collect($matches[1])->sort()->values();
+
+        // URLs distinctes : le thème seedé de slug "tools" partage l'URL /tools
+        // avec la route d'index tools.index. Deux ressources, une seule URL —
+        // spatie dédoublonne à l'écriture, la parité porte donc sur le set distinct.
+        $expected = app(\App\Services\Seo\SitemapEntries::class)->all()
+            ->pluck('url')->unique()->sort()->values();
+
+        $this->assertEquals($expected->all(), $locs->all());
+    }
 }

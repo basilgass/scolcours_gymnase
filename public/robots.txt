@@ -36,9 +36,13 @@ Disallow: /qr
 Disallow: /search/
 Disallow: /download/
 
-# --- Outils internes / debug ---
+# --- Alias courts de redirection (à bloquer exactement, pas en préfixe) ---
+# /b -> /bareme, /g -> /grapheur. Le $ ancre la fin d'URL :
+# sans lui, "/g" bloquerait /geometrie, /generators, /grapheur, etc.
 Disallow: /b$
-Disallow: /g
+Disallow: /g$
+
+# --- Outils internes / debug ---
 Disallow: /fullscreen
 Disallow: /latex/
 

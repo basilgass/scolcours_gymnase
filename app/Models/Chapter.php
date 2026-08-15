@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasMeta;
 use App\Traits\HasUrlTrait;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
@@ -61,6 +62,7 @@ use Illuminate\Support\Carbon;
 class Chapter extends Model
 {
 	use HasFactory;
+	use HasMeta;
 	use HasUrlTrait;
 
 	protected $guarded = [];

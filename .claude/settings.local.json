@@ -186,7 +186,17 @@
       "PowerShell(php artisan test --compact tests/Feature/Calendars/CalendarApiTest.php)",
       "PowerShell(php artisan test --compact tests/Feature/Posts/PostWebTest.php tests/Feature/Formulas/FormulaWebTest.php tests/Feature/Chapters/ChapterWebTest.php tests/Feature/System/GenerateSitemapTest.php)",
       "PowerShell(php artisan sitemap:generate)",
-      "PowerShell(php artisan test --compact)"
+      "PowerShell(php artisan test --compact)",
+      "PowerShell(\"--- APP_URL local ---\"; \\(Get-Content .env | Select-String '^APP_URL'\\); \"--- config app.url ---\"; php artisan config:show app.url)",
+      "PowerShell(git checkout *)",
+      "PowerShell(php artisan test --compact --filter=HasMetaTest)",
+      "PowerShell(php artisan test --compact --filter=DescriptionCleanerTest)",
+      "PowerShell(php artisan config:show seo.suffix)",
+      "PowerShell(php artisan test --compact --filter=SitemapEntriesTest)",
+      "PowerShell(php artisan test --compact --filter=GenerateSitemapTest)",
+      "PowerShell(php artisan test --compact --filter=MetaResolverTest)",
+      "PowerShell(php artisan test --compact --filter=SeoAdminTest)",
+      "mcp__laravel-boost__get-absolute-url"
     ]
   },
   "enableAllProjectMcpServers": true,

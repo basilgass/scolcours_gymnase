@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DevController;
+use App\Http\Controllers\SeoAdminController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -84,6 +85,13 @@ Route::middleware('admin')
 	          ->as('illustrations.')
 	          ->group(function () {
 		          Route::get('/', [AdminController::class, "illustrations"])
+		               ->name('index');
+	          });
+
+	     Route::prefix('seo')
+	          ->as('seo.')
+	          ->group(function () {
+		          Route::get('/', [SeoAdminController::class, 'index'])
 		               ->name('index');
 	          });
 

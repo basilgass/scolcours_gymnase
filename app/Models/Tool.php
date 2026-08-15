@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use App\Models\Concerns\HasMeta;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
@@ -36,6 +37,7 @@ use Illuminate\Support\Carbon;
 class Tool extends Model
 {
 	use HasFactory;
+	use HasMeta;
 
 	protected $guarded = [];
 

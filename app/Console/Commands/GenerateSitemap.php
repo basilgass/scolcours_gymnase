@@ -2,12 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Challenge;
-use App\Models\Chapter;
-use App\Models\Deck;
-use App\Models\Generator;
-use App\Models\Theme;
-use App\Models\Tool;
+use App\Services\Seo\SitemapEntries;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
@@ -18,83 +13,21 @@ use Spatie\Sitemap\Tags\Url;
 #[Description('Génère le fichier public/sitemap.xml à partir du contenu publié.')]
 class GenerateSitemap extends Command
 {
-    public function handle(): int
+    public function handle(SitemapEntries $entries): int
     {
         $sitemap = Sitemap::create();
 
-        $sitemap->add(
-            Url::create('/')
-                ->setPriority(1.0)
-                ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
-        );
+        foreach ($entries->all() as $entry) {
+            $url = Url::create($entry->url)
+                ->setPriority($this->priorityFor($entry->key))
+                ->setChangeFrequency($this->changeFrequencyFor($entry->key));
 
-        $indexRoutes = [
-            'formulas.index',
-            'tools.index',
-            'decks.index',
-            'challenges.index',
-            'generators.index',
-            'chapters.index',
-            'posts.index',
-        ];
-        foreach ($indexRoutes as $name) {
-            $sitemap->add(
-                Url::create(route($name))
-                    ->setPriority(0.5)
-                    ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
-            );
+            if ($entry->model?->updated_at !== null) {
+                $url->setLastModificationDate($entry->model->updated_at);
+            }
+
+            $sitemap->add($url);
         }
-
-        Theme::where('enabled', true)
-            ->with(['chapters' => fn ($q) => $q->where('active', true)])
-            ->get()
-            ->each(function (Theme $theme) use ($sitemap) {
-                $sitemap->add(
-                    Url::create(route('themes.show', $theme->slug))
-                        ->setLastModificationDate($theme->updated_at)
-                        ->setPriority(0.7)
-                        ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
-                );
-
-                $theme->chapters->each(fn (Chapter $chapter) => $sitemap->add(
-                    Url::create(route('themes.chapters.show', [$theme->slug, $chapter->slug]))
-                        ->setLastModificationDate($chapter->updated_at)
-                        ->setPriority(1.0)
-                        ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
-                ));
-            });
-
-        // Les formules n'ont pas de page propre : /formulaire/{id} redirige (301)
-        // vers son chapitre. On ne liste donc que l'index /formulaire (via
-        // $indexRoutes), jamais les URLs individuelles qui redirigeraient.
-
-        Tool::all()->each(fn (Tool $tool) => $sitemap->add(
-            Url::create(route('tools.show', $tool->slug))
-                ->setLastModificationDate($tool->updated_at)
-                ->setPriority(0.6)
-                ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
-        ));
-
-        Deck::where('active', true)->get()->each(fn (Deck $deck) => $sitemap->add(
-            Url::create(route('decks.show', $deck->slug))
-                ->setLastModificationDate($deck->updated_at)
-                ->setPriority(0.6)
-                ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
-        ));
-
-        Challenge::where('active', true)->get()->each(fn (Challenge $challenge) => $sitemap->add(
-            Url::create(route('challenges.show', $challenge->slug))
-                ->setLastModificationDate($challenge->updated_at)
-                ->setPriority(0.6)
-                ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
-        ));
-
-        Generator::all()->each(fn (Generator $generator) => $sitemap->add(
-            Url::create(route('generators.show', $generator->slug))
-                ->setLastModificationDate($generator->updated_at)
-                ->setPriority(0.6)
-                ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
-        ));
 
         $sitemap->writeToFile(public_path('sitemap.xml'));
 
@@ -102,5 +35,22 @@ class GenerateSitemap extends Command
         $this->info("sitemap.xml généré — {$count} URLs");
 
         return self::SUCCESS;
+    }
+
+    private function priorityFor(string $key): float
+    {
+        return match ($key) {
+            'home', 'themes.chapters.show' => 1.0,
+            'themes.show'                  => 0.7,
+            default                        => str_ends_with($key, '.index') ? 0.5 : 0.6,
+        };
+    }
+
+    private function changeFrequencyFor(string $key): string
+    {
+        return match ($key) {
+            'home', 'themes.show', 'themes.chapters.show' => Url::CHANGE_FREQUENCY_WEEKLY,
+            default                                       => Url::CHANGE_FREQUENCY_MONTHLY,
+        };
     }
 }
