@@ -131,7 +131,7 @@ const result = computed(() => {
 			}
 		}
 	} catch (e) {
-		console.log(e)
+		console.warn(e)
 		return false
 	}
 })

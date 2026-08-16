@@ -8,7 +8,7 @@ import {router, usePage} from "@inertiajs/vue3"
 import axios from "axios"
 import {computed, ref} from "vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
-import Card from "@/Components/Ui/Card.vue";
+import Card from "@/Components/Ui/Card.vue"
 
 
 const props = defineProps<{
@@ -35,7 +35,7 @@ function activate() {
 	).then(() => {
 		flash.success(`${props.chapter.slug} est ${isActive.value ? 'visible' : 'caché'}.`)
 	}).catch((res: AxiosErrorMessage) => {
-		console.log(res.response.data.message)
+		console.warn(res.response.data.message)
 	})
 
 }
@@ -65,8 +65,8 @@ function onChapterCardClick() {
 				<div>id: {{ chapter.id }}</div>
 				<div class="flex gap-4">
 					<button
-						@click="activate"
 						class="cursor-pointer"
+						@click="activate"
 					>
 						<i
 							:class="isActive ? 'bi bi-eye':'bi bi-eye-slash'"

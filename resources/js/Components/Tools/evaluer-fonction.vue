@@ -65,7 +65,7 @@ const fx = computed(() => {
 
 		return data
 	} catch (e) {
-		console.log(e)
+		console.warn(e)
 		return false
 	}
 })

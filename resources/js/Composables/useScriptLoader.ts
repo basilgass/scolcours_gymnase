@@ -51,7 +51,7 @@ export function useScriptLoader(script: string, config?: {
 				data.value = F(PiMath, PiMathExt, iteration.value, parentData.value)
 				hasErrors.value = false
 			} catch (e) {
-				console.log("Script loader error", e)
+				console.warn("Script loader error", e)
 				data.value = {}
 				hasErrors.value = true
 			}

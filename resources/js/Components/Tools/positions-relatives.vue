@@ -328,7 +328,7 @@ const positionRelative = computed<string>(() => {
 			return posRel_sphere_sphere(obj1.pi as Sphere3, obj2.pi as Sphere3)
 		}
 	} catch (err) {
-		console.log(err)
+		console.warn(err)
 		// Do nothing.
 	}
 
@@ -531,11 +531,14 @@ function posRel_sphere_sphere(s1: Sphere3, s2: Sphere3): string {
 				<div
 					v-for="(obj, index) in objets1"
 					:key="`obj1-${index}`"
-					@click="objet1Index = index"
 					class="cursor-pointer p-2"
 					:class="index===objet1Index?'bg-green-100':''"
+					@click="objet1Index = index"
 				>
-					<span v-if="obj.pi" v-katex="obj.pi.tex" /> - {{ obj.type }} {{ obj.dimension }}D
+					<span
+						v-if="obj.pi"
+						v-katex="obj.pi.tex"
+					/> - {{ obj.type }} {{ obj.dimension }}D
 				</div>
 			</Card>
 			<Card>
@@ -550,7 +553,10 @@ function posRel_sphere_sphere(s1: Sphere3, s2: Sphere3): string {
 					class="p-2"
 					:class="index===objet2Index?'bg-green-100':''"
 				>
-					<span v-if="obj.pi" v-katex="obj.pi.tex" /> - {{ obj.type }} {{ obj.dimension }}D
+					<span
+						v-if="obj.pi"
+						v-katex="obj.pi.tex"
+					/> - {{ obj.type }} {{ obj.dimension }}D
 				</div>
 			</Card>
 		</div>

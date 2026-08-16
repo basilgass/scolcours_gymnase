@@ -65,58 +65,45 @@ const jsonMap = computed(() => {
 </script>
 
 <template>
-	<div>
-		<form-input
-			v-model="label"
-			type="text"
-			label="label"
-			inline-label
-			xs
-			btn="bi bi-save"
-			@button-click="updateLesson"
-		/>
-
-		<div
-			class="cursor-pointer text-xs font-code"
-			@click="showScoreRules=!showScoreRules"
-		>
-			afficher les règles
-		</div>
-		<div
-			v-show="showScoreRules"
-			class="flex flex-col max-w-sm gap-3"
-		>
-			<FormJson
-				v-model="scoreRules"
-				:map="jsonMap"
-				label="configuration"
-				clearable
-			/>
-
-			<sc-button
-				icon
-				type="save"
+	<div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+		<div>
+			<form-input
+				v-model="label"
+				type="text"
+				label="label"
 				xs
-				@click="updateLesson"
+				btn="bi bi-save"
+				@button-click="updateLesson"
 			/>
-		</div>
 
-		<template v-if="lesson.lessonable_type === 'Generator' && lesson.lessonable_id != null">
-			<div
-				class="cursor-pointer text-xs font-code"
-				@click="showParameters = !showParameters"
-			>
-				paramètres du générateur
-			</div>
-			<div v-show="showParameters">
-				<generator-configurator
-					v-model="params"
-					:generator-id="lesson.lessonable_id"
-					:read-query="false"
-					:show-reload="false"
-					@change="saveParameters"
+			<div class="flex gap-3 flex-col">
+				<FormJson
+					v-model="scoreRules"
+					:map="jsonMap"
+					label="configuration"
+					clearable
+					xs
+					output
+				/>
+
+				<sc-button
+					icon
+					type="save"
+					xs
+					@click="updateLesson"
 				/>
 			</div>
+		</div>
+
+
+		<template v-if="lesson.lessonable_type === 'Generator' && lesson.lessonable_id != null">
+			<generator-configurator
+				v-model="params"
+				:generator-id="lesson.lessonable_id"
+				:read-query="false"
+				:show-reload="false"
+				@change="saveParameters"
+			/>
 		</template>
 	</div>
 </template>

@@ -316,7 +316,6 @@ function updateMatrix(operation: Partial<matriceAugmenteeInterface>, refreshOnly
 		case "*":
 		case "/": {
 			matrixLine.forEach(polynom => {
-				// console.log('multiply', polynom.tex, 'by', +operation.value)
 				if (operation.operation === '*') {
 					polynom.multiply(value)
 				} else {

@@ -27,7 +27,7 @@ function addCard() {
 			theCards.value.push(res.data)
 		})
 		.catch(err => {
-			console.log(err.response.data.message)
+			console.warn(err.response.data.message)
 		})
 }
 

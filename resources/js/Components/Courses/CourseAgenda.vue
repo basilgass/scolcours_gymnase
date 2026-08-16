@@ -56,6 +56,9 @@ function getYearCalendar() {
 				}
 			})
 		})
+		.catch((res: AxiosErrorMessage) => {
+			console.warn('Loading school year data error', res)
+		})
 }
 
 // récupérer les données des équipes sélectionnées pour le cours donné
@@ -86,7 +89,7 @@ function getTeamCourseCalendar(course: CourseMinInterface, team: TeamInterface) 
 
 			})
 		})
-		.catch(res => console.log(res))
+		.catch(res => console.warn(res))
 		.finally(() => {
 			loadingCalendars.value++
 		})
@@ -157,7 +160,8 @@ function getWeeks(startWeek: number, endWeek: number): weekInterface[] {
 
 	// Premier jour de la semaine
 	const firstCourseDay = yearCalendar.value
-		.find(d => d.week === startWeek - 1)
+		.find(d => d.week === startWeek - 1) ?? yearCalendar.value[0]
+
 	if (firstCourseDay === undefined) return arr
 
 	let firstCourseDayOfTheWeek = firstCourseDay.day
@@ -166,7 +170,7 @@ function getWeeks(startWeek: number, endWeek: number): weekInterface[] {
 	// Maybe monday is not monday.
 	let monday = firstCourseDayOfTheWeek.subtract((firstCourseDayOfTheWeek.day() + 6) % 7, 'day')
 
-	for (let week = startWeek - 1; week <= endWeek + 1; week++) {
+	for (let week = Math.max(1, startWeek - 1); week <= endWeek + 1; week++) {
 
 		// On contrôle si le lundi est dans une semaine de vacances.
 		// Danc ce cas, on ajoute une semaine tant que c'est des vacances.
@@ -176,7 +180,7 @@ function getWeeks(startWeek: number, endWeek: number): weekInterface[] {
 
 		arr.push({
 			week,
-			days: [0, 1, 2, 3, 4, 5].map(d => {
+			days: [0, 1, 2, 3, 4].map(d => {
 				const day = monday.add(d, 'days')
 				return {
 					day,

@@ -124,7 +124,6 @@ const showList = ref(props.collapsed !== true)
 
 function itemClicked(item: T) {
 	if (props.routeName && props.routeData) {
-		console.log(route(props.routeName, props.routeData(item)))
 		router.visit(route(props.routeName, props.routeData(item)))
 	}
 }

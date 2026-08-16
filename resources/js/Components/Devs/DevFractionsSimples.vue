@@ -92,7 +92,6 @@ defineOptions({layout: LayoutMain})
 //
 // 	// Solve the system of equations
 // 	const linear = new LinearSystem(...equations)
-// 	// linear.equations.forEach(equ => console.log(equ.display))
 // 	const matrix = linear.solveMatrix()
 //
 // 	return fractions.map((fraction, index) => {

@@ -196,7 +196,8 @@
       "PowerShell(php artisan test --compact --filter=GenerateSitemapTest)",
       "PowerShell(php artisan test --compact --filter=MetaResolverTest)",
       "PowerShell(php artisan test --compact --filter=SeoAdminTest)",
-      "mcp__laravel-boost__get-absolute-url"
+      "mcp__laravel-boost__get-absolute-url",
+      "PowerShell(git *)"
     ]
   },
   "enableAllProjectMcpServers": true,

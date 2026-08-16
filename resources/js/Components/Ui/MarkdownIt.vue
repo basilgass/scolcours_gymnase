@@ -91,7 +91,6 @@ const defaultTableClose: RenderRule =
 	((tokens, idx, options, env, self) => self.renderToken(tokens, idx, options))
 
 md.renderer.rules.table_open = (tokens, idx, options, env, self) => {
-	// console.log(tokens[idx])
 	return `<div class="overflow-x-auto">` + defaultTableOpen(tokens, idx, options, env, self)
 }
 

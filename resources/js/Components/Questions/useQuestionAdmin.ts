@@ -83,7 +83,6 @@ export function useQuestionAdmin(
 				)
 			})
 			.catch((res: AxiosErrorMessage) => {
-				console.log(res.response.data.message)
 				flash.error(
 					"Il y a eu un problème avec l'affichage conditionnel."
 				)

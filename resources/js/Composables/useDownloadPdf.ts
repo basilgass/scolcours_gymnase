@@ -45,8 +45,6 @@ export function usePdf() {
 			})
 			.catch((err: AxiosErrorMessage) => {
 				flash.error(err.response.data.message)
-				// console.log(err.response.data.message)
-				// pdfError.value = err.response.data.message
 			})
 	}
 

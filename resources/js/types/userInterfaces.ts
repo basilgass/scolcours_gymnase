@@ -30,6 +30,20 @@ export interface TeamCalendarInterface {
 	time: string // hh:mm — dérivé du créneau lié, conservé pour l'affichage
 }
 
+export interface SchoolTimetableInterface {
+	id: number,
+	period: number,
+	start: string, // hh:mm
+	end: string // hh:mm
+}
+
+export interface SchoolCalendarInterface {
+	id: number,
+	week: number | null,
+	day: string, // Y-m-d
+	school: boolean
+}
+
 export interface TeamInterface {
 	id: number,
 	name: string,

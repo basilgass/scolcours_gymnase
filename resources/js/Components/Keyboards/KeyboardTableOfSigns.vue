@@ -77,7 +77,6 @@ const tosName = computed(() => {
 })
 
 const growsOnly = computed(() => {
-	console.log(props.keyboard.parameters)
 	return props.keyboard.parameters.includes('grows')
 })
 
@@ -146,7 +145,7 @@ function updateKeyboardActiveCell() {
 			cell = tosUI.value.$el.querySelector(`[data-tos="zero-${i}"]`)
 			break
 		}
-		
+
 		case "signs": {
 			const i = signs.value.input.length
 			cell = tosUI.value.$el.querySelector(`[data-tos="sign-${i}"]`)

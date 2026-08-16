@@ -5,7 +5,7 @@ import {Ref} from "vue"
 
 // Re-exports depuis les fichiers domaine (rétrocompatibilité)
 export type {
-	UserInterface, TeamInterface, TeamCalendarInterface
+	UserInterface, TeamInterface, TeamCalendarInterface, SchoolTimetableInterface, SchoolCalendarInterface
 } from "@/types/userInterfaces.ts"
 export type {WidgetInterface, WidgetPropsInterface} from "@/types/widgetInterfaces.ts"
 export type {

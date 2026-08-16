@@ -48,7 +48,7 @@ let tex = computed(() => {
 		updateVenn(P)
 		return P.tex
 	} catch (e) {
-		console.log(e)
+		console.warn(e)
 		return "\\text{ expression non reconnue }"
 	}
 })

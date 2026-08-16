@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\SchoolApiController;
 use App\Http\Controllers\api\TeamCalendarApiController;
 
 Route::middleware('web')
@@ -51,6 +52,13 @@ Route::middleware('api')
 		          Route::apiResource('teams.calendars', TeamCalendarApiController::class)
 		               ->only(['store', 'update', 'destroy'])
 		               ->shallow();
+
+		          Route::patch('school/timetable/{timetable}', [SchoolApiController::class, 'updateTimetable'])
+		               ->name('school.timetables.update');
+		          Route::post('school/calendar/generate', [SchoolApiController::class, 'generateCalendar'])
+		               ->name('school.calendars.generate');
+		          Route::patch('school/calendar/{calendar}/toggle', [SchoolApiController::class, 'toggleCalendarDay'])
+		               ->name('school.calendars.toggle');
 
 	          });
 

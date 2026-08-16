@@ -8,11 +8,13 @@ use App\Http\Resources\TeamResource;
 use App\Http\Resources\ToolResource;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\WidgetResource;
+use App\Models\Calendars\SchoolCalendar;
 use App\Models\Challenge;
 use App\Models\Chapter;
 use App\Models\Course;
 use App\Models\Illustration;
 use App\Models\Scolcours;
+use App\Models\SchoolTimetable;
 use App\Models\Team;
 use App\Models\Theme;
 use App\Models\Tool;
@@ -334,6 +336,17 @@ class AdminController extends Controller
 			[
 				'courses' => CourseResource::collection($courses),
 				'teams'   => TeamResource::collection(Team::active()->with('calendars')->get())
+			]
+		);
+	}
+
+	public function school()
+	{
+		return Inertia::render(
+			'Admin/AdminSchool',
+			[
+				'timetables' => SchoolTimetable::orderBy('period')->get(),
+				'calendars'  => SchoolCalendar::orderBy('day')->get(),
 			]
 		);
 	}

@@ -30,7 +30,7 @@ function loadStats() {
 			loading.value = false
 		})
 		.catch(err => {
-			console.log(err)
+			console.warn(err)
 		})
 }
 

@@ -21,11 +21,8 @@ function addElement(event: { draw: PiDraw, mouse: MouseEvent | TouchEvent }) {
 	const {draw, mouse} = event
 
 	if (mouse instanceof MouseEvent) {
-		console.log(mouse.offsetX, mouse.offsetY)
+		// Do nothing ?
 	}
-
-	console.log(draw.figures)
-	console.log(draw.rootSVG.viewbox())
 
 }
 </script>

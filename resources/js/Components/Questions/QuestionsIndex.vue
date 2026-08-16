@@ -36,7 +36,7 @@ onMounted(() => {
 					if (!exists) storeScore.scores.push(score)
 				})
 			})
-			.catch(res => console.log(res))
+			.catch(res => console.warn(res))
 	} else {
 		storeScore.getScores<ScoreQuestionDataInterface>('Question', ids)
 	}

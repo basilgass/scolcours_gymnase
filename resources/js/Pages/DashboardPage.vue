@@ -41,7 +41,6 @@ function regeneratePseudo() {
 function updateShowRealName() {
 	axios.patch(route('profile.showRealName.update'), {show_real_name: showRealName.value})
 		.then((res) => {
-			console.log(res)
 			// Do nothing
 		})
 		.catch((res) => {

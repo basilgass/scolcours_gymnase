@@ -83,7 +83,7 @@ function updateCard() {
 
 		})
 		.catch((err: AxiosErrorMessage) => {
-			console.log(err.response.data.message)
+			console.warn(err.response.data.message)
 			flash.error('Problème dans la sauvegarde de la carte.')
 		})
 }

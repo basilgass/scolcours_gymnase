@@ -10,14 +10,6 @@ function makeKey(i: number): string {
 
 function replace_abc_toTex(md: string, index: number, key: string, answer: keyboardEventInterface, color: string): string {
 	// $a, $b, ...
-	// console.log(md)
-	// console.log(key)
-	// console.log(answer)
-	// console.log(color)
-	// const r = new RegExp(`${key.toLowerCase()}`, "gm")
-	// console.log(r)
-	//
-	// console.log('MATCH', md.match(r))
 	return md.replaceAll(
 		new RegExp(`${key.toLowerCase()}`, "gm"),
 		`\\htmlData{answer-index=${index}}{\\textcolor{${color}}{${

@@ -42,7 +42,7 @@ function saveGenerator() {
 	}).then(() => {
 		flash.success("Générateur enregistré")
 	}).catch((err) => {
-		console.log(err)
+		console.warn(err)
 		flash.error("Erreur lors de l'enregistrement")
 	})
 }
@@ -58,7 +58,7 @@ function deleteGenerator() {
 		flash.success("Générateur supprimé")
 		router.visit(route("admin.generators.index"))
 	}).catch((err) => {
-		console.log(err)
+		console.warn(err)
 		flash.error("Erreur lors de la suppression")
 	})
 }

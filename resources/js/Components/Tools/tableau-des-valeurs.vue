@@ -93,7 +93,7 @@ const fx = computed<false | ITableOfValue[]>(() => {
 	try {
 		return getTableOfValues()
 	} catch (e) {
-		console.log(e)
+		console.warn(e)
 		return false
 	}
 })
@@ -195,7 +195,7 @@ const drawParamsAuto = computed(() => {
 
 const draw = computed<WidgetPropsInterface>(() => {
 	if (fx.value === false) {
-		return { parameters: '', code: '' }
+		return {parameters: '', code: ''}
 	}
 	const parameters = drawParams.value ? drawParams.value : drawParamsAuto.value
 
@@ -288,18 +288,18 @@ const draw = computed<WidgetPropsInterface>(() => {
 						}"
 					>
 						<div
+							v-katex="`x`"
 							:class="{
 								'w-[100px] border border-b-0': verticalTable,
 								'w-[100px] border-b': !verticalTable
 							}"
-							v-katex="`x`"
 						/>
 						<div
+							v-katex="`f(x)`"
 							:class="{
 								'flex-1 border-t border-r': verticalTable,
 								'w-[100px] border-b flex-1 grid place-items-center ': !verticalTable
 							}"
-							v-katex="`f(x)`"
 						/>
 					</div>
 					<div
@@ -315,21 +315,21 @@ const draw = computed<WidgetPropsInterface>(() => {
 						}"
 					>
 						<div
+							v-katex="`${v.x}`"
 							class="grid place-items-center
 								bg-analyse-light"
 							:class="{
 								'border-r w-[100px] place-self-stretch': verticalTable,
 								'border-b': !verticalTable
 							}"
-							v-katex="`${v.x}`"
 						/>
 						<div
+							v-katex="`${ numericParse ? v.fx : v.fxTex}`"
 							class=""
 							:class="{
 								'flex-1': verticalTable,
 								'flex-1 grid place-items-center border-b': !verticalTable
 							}"
-							v-katex="`${ numericParse ? v.fx : v.fxTex}`"
 						/>
 					</div>
 				</div>
@@ -339,8 +339,8 @@ const draw = computed<WidgetPropsInterface>(() => {
 
 		<Card if="draw">
 			<FormInput
-				type="text"
 				v-model="drawParams"
+				type="text"
 				label="paramètres du graphe"
 			/>
 			<div class="font-code">

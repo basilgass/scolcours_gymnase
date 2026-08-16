@@ -35,7 +35,7 @@ async function getTools() {
 			availableTools.value = res.data as ToolInterface[]
 		})
 		.catch((res: AxiosErrorMessage) => {
-			console.log(res.response.data.message)
+			console.warn(res.response.data.message)
 		})
 }
 

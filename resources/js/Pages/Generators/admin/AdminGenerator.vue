@@ -51,7 +51,7 @@ function addGenerator() {
 			router.visit(route("admin.generators.edit", [res.data]))
 		})
 		.catch((res) => {
-			console.log(res.response.data)
+			console.warn(res.response.data)
 		})
 }
 

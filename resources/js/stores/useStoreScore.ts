@@ -315,7 +315,7 @@ export const useStoreScore = defineStore(
 					}
 				}
 			}).catch((err: AxiosErrorMessage) => {
-				console.log(err.response.data.message)
+				console.warn(err.response.data.message)
 			})
 
 

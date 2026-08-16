@@ -13,7 +13,7 @@ export interface FormElementEmits {
 }
 
 export type TextInputType =
-	'text' | 'id' | 'email' | 'password' | 'number' | 'color' | 'range' | 'date' | 'datetime-local'
+	'text' | 'id' | 'email' | 'password' | 'number' | 'color' | 'range' | 'date' | 'datetime-local' | 'time'
 
 export type FormJsonFieldType =
 	TextInputType | 'textarea' | 'select' | 'switch' | 'codearea' | 'fraction' | 'vector' | 'keyboard' | 'numberset'

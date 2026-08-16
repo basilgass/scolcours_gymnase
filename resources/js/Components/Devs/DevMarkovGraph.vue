@@ -27,22 +27,21 @@ const illustration = computed(() => {
 	}
 })
 
-console.log(illustration.value)
 </script>
 
 <template>
 	<div>
 		<div>
 			<FormInput
+				v-model="labelInput"
 				type="text"
 				class="font-code"
 				label="étiquettes"
-				v-model="labelInput"
 			/>
 			<FormTextarea
+				v-model="matrixInput"
 				class="font-code"
 				label="matrice"
-				v-model="matrixInput"
 				rows="4"
 			/>
 		</div>

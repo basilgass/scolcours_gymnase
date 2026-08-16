@@ -115,10 +115,6 @@ describe("PolynomChecker", () => {
 	test('polynome désordonné', () => {
 		const chk = new PolynomChecker('')
 		chk.answer = 'xyz'
-
-		console.log(chk.checkValue('xyz'))
-		console.log(chk.checkValue('yzx'))
-		console.log(chk.checkValue('zyx'))
 	})
 
 	test('polynôme entièrement factorisé', () => {

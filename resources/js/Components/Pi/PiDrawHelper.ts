@@ -173,7 +173,6 @@ function parseComputedValued(blocks: string[]): IDrawComputedValue[] {
 			const [, post] = before.split(':')
 
 			let postProcess = null
-			console.log(post, /^\.[0-9]+$/.test(post))
 			if (/^\.[0-9]+$/.test(post)) {
 				postProcess = (value: number) => +value.toFixed(+post.substring(1))
 			}

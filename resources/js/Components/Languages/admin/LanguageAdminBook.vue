@@ -33,7 +33,7 @@ function createBook() {
 		books.value.push(res.data)
 		book.value = res.data.id
 	}).catch(res => {
-		console.log(res.response.data.message)
+		console.warn(res.response.data.message)
 	})
 }
 
@@ -47,15 +47,15 @@ function createBook() {
 				:key="b.id"
 				type="admin"
 				:outline="book!==b.id"
-				@click="book === b.id ? book = -1 : book = b.id"
 				class="text-left"
+				@click="book === b.id ? book = -1 : book = b.id"
 			>
 				{{ b.title }} ({{ b.slug }} / {{ b.id }})
 			</sc-button>
 		</div>
 		<div
-			class="flex flex-col items-end border rounded-sm p-3 bg-content"
 			v-if="book===-1"
+			class="flex flex-col items-end border rounded-sm p-3 bg-content"
 		>
 			<FormInput
 				v-model="bookTitle"

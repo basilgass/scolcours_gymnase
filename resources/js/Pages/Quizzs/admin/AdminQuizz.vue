@@ -60,7 +60,7 @@ function loadSessions(id: number) {
 			sessions[id] = res.data.filter(session => session.current !== 0)
 		})
 		.catch((err: AxiosErrorMessage) => {
-			console.log(err.response.data.message)
+			console.warn(err.response.data.message)
 		})
 }
 
@@ -81,7 +81,7 @@ function createSession(id: number) {
 		sessions[id].push(res.data)
 
 	}).catch((res: AxiosErrorMessage) => {
-		console.log(res)
+		console.warn(res)
 	})
 }
 

@@ -35,7 +35,7 @@ function addCourse() {
 			router.visit(route('admin.courses.edit', {course: res.data.id}))
 		})
 		.catch((err: AxiosErrorMessage) => {
-			console.log(err.response.data.message)
+			console.warn(err.response.data.message)
 		})
 }
 
@@ -52,7 +52,6 @@ function searchFunction(item: CourseInterface, search: string): boolean {
 		return true
 	}
 
-	console.log((item.teams ?? []).map(t => t.name))
 	if ((item.teams ?? []).some(team => team.name.toLowerCase().includes(search))) {
 		return true
 	}

@@ -74,7 +74,7 @@ function getUnits(bookId: number) {
 			existingUnits.value = res.data
 			return
 		}).catch(res => {
-		console.log(res.response.data.message)
+		console.warn(res.response.data.message)
 	})
 }
 

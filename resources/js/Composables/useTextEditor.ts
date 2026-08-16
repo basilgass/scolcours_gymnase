@@ -384,7 +384,6 @@ export function useTextEditor(AreaRefName: string, options?: {
 			) {
 				// On récupère le mot avant la macro suffixe
 				const word = getWordBefore(el.value.slice(0, el.selectionStart - key.length)) ?? ''
-				console.log('BEFORE:', word, ':END')
 				return {key, ...macro, word}
 			}
 		}

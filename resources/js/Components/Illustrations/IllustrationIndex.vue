@@ -37,7 +37,7 @@ function updateIllustrationsOrder() {
 		flash.success('Les illustrations ont bien été ré-ordré.')
 	}).catch((err) => {
 		// Show flash error message
-		console.log(err.response.data.message)
+		console.warn(err.response.data.message)
 		flash.error('Problème de réorganisation des illustrations.')
 	})
 }

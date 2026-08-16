@@ -34,7 +34,7 @@ function create() {
 		.then((res: AxiosResponseModel<EvaluationInterface>) => {
 			router.visit(route("admin.evaluations.edit", {evaluation: res.data.id}))
 		})
-		.catch((err: AxiosErrorMessage) => console.log(err.response.data.message))
+		.catch((err: AxiosErrorMessage) => console.warn(err.response.data.message))
 }
 </script>
 <template>

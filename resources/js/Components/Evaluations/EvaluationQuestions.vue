@@ -27,7 +27,7 @@ function status(question: QuestionInterface): ITEM_STATUS {
 }
 
 function validateQuestion(event: questionResultInterface) {
-	console.log(event)
+	// TODO :  Do nothing on validate question ?
 }
 
 const allDone = computed(() => {

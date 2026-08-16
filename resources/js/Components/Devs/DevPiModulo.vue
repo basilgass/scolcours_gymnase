@@ -58,7 +58,6 @@ function distanceBetweenToPoints(i: number, j: number): number {
 	const x2 = (radius * Math.cos(2 * Math.PI / modulo.value * j + Math.PI / 2))
 	const y2 = (radius * Math.sin(2 * Math.PI / modulo.value * j + Math.PI / 2))
 
-	console.log(Math.round((x2 - x1) ** 2 + (y2 - y1) ** 2))
 	return Math.round((x2 - x1) ** 2 + (y2 - y1) ** 2)
 }
 

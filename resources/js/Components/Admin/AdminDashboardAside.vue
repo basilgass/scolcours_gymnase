@@ -11,6 +11,7 @@ const links = [
 	{title: "évaluations", route: "admin.evaluations.index", icon: 'bi bi-journal-check'},
 	{title: "decks", route: "admin.decks.index", icon: 'bi bi-collection'},
 	{title: "agenda", route: "admin.agenda", icon: 'bi bi-calendar'},
+	{title: "école", route: "admin.school.index", icon: 'bi bi-calendar-week'},
 	{title: "composants", route: null, icon: "bi bi-gear-wide-connected"},
 	{title: "chapitres", route: "admin.chapters.index", icon: 'bi bi-paragraph'},
 	{title: "blocks scripts", route: "admin.blocks.index", icon: 'bi bi-body-text'},

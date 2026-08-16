@@ -44,14 +44,12 @@ function updateCourse() {
 		body: theCourse.value.block.body,
 	})
 		.then((res: AxiosResponseModel<CourseInterface>) => {
-			console.log(res.data)
 			flash.success("Le cours a bien été enregistré.")
 		})
 		.catch((err: AxiosErrorMessage) => {
 			console.warn(err.response.data.message)
 		})
 }
-
 
 const chapter = ref<ChapterInterface>()
 const posts = ref<PostShowInterface[]>([])
@@ -394,12 +392,7 @@ function updateLessonsOrder() {
 				@end="updateLessonsOrder"
 			>
 				<template #item="{ element }: {element: LessonInterface}">
-					<Card
-						class="max-w-2xl"
-						:class="{
-							' bg-blue-100 border-blue-600 text-blue-600': itemSource?.id===element.id
-						}"
-					>
+					<Card>
 						<template #header>
 							<div
 								class="flex justify-between items-baseline"
@@ -418,7 +411,6 @@ function updateLessonsOrder() {
 									<div
 										v-katex.auto="element.title"
 										class="text-lg font-normal cursor-pointer"
-										@click="setItemSource(element)"
 									/>
 								</div>
 
@@ -443,20 +435,6 @@ function updateLessonsOrder() {
 						<course-lesson-edit
 							:lesson="element"
 						/>
-
-						<template
-							v-if="itemSource?.id===element.id"
-							#footer
-						>
-							<div v-if="itemSource?.id===element.id">
-								{{ element.requires }}
-							</div>
-							<i
-								v-else-if="itemSource"
-								class="bi bi-link text-xl text-blue-600 cursor-pointer"
-								@click="onClick(element)"
-							/>
-						</template>
 					</Card>
 				</template>
 			</draggable>

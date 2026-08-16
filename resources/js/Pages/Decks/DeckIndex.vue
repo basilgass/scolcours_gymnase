@@ -24,8 +24,7 @@ const props = defineProps({
 const scores = useStoreScore()
 scores.getScores<ScoreDeckDataInterface>("Deck", props.decks.map(deck => deck.id))
 	.then(res => {
-		console.log(res)
-
+		// TODO : Do nothing after loading scores ?
 	})
 
 </script>

@@ -45,7 +45,6 @@ const pdfGenereate = () => {
 
 	if (pdfQuestionWrapper.value !== "") {
 		questions = questions.map((q) => {
-			console.log(q.answer)
 			// Wrap the question in a custom wrapper
 			q.question = pdfQuestionWrapper.value.replace("@", q.question)
 

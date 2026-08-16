@@ -33,6 +33,7 @@ const componentMap: Record<FormJsonFieldType, Component> = {
 	range: FormInput,
 	date: FormInput,
 	'datetime-local': FormInput,
+	time: FormInput,
 	textarea: FormTextarea,
 	select: FormSelect,
 	switch: FormSwitch,
@@ -44,7 +45,8 @@ const componentMap: Record<FormJsonFieldType, Component> = {
 }
 
 interface Props extends FormMakerBaseProps {
-	map: Record<string, FormJsonFieldType>
+	map: Record<string, FormJsonFieldType>,
+	output?: boolean
 }
 
 const props = defineProps<Props>()
@@ -96,7 +98,15 @@ watch(() => props.map, () => buildValues())
 
 <template>
 	<div ref="input">
-		<div class="flex flex-col gap-3">
+		<div
+			class="flex flex-col"
+			:class="{
+				'gap-0' : xs,
+				'gap-1' : sm,
+				'gap-3': xl,
+				'gap-2' : !xs && !sm && !xl,
+			}"
+		>
 			<component
 				:is="componentMap[fieldType]"
 				v-for="(fieldType, element) in map"
@@ -107,10 +117,11 @@ watch(() => props.map, () => buildValues())
 				:label="element"
 				:disabled="props.disabled"
 				:clearable
+				v-bind="{...$attrs,...props}"
 				@update="onChange"
 				@enter="focusNext(element)"
 			/>
 		</div>
-		<code>{{ JSON.stringify(json) }}</code>
+		<code v-if="output">{{ JSON.stringify(json) }}</code>
 	</div>
 </template>

@@ -24,7 +24,6 @@ const deckResult = computed<number>(() => {
 })
 
 function resetDeck() {
-	console.log('RESET DECK')
 	deckData.reset()
 }
 
@@ -40,9 +39,9 @@ function resetDeck() {
 			</div>
 
 			<sc-button
-				@click="resetDeck"
 				class="py-5"
 				type="primary"
+				@click="resetDeck"
 			>
 				recommencer
 			</sc-button>

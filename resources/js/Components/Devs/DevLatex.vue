@@ -35,7 +35,7 @@ function makePDF() {
 			)
 		})
 		.catch((err) => {
-			console.log(err.response)
+			console.warn(err.response)
 		})
 }
 
@@ -48,7 +48,7 @@ function getPDF() {
 			pdfs.value = res.data
 		})
 		.catch((err) => {
-			console.log(err.response)
+			console.warn(err.response)
 		})
 }
 
@@ -77,8 +77,8 @@ onMounted(() => {
 				:key="pdf.slug"
 			>
 				<a :href="route('latex.download', [pdf.slug])">{{
-						pdf.slug
-					}}</a>
+					pdf.slug
+				}}</a>
 			</div>
 		</div>
 	</div>

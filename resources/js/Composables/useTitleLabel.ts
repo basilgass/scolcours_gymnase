@@ -4,7 +4,6 @@ interface TitleLabelInterface {
 }
 
 export function useTitleLabel(item: TitleLabelInterface) {
-	console.log(item)
 	if (!item.label) return item.title
 
 	if (item.label.includes('@')) {

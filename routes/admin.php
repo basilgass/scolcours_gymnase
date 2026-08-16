@@ -81,6 +81,9 @@ Route::middleware('admin')
 	     Route::get('agenda', [AdminController::class, 'agenda'])
 	          ->name('agenda');
 
+	     Route::get('school', [AdminController::class, 'school'])
+	          ->name('school.index');
+
 	     Route::prefix('illustrations')
 	          ->as('illustrations.')
 	          ->group(function () {

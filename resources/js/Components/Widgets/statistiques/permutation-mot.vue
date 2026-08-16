@@ -177,7 +177,7 @@ function prepareNextWord() {
 			return nextWord.value = response.data[0]
 		})
 		.catch((error: AxiosErrorMessage): string[] => {
-			console.log(error.response.data.message)
+			console.warn(error.response.data.message)
 			return []
 		})
 }
