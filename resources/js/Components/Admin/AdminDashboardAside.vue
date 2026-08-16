@@ -22,6 +22,7 @@ const links = [
 	{title: "devs", route: "dev.index", icon: 'bi bi-wrench'},
 	{title: "généralités", route: null, icon: 'bi bi-pencil-square'},
 	{title: "configuration", route: "admin.config.index", icon: 'bi bi-wrench'},
+	{title: "seo", route: "admin.seo.index", icon: 'bi bi-search'}
 	// { title: "import des langues", route: "admin.voc.import", icon: 'bi bi-translate' },
 ]
 

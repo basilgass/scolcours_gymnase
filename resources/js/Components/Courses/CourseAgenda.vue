@@ -184,7 +184,7 @@ function getWeeks(startWeek: number, endWeek: number): weekInterface[] {
 				const day = monday.add(d, 'days')
 				return {
 					day,
-					active: yearCalendar.value.find(d => d.active && d.day.isSame(day)) !== null
+					active: yearCalendar.value.some(d => d.active && d.day.isSame(day, 'day'))
 				}
 			})
 		})
@@ -214,7 +214,7 @@ watch(() => props.course, () => {
 
 })
 
-function updateLesson(event: { lesson_id: number, team_id: number, target: Dayjs, homework: boolean }) {
+function updateLesson(event: { lesson_id: number, team_id: number, target: Dayjs, homework: boolean, deadline: boolean }) {
 
 	// On récupère la "teamLesson" concernée.
 	const index = teamLessons.value.findIndex(cal => cal.lesson.id === event.lesson_id && cal.team.id === event.team_id)
@@ -222,23 +222,31 @@ function updateLesson(event: { lesson_id: number, team_id: number, target: Dayjs
 
 	const teamLesson = teamLessons.value[index]
 
-	// On recherche s'il fait partie du calendrier
-	const eventDay = event.target.day()
-	const calEvents = (teamLesson.team.calendar ?? [])
-		.filter(cal => cal.day === eventDay)
+	if (event.deadline) {
+		// Échéance : à faire ce jour-là pour 23h59, indépendamment des créneaux de présence.
+		teamLesson.lesson.scheduled_at = event.target
+			.hour(23).minute(59)
+			.format('YYYY-MM-DDTHH:mm')
+	} else {
+		// On recherche s'il fait partie du calendrier
+		const eventDay = event.target.day()
+		const calEvents = (teamLesson.team.calendar ?? [])
+			.filter(cal => cal.day === eventDay)
 
 
-	let calEvent = event.homework
-		? calEvents.reduce((a, b) => a.time < b.time ? a : b, calEvents[0]) // premier de la journée
-		: calEvents.reduce((a, b) => a.time > b.time ? a : b, calEvents[0]) // dernier de la journée
+		let calEvent = event.homework
+			? calEvents.reduce((a, b) => a.time < b.time ? a : b, calEvents[0]) // premier de la journée
+			: calEvents.reduce((a, b) => a.time > b.time ? a : b, calEvents[0]) // dernier de la journée
 
-	const [h, m] = calEvent.time.split(':').map(Number)
+		const [h, m] = calEvent.time.split(':').map(Number)
 
-	teamLesson.lesson.scheduled_at = event.target
-		.hour(h).minute(m + (event.homework ? 0 : 45)) // ajouter 45 minutes si pas devoir
-		.format('YYYY-MM-DDTHH:mm')
+		teamLesson.lesson.scheduled_at = event.target
+			.hour(h).minute(m + (event.homework ? 0 : 45)) // ajouter 45 minutes si pas devoir
+			.format('YYYY-MM-DDTHH:mm')
+	}
 
 	teamLesson.lesson.homework = event.homework
+	teamLesson.lesson.deadline = event.deadline
 
 	// Mise à jour de teamLessons
 	teamLessons.value.splice(index, 1)
@@ -252,7 +260,8 @@ function updateLesson(event: { lesson_id: number, team_id: number, target: Dayjs
 			team: teamLesson.team.id,
 		}), {
 			scheduled_at: teamLesson.lesson.scheduled_at,
-			homework: teamLesson.lesson.homework
+			homework: teamLesson.lesson.homework,
+			deadline: teamLesson.lesson.deadline
 		})
 		.then(() => {
 			flash.success('La leçon a bien été mise à jour.')
@@ -281,6 +290,7 @@ const lessonsToPlace = computed(() => {
 					v-for="week in weeks"
 					:key="`week-${week.week}`"
 					:calendar
+					:days="week.days"
 					:from="week.days[0].day"
 					:teams="teams ?? []"
 					:to="week.days[4].day"

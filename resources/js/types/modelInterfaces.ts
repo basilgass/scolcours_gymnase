@@ -41,6 +41,7 @@ export interface LessonInterface<T extends LessonScoreRulesInterface = LessonSco
 	course_id: number,
 	created_at: string,
 	homework: boolean,
+	deadline: boolean,
 	lessonable_id: number | null,
 	lessonable_tag: 'exercise' | 'howto' | null,
 	lessonable_type: lessonableClassName | null,

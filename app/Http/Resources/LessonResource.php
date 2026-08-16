@@ -69,6 +69,7 @@ class LessonResource extends JsonResource
 			'remaining_time'  => $scheduled_at?->diffForHumans(),
 			'scheduled_at'    => $scheduled_at,
 			'homework'        => $calendar?->homework ?? false,
+			'deadline'        => $calendar?->deadline ?? false,
 			'created_at'      => $this->created_at,
 			'updated_at'      => $this->updated_at,
 		];

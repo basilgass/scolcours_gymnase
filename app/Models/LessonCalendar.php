@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  * @property int $lesson_id
  * @property \Illuminate\Support\Carbon|null $scheduled_at
  * @property bool $homework
+ * @property bool $deadline
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Block> $blocks
@@ -24,6 +25,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonCalendar newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonCalendar query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonCalendar whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonCalendar whereDeadline($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonCalendar whereHomework($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonCalendar whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LessonCalendar whereLessonId($value)
@@ -40,14 +42,16 @@ class LessonCalendar extends Model
 		'team_id',
 		'lesson_id',
 		'scheduled_at',
-		'homework'
+		'homework',
+		'deadline'
 	];
 
 	protected function casts(): array
 	{
 		return [
 			'scheduled_at' => 'datetime',
-			'homework'     => 'boolean'
+			'homework'     => 'boolean',
+			'deadline'     => 'boolean'
 		];
 	}
 

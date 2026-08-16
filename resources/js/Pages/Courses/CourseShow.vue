@@ -14,6 +14,7 @@ import {useScrollTo} from "@/Composables/useHelpers.ts"
 import {ScoreLessonDataInterface} from "@/types/scoreInterfaces.ts"
 import Card from "@/Components/Ui/Card.vue"
 import LessonDrops from "@/Components/Courses/LessonDrops.vue"
+import {lessonBandColors} from "@/types/lessonInterfaces.ts"
 
 defineOptions({layout: LayoutMain})
 
@@ -135,18 +136,32 @@ function afficherDate(day: string, short?: boolean): string {
 				<lesson-drops
 					:course
 					:lessons="lessonsByDate[day]"
-					:team
 				/>
 			</card>
 		</div>
 
 		<div class="flex justify-center mt-12">
-			<div
-				v-theme.bg.light
-				class="p-3 rounded-lg"
-			>
-				<i class="bi bi-exclamation-triangle text-xl mr-3" />Les leçons dans l'encadré de couleur sont en
-				devoirs, à faire <span class="font-semibold">avant</span> le cours !
+			<div class="p-3 rounded-lg border flex flex-col gap-2 text-sm">
+				<div class="flex items-center gap-2">
+					<span
+						class="inline-block w-4 h-4 rounded border shrink-0"
+						:class="lessonBandColors.homework.base"
+					/>
+					<span>Encadré <span
+						class="font-semibold"
+						:class="lessonBandColors.homework.text"
+					>orange</span> : devoir à faire <span class="font-semibold">avant</span> le cours.</span>
+				</div>
+				<div class="flex items-center gap-2">
+					<span
+						class="inline-block w-4 h-4 rounded border shrink-0"
+						:class="lessonBandColors.deadline.base"
+					/>
+					<span>Encadré <span
+						class="font-semibold"
+						:class="lessonBandColors.deadline.text"
+					>vert</span> : échéance à faire pour ce jour (23h59).</span>
+				</div>
 			</div>
 		</div>
 

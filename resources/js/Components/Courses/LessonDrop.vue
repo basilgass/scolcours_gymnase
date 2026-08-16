@@ -52,14 +52,14 @@ onMounted(() => {
 	>
 		<div class="flex gap-3">
 			<div
-				class="relative w-8 h-8 rounded-full grid place-items-center border"
+				class="relative shrink-0 w-8 h-8 rounded-full grid place-items-center border"
 				:class="dropColorClass"
 			>
 				<lesson-type-icon :lesson />
 			</div>
 			<div
 				v-katex.auto="lesson.label ?? lesson.title"
-				class="whitespace-nowrap overflow-hidden"
+				class="min-w-0 whitespace-nowrap overflow-hidden"
 			/>
 		</div>
 	</InertiaLink>

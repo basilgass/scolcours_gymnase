@@ -207,7 +207,15 @@
       "PowerShell(php artisan test --compact tests/Unit/Seo/DescriptionCleanerTest.php tests/Unit/Seo/MetaResolverTest.php 2>&1 | Select-Object -Last 25)",
       "PowerShell(php artisan test --compact tests/Unit/Seo tests/Feature/Seo tests/Feature/System/GenerateSitemapTest.php 2>&1 | Select-Object -Last 20)",
       "PowerShell(php artisan test --compact tests/Unit/Seo/DescriptionCleanerTest.php --filter \"test_strips_custom_attribute_annotations\" 2>&1 | Select-Object -Last 20)",
-      "PowerShell(php artisan test --compact 2>&1 | Select-Object -Last 40)"
+      "PowerShell(php artisan test --compact 2>&1 | Select-Object -Last 40)",
+      "PowerShell(php artisan make:migration add_deadline_to_lesson_calendars_table --no-interaction)",
+      "PowerShell(php artisan migrate --no-interaction)",
+      "PowerShell(php artisan test --compact --filter=test_admin_can_create_or_update_a_lesson_calendar tests/Feature/Lessons/LessonApiActionsTest.php)",
+      "PowerShell(php artisan test --compact tests/Feature/Lessons/LessonApiActionsTest.php)",
+      "PowerShell(npx vitest run tests/ts/Components/Courses/CourseWeekTimetable.test.ts 2>&1 | Select-Object -Last 40)",
+      "PowerShell(npx vitest run tests/ts/Components/Courses/LessonDrops.test.ts tests/ts/Components/Courses/CourseWeekTimetable.test.ts 2>&1 | Select-Object -Last 30)",
+      "PowerShell(npx vue-tsc --noEmit; if \\($LASTEXITCODE -eq 0\\) { \"TYPECHECK OK\" } else { \"TYPECHECK FAIL \\($LASTEXITCODE\\)\" })",
+      "PowerShell(npx vitest run tests/ts/Components/Courses/LessonDrops.test.ts 2>&1 | Select-Object -Last 12)"
     ]
   },
   "enableAllProjectMcpServers": true,

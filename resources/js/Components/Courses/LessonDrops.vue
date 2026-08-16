@@ -1,50 +1,25 @@
 <script lang="ts" setup>
 
-import {CourseInterface, LessonInterface, TeamInterface} from "@/types/modelInterfaces.ts"
+import {CourseInterface, LessonInterface} from "@/types/modelInterfaces.ts"
 import LessonDrop from "@/Components/Courses/LessonDrop.vue"
 import {computed} from "vue"
-import dayjs from "dayjs"
+import {lessonBandColors} from "@/types/lessonInterfaces.ts"
 
 const props = defineProps<{
 	course: CourseInterface,
-	team: TeamInterface,
 	lessons: LessonInterface[]
 }>()
 
-function toMinutes(time: string): number | null {
-	const [hour, minute] = time.split(':').map(Number)
-
-	if (minute === undefined) {
-		return null
-	}
-
-	return hour * 60 + minute
-}
-
-const firstTimeOfTheDayInMinutes = computed(() => {
-	if (props.lessons.length === 0) {
-		return null
-	}
-
-	const day = dayjs(props.lessons[0].scheduled_at).day()
-	const times: number[] = (props.team.calendar ?? [])
-		.filter((calendar) => calendar.day === day)
-		.map((calendar) => toMinutes(calendar.time))
-		.filter((time): time is number => time !== null)
-
-	if (times.length === 0) {
-		return null
-	}
-
-	return Math.min(...times)
-})
-
 const homeworkLessons = computed(() => {
-	return props.lessons.filter(lesson => lesson.homework)
+	return props.lessons.filter(lesson => lesson.homework && !lesson.deadline)
 })
 
 const courseLessons = computed(() => {
-	return props.lessons.filter(lesson => !lesson.homework)
+	return props.lessons.filter(lesson => !lesson.homework && !lesson.deadline)
+})
+
+const deadlineLessons = computed(() => {
+	return props.lessons.filter(lesson => lesson.deadline)
 })
 
 </script>
@@ -53,11 +28,15 @@ const courseLessons = computed(() => {
 	<div class="space-y-4">
 		<div
 			v-if="homeworkLessons.length"
-			v-theme.bg.light
-			class="flex gap-1 flex-col
-			-mx-3 -mt-3 p-3 mb-3
-			"
+			class="flex gap-1 flex-col border p-2 rounded-lg"
+			:class="lessonBandColors.homework.base"
 		>
+			<div
+				class="text-xs font-semibold uppercase"
+				:class="lessonBandColors.homework.text"
+			>
+				Devoirs
+			</div>
 			<lesson-drop
 				v-for="lesson in homeworkLessons"
 				:key="`lesson-tag-${lesson.id}`"
@@ -68,10 +47,29 @@ const courseLessons = computed(() => {
 
 		<div
 			v-if="courseLessons.length"
-			class="flex gap-1 flex-col"
+			class="flex gap-1 flex-col border border-transparent p-2 rounded-lg"
 		>
 			<lesson-drop
 				v-for="lesson in courseLessons"
+				:key="`lesson-tag-${lesson.id}`"
+				:course
+				:lesson
+			/>
+		</div>
+
+		<div
+			v-if="deadlineLessons.length"
+			class="flex gap-1 flex-col border p-2 rounded-lg"
+			:class="lessonBandColors.deadline.base"
+		>
+			<div
+				class="text-xs font-semibold uppercase"
+				:class="lessonBandColors.deadline.text"
+			>
+				Échéance
+			</div>
+			<lesson-drop
+				v-for="lesson in deadlineLessons"
 				:key="`lesson-tag-${lesson.id}`"
 				:course
 				:lesson

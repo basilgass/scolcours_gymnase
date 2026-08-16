@@ -114,6 +114,7 @@ class LessonApiController extends Controller
 		$validated = $request->validate([
 			'scheduled_at' => ['required', 'date_format:Y-m-d\TH:i'],
 			'homework'     => ['required', 'boolean'],
+			'deadline'     => ['sometimes', 'boolean'],
 		]);
 
 		$calendar = $lesson

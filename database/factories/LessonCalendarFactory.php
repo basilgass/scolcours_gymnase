@@ -18,6 +18,7 @@ class LessonCalendarFactory extends Factory
             'lesson_id'    => Lesson::factory(),
             'scheduled_at' => now(),
             'homework'     => false,
+            'deadline'     => false,
         ];
     }
 

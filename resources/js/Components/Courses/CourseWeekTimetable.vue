@@ -4,6 +4,7 @@ import {computed, ref} from "vue"
 import {Dayjs} from "dayjs"
 import {
 	itemInTimetableInterface,
+	lessonBandColors,
 	weekCalendarDagTransferInterface,
 	weekCalendarInterface
 } from "@/types/lessonInterfaces.ts"
@@ -17,8 +18,25 @@ const props = defineProps<{
 	from: Dayjs,
 	to: Dayjs,
 	calendar: weekCalendarInterface[],
+	days: { day: Dayjs, active: boolean }[],
 	teams: TeamInterface[]
 }>()
+
+type BandId = 'homework' | 'lesson' | 'deadline'
+
+interface BandConfig {
+	id: BandId,
+	label: string,
+	base: string,   // couleur droppable
+	hover: string,  // couleur au survol d'un drag
+	text: string    // couleur du libellé de la bande
+}
+
+const bands: BandConfig[] = [
+	{id: 'homework', label: 'Devoirs', ...lessonBandColors.homework},
+	{id: 'lesson', label: 'Leçons', ...lessonBandColors.lesson},
+	{id: 'deadline', label: 'Échéance', ...lessonBandColors.deadline}
+]
 
 const courseByDay = computed(() => {
 	const arr: Record<number, number[]> = {}
@@ -60,17 +78,53 @@ function getItems(team: TeamInterface, day: number): weekCalendarInterface[] {
 	)
 }
 
+// Jour scolaire (colonne `school` de school_calendars, remontée en `active`).
+function isSchoolDay(weekday: number): boolean {
+	return props.days[weekday - 1]?.active ?? false
+}
+
+// Jour de présence de l'équipe (créneaux du team_calendar).
+function isPresenceDay(team: TeamInterface, weekday: number): boolean {
+	return courseByDay.value[team.id]?.includes(weekday) ?? false
+}
+
+// Items d'une bande donnée pour un jour donné.
+function itemsForBand(team: TeamInterface, weekday: number, band: BandId): weekCalendarInterface[] {
+	const items = itemsInTimetable.value[team.name]?.[weekday] ?? []
+
+	if (band === 'deadline') {
+		return items.filter(item => item.lesson.deadline)
+	}
+	if (band === 'homework') {
+		return items.filter(item => item.lesson.homework && !item.lesson.deadline)
+	}
+	return items.filter(item => !item.lesson.homework && !item.lesson.deadline)
+}
+
+// Un jour non-scolaire n'accepte rien ; les échéances ignorent la présence, pas devoirs/leçons.
+function isDroppable(team: TeamInterface, weekday: number, band: BandId): boolean {
+	if (!isSchoolDay(weekday)) return false
+	if (band === 'deadline') return true
+	return isPresenceDay(team, weekday)
+}
+
+function bandPayload(band: BandId): { homework: boolean, deadline: boolean } {
+	if (band === 'deadline') return {homework: true, deadline: true}
+	if (band === 'homework') return {homework: true, deadline: false}
+	return {homework: false, deadline: false}
+}
+
 const isDragging = ref(false)
 const hoveredCells = ref<Record<string, boolean>>({})
 
-function cellKey(team: TeamInterface, day: number) {
-	return `w${props.week}-${team.name}-${day}`
+function cellKey(team: TeamInterface, weekday: number, band: BandId) {
+	return `w${props.week}-${team.name}-${band}-${weekday}`
 }
 
-function isHovered(team: TeamInterface, day: number) {
+function isHovered(team: TeamInterface, weekday: number, band: BandId) {
 	if (team.name !== currentTeamDragItem.value) return false
 
-	return !!hoveredCells.value[cellKey(team, day)]
+	return !!hoveredCells.value[cellKey(team, weekday, band)]
 }
 
 const currentTeamDragItem = ref<string | null>(null)
@@ -92,13 +146,13 @@ function onDragStart(e: DragEvent, sourceDay: number, item: weekCalendarInterfac
 	isDragging.value = true
 }
 
-function onDragEnter(e: DragEvent, team: TeamInterface, day: number) {
+function onDragEnter(e: DragEvent, team: TeamInterface, weekday: number, band: BandId) {
 	if (e.dataTransfer) e.dataTransfer.dropEffect = "move"
-	hoveredCells.value[cellKey(team, day)] = true
+	hoveredCells.value[cellKey(team, weekday, band)] = true
 }
 
-function onDragLeave(e: DragEvent, team: TeamInterface, day: number) {
-	hoveredCells.value[cellKey(team, day)] = false
+function onDragLeave(e: DragEvent, team: TeamInterface, weekday: number, band: BandId) {
+	hoveredCells.value[cellKey(team, weekday, band)] = false
 }
 
 function onDragEnd() {
@@ -112,10 +166,8 @@ function onDragOver(e: DragEvent) {
 	if (e.dataTransfer) e.dataTransfer.dropEffect = "move"
 }
 
-function onDrop(e: DragEvent, tday: number) {
+function onDrop(e: DragEvent, weekday: number, band: BandId) {
 	e.preventDefault()
-
-	const targetDay = (tday - 1) % 5 + 1
 
 	if (!e.dataTransfer) return
 	const dataJson = e.dataTransfer.getData("application/json")
@@ -130,19 +182,21 @@ function onDrop(e: DragEvent, tday: number) {
 
 	if (!source) return
 
-	// On vérifie que le cours exist à cette date.
-	if (!courseByDay.value[source.team_id].includes(targetDay)) {
-		alert("Le cours n'existe pas ce jour.")
-		return
-	}
+	const team = props.teams.find(t => t.id === source?.team_id)
+	if (!team) return
 
-	// Sauvegarde des informations (axios)
-	const target = props.from.add(targetDay - 1, 'days')
+	// Jour non-scolaire, ou hors présence pour devoirs/leçons : rejet silencieux.
+	if (!isDroppable(team, weekday, band)) return
+
+	const target = props.from.add(weekday - 1, 'days')
+	const payload = bandPayload(band)
+
 	// Emettre l'information aux parents pour la mise à jour du calendrier.
 	emit('drop', {
 		...source,
 		target,
-		homework: tday <= 5
+		homework: payload.homework,
+		deadline: payload.deadline
 	})
 }
 
@@ -151,7 +205,8 @@ const emit = defineEmits<{
 		lesson_id: number,
 		team_id: number,
 		target: Dayjs,
-		homework: boolean
+		homework: boolean,
+		deadline: boolean
 	}]
 }>()
 
@@ -178,36 +233,49 @@ const emit = defineEmits<{
 			<div
 				v-for="team in teams"
 				:key="`team-${team.name}`"
-				class="grid grid-cols-5 gap-x-3 gap-y-1"
+				class="space-y-2"
 			>
 				<div
-					v-for="day in 10"
-					:key="`devoirs-${day}`"
-					:class="[
-						'px-3 min-h-[2em] rounded-lg border border-dashed transition-colors duration-150',
-						{
-							'border-orange-400 bg-orange-100': courseByDay[team.id].includes(day) && day<=5,
-							'bg-orange-200': courseByDay[team.id].includes(day) && day<=5 && isHovered(team, day),
-							'border-blue-400 bg-blue-100': courseByDay[team.id].includes((day-1)%5+1) && day > 5,
-							'bg-blue-200': courseByDay[team.id].includes((day-1)%5+1) && day > 5 && isHovered(team, day),
-							'opacity-20 cursor-not-allowed': !courseByDay[team.id].includes((day-1)%5+1)
-						}
-					]"
-					@dragenter="event => onDragEnter(event, team, day)"
-					@dragleave="event => onDragLeave(event, team, day)"
-					@drop="event => onDrop(event, day)"
-					@dragover.prevent="onDragOver"
+					v-for="band in bands"
+					:key="`team-${team.name}-band-${band.id}`"
+					class="space-y-1"
 				>
 					<div
-						v-for="item in itemsInTimetable[team.name][(day-1)%5+1].filter(item=>item.lesson.homework === (day<=5) )"
-						:key="`team-${item.team.id}-lesson-${item.lesson.id}`"
-						class="bg-content border rounded item-draggable text-xs flex gap-2 items-top p-1 overflow-hidden cursor-move"
-						draggable="true"
-						@dragend="onDragEnd"
-						@dragstart="event => onDragStart(event, day, item)"
+						class="text-xs font-semibold"
+						:class="band.text"
 					>
-						<lesson-type-icon :lesson="item?.lesson??null" />
-						{{ item.lesson.label ?? item.lesson.title }} ({{ item.team.name }})
+						{{ team.name }} — {{ band.label }}
+					</div>
+
+					<div class="grid grid-cols-5 gap-x-3 gap-y-1">
+						<div
+							v-for="weekday in 5"
+							:key="`${band.id}-${weekday}`"
+							:data-band="band.id"
+							:data-weekday="weekday"
+							:class="[
+								'px-3 min-h-[2em] rounded-lg border border-dashed transition-colors duration-150',
+								isDroppable(team, weekday, band.id)
+									? [band.base, isHovered(team, weekday, band.id) ? band.hover : '']
+									: 'opacity-20 cursor-not-allowed'
+							]"
+							@dragenter="event => onDragEnter(event, team, weekday, band.id)"
+							@dragleave="event => onDragLeave(event, team, weekday, band.id)"
+							@drop="event => onDrop(event, weekday, band.id)"
+							@dragover.prevent="onDragOver"
+						>
+							<div
+								v-for="item in itemsForBand(team, weekday, band.id)"
+								:key="`team-${item.team.id}-lesson-${item.lesson.id}`"
+								class="bg-content border rounded item-draggable text-xs flex gap-2 items-top p-1 overflow-hidden cursor-move"
+								draggable="true"
+								@dragend="onDragEnd"
+								@dragstart="event => onDragStart(event, weekday, item)"
+							>
+								<lesson-type-icon :lesson="item?.lesson??null" />
+								{{ item.lesson.label ?? item.lesson.title }} ({{ item.team.name }})
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

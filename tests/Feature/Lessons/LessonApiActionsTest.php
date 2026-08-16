@@ -87,21 +87,31 @@ class LessonApiActionsTest extends TestCase
 
         // Création → modèle fraîchement créé → 201.
         $this->patchJson(route('api.admin.teams.lessons.calendars.update', [$team, $lesson]), [
-            'scheduled_at' => '2026-09-01T08:30',
+            'scheduled_at' => '2026-09-01T23:59',
             'homework'     => true,
+            'deadline'     => true,
         ])->assertStatus(201);
 
         $this->assertDatabaseHas('lesson_calendars', [
             'lesson_id' => $lesson->id,
             'team_id'   => $team->id,
             'homework'  => true,
+            'deadline'  => true,
         ]);
 
         // Second appel sur le même couple (team, lesson) : updateOrCreate met à jour → 200.
+        // deadline explicitement remis à false → l'échéance est bien effacée.
         $this->patchJson(route('api.admin.teams.lessons.calendars.update', [$team, $lesson]), [
             'scheduled_at' => '2026-09-08T10:00',
             'homework'     => false,
+            'deadline'     => false,
         ])->assertStatus(200);
+
+        $this->assertDatabaseHas('lesson_calendars', [
+            'lesson_id' => $lesson->id,
+            'team_id'   => $team->id,
+            'deadline'  => false,
+        ]);
 
         $this->assertSame(1, $lesson->calendars()->count());
     }
