@@ -81,6 +81,12 @@ function onChange() {
 	emits('update', json.value)
 }
 
+const forwardedProps = computed(() => ({
+	xs: props.xs,
+	sm: props.sm,
+	xl: props.xl,
+}))
+
 const rRefs = useTemplateRef('elements')
 
 function focusNext(key: string) {
@@ -115,9 +121,9 @@ watch(() => props.map, () => buildValues())
 				v-model="rValue[element].value"
 				:type="fieldType"
 				:label="element"
-				:disabled="props.disabled"
+				:disabled
 				:clearable
-				v-bind="{...$attrs,...props}"
+				v-bind="{...$attrs, ...forwardedProps}"
 				@update="onChange"
 				@enter="focusNext(element)"
 			/>

@@ -1,0 +1,1 @@
+function e(e){return e.label?e.label.includes(`@`)?e.label.replace(`@`,e.title):e.label:e.title}export{e as t};

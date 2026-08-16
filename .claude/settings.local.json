@@ -197,7 +197,9 @@
       "PowerShell(php artisan test --compact --filter=MetaResolverTest)",
       "PowerShell(php artisan test --compact --filter=SeoAdminTest)",
       "mcp__laravel-boost__get-absolute-url",
-      "PowerShell(git *)"
+      "PowerShell(git *)",
+      "Bash(Select-String -Pattern \"FormJson|error|Found|built\")",
+      "Bash(Select-Object -First 20)"
     ]
   },
   "enableAllProjectMcpServers": true,
