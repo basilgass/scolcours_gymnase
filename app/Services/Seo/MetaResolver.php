@@ -21,10 +21,13 @@ class MetaResolver
 
     private function fromConfig(string $key): MetaData
     {
-        $static = config("seo.static.{$key}", [
+        // La clé peut contenir un point (ex. 'tools.index') : on lit le tableau
+        // complet et on indexe par clé littérale, sinon config() la découperait
+        // en sous-tableaux imbriqués inexistants.
+        $static = config('seo.static')[$key] ?? [
             'title'       => config('seo.suffix'),
             'description' => '',
-        ]);
+        ];
 
         return new MetaData(
             $static['title'],

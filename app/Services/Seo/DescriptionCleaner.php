@@ -13,10 +13,15 @@ class DescriptionCleaner
         }
 
         $text = strip_tags($raw);
+        // Environnements mathématiques complets : délimiteurs ET contenu.
+        $text = preg_replace('/\\\\\[.*?\\\\\]/s', ' ', $text); // \[ ... \]
+        $text = preg_replace('/\\\\\(.*?\\\\\)/s', ' ', $text); // \( ... \)
         // LaTeX inline $...$
         $text = preg_replace('/\$[^$]*\$/', ' ', $text);
-        // Commandes \cmd ou \cmd{...}
+        // Commandes résiduelles \cmd ou \cmd{...}
         $text = preg_replace('/\\\\[a-zA-Z]+\s*(\{[^}]*\})?/', ' ', $text);
+        // Annotations Markdown custom du type {.@info}, {.@warning}, etc.
+        $text = preg_replace('/\{\.@[^}]*\}/', ' ', $text);
         $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5);
         $text = trim(preg_replace('/\s+/', ' ', $text));
 

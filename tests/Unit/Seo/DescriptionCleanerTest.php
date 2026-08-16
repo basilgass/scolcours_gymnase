@@ -41,4 +41,28 @@ class DescriptionCleanerTest extends TestCase
         $this->assertStringEndsWith('…', $result);
         $this->assertStringNotContainsString('mo…', $result); // pas de coupe en plein mot
     }
+
+    public function test_strips_display_math_environment_entirely(): void
+    {
+        // \[ ... \] : délimiteurs ET contenu retirés, texte adjacent conservé.
+        $result = DescriptionCleaner::clean('Extension de la notion \\[ \\sqrt[5]{32^2} = 4 \\]');
+
+        $this->assertSame('Extension de la notion', $result);
+    }
+
+    public function test_strips_inline_parenthesis_math_without_leaving_soup(): void
+    {
+        // \( ... \) : aucun résidu d'opérateurs ou d'exposants (ex-bouillie "^2( )+ ^2( )=1").
+        $result = DescriptionCleaner::clean('Identité \\(\\sin^2(\\alpha)+\\cos^2(\\alpha)=1\\) fondamentale.');
+
+        $this->assertSame('Identité fondamentale.', $result);
+    }
+
+    public function test_strips_custom_attribute_annotations(): void
+    {
+        // Annotations Markdown custom "{.@info}" : purement techniques, pas du contenu.
+        $result = DescriptionCleaner::clean('Cercle de centre O et de rayon 6 {.@info}');
+
+        $this->assertSame('Cercle de centre O et de rayon 6', $result);
+    }
 }

@@ -199,7 +199,15 @@
       "mcp__laravel-boost__get-absolute-url",
       "PowerShell(git *)",
       "Bash(Select-String -Pattern \"FormJson|error|Found|built\")",
-      "Bash(Select-Object -First 20)"
+      "Bash(Select-Object -First 20)",
+      "PowerShell(composer install *)",
+      "PowerShell(php artisan test --compact tests/Unit/Seo/DescriptionCleanerTest.php --filter \"test_strips_display_math_environment_entirely|test_strips_inline_parenthesis_math_without_leaving_soup\" 2>&1 | Select-Object -Last 30)",
+      "PowerShell(php artisan test --compact tests/Feature/Seo/MetaResolverTest.php --filter \"test_index_page_with_a_dotted_key_reads_from_config\" 2>&1 | Select-Object -Last 30)",
+      "PowerShell(php artisan test --compact tests/Unit/Seo/MetaResolverTest.php --filter \"test_index_page_with_a_dotted_key_reads_from_config\" 2>&1 | Select-Object -Last 30)",
+      "PowerShell(php artisan test --compact tests/Unit/Seo/DescriptionCleanerTest.php tests/Unit/Seo/MetaResolverTest.php 2>&1 | Select-Object -Last 25)",
+      "PowerShell(php artisan test --compact tests/Unit/Seo tests/Feature/Seo tests/Feature/System/GenerateSitemapTest.php 2>&1 | Select-Object -Last 20)",
+      "PowerShell(php artisan test --compact tests/Unit/Seo/DescriptionCleanerTest.php --filter \"test_strips_custom_attribute_annotations\" 2>&1 | Select-Object -Last 20)",
+      "PowerShell(php artisan test --compact 2>&1 | Select-Object -Last 40)"
     ]
   },
   "enableAllProjectMcpServers": true,

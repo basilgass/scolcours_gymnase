@@ -78,4 +78,18 @@ class MetaResolverTest extends TestCase
         $this->assertSame('Scolcours — mathématiques au gymnase', $meta->title);
         $this->assertSame(MetaSource::Template, $meta->source);
     }
+
+    public function test_index_page_with_a_dotted_key_reads_from_config(): void
+    {
+        // La clé 'tools.index' contient un point : config() ne doit pas la découper
+        // en sous-tableaux (sinon retombe sur le suffixe seul + description vide).
+        $meta = $this->resolve(new SitemapEntry(route('tools.index'), 'tools.index'));
+
+        $this->assertSame('Outils | Scolcours', $meta->title);
+        $this->assertSame(
+            'Outils interactifs de mathématiques : graphes, calculs, illustrations.',
+            $meta->description
+        );
+        $this->assertSame(MetaSource::Template, $meta->source);
+    }
 }
