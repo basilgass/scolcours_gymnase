@@ -85,13 +85,11 @@ class ChapterApiController extends Controller
 	public function update(Request $request, Chapter $chapter)
 	{
 		$validated = $request->validate([
-			'title'      => ['required', 'min:2', 'max:255'],
-			'meta_title' => ['nullable', 'min:2', 'max:255'],
-			'slug'       => ['required', 'min:1', 'max:255'],
+			'title' => ['required', 'min:2', 'max:255'],
+			'slug'  => ['required', 'min:1', 'max:255'],
 		]);
 
 		$chapter->title = $validated['title'];
-		$chapter->meta_title = $validated['meta_title'] ?? null;
 		$chapter->slug = $validated['slug'];
 		$chapter->save();
 

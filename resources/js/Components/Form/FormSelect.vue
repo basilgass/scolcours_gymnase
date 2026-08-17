@@ -50,7 +50,11 @@ function updatePosition() {
 	menuStyle.value = {
 		position: 'fixed',
 		left: `${r.left}px`,
-		width: `${r.width}px`,
+		// minWidth (au lieu de width) : le menu reste au moins aussi large que le trigger
+		// mais s'élargit au contenu ; maxWidth le borne au bord droit du viewport pour
+		// éviter tout débordement quand le trigger est étroit (ex. cellule de tableau).
+		minWidth: `${r.width}px`,
+		maxWidth: `${window.innerWidth - r.left - gap}px`,
 		maxHeight: `${maxHeight}px`,
 		...(openUp
 			? {bottom: `${window.innerHeight - r.top + gap}px`}
@@ -173,7 +177,7 @@ watch(open, (isOpen) => {
 						:key="`choice-${index}`"
 						v-katex.auto="labelMap(choice)"
 						v-theme.border
-						class="px-2 py-3 cursor-pointer transition-colors border-0"
+						class="px-2 py-3 cursor-pointer transition-colors border-0 whitespace-nowrap"
 						:class="[
 							index === activeIndex ? 'bg-slate-200 dark:bg-slate-600' : 'hover:bg-slate-100 dark:hover:bg-slate-700',
 							choice === value ? 'border-l-8' : ''

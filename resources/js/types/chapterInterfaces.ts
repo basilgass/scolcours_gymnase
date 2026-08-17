@@ -17,7 +17,6 @@ export interface ChapterInterface {
 		body: string
 	},
 	id: number;
-	meta_title: string;
 	modified: string;
 	slug: string;
 	theme_id: number;

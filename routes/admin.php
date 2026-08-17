@@ -96,6 +96,8 @@ Route::middleware('admin')
 	          ->group(function () {
 		          Route::get('/', [SeoAdminController::class, 'index'])
 		               ->name('index');
+		          Route::patch('/', [SeoAdminController::class, 'update'])
+		               ->name('update');
 	          });
 
 

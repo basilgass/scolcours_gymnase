@@ -93,10 +93,6 @@ function deleteChapter() {
 				focus
 				label="titre"
 			/>
-			<FormInput
-				v-model="theChapter.meta_title"
-				label="meta-titre"
-			/>
 
 			<FormInput
 				v-model="theChapter.slug"

@@ -23,7 +23,6 @@ use Illuminate\Support\Carbon;
  * @property int $theme_id
  * @property string $slug
  * @property string $title
- * @property string|null $meta_title
  * @property int $active
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at

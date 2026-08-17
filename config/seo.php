@@ -28,11 +28,11 @@ return [
         ],
         'chapters.index' => [
             'title'       => 'Chapitres | Scolcours',
-            'description' => 'Tous les chapitres de mathématiques du gymnase.',
+            'description' => 'Tous les chapitres de mathématiques du gymnase : algèbre, analyse, géométrie, probabilités et statistiques, arithmétique, avec cours et exercices.',
         ],
         'posts.index' => [
             'title'       => 'Articles | Scolcours',
-            'description' => 'Les articles de cours de mathématiques.',
+            'description' => 'Articles et cours de mathématiques du gymnase : algèbre, analyse, géométrie, probabilités et arithmétique, expliqués pas à pas avec des exemples.',
         ],
         'tools.index' => [
             'title'       => 'Outils | Scolcours',
@@ -40,11 +40,11 @@ return [
         ],
         'decks.index' => [
             'title'       => 'Cartes | Scolcours',
-            'description' => 'Jeux de cartes de révision de mathématiques.',
+            'description' => 'Jeux de cartes de révision pour mémoriser définitions, formules et méthodes de mathématiques du gymnase et réviser efficacement avant les épreuves.',
         ],
         'challenges.index' => [
             'title'       => 'Défis | Scolcours',
-            'description' => 'Défis de mathématiques à résoudre.',
+            'description' => 'Défis de mathématiques à résoudre pour s\'entraîner : énigmes et problèmes variés couvrant l\'algèbre, l\'analyse, la géométrie et les probabilités du gymnase.',
         ],
         'generators.index' => [
             'title'       => 'Exercices | Scolcours',
@@ -52,7 +52,7 @@ return [
         ],
         'formulas.index' => [
             'title'       => 'Formulaire | Scolcours',
-            'description' => 'Formulaire de mathématiques du gymnase.',
+            'description' => 'Formulaire de mathématiques du gymnase : toutes les formules essentielles d\'algèbre, d\'analyse, de géométrie et de probabilités réunies en un seul endroit.',
         ],
     ],
 ];
