@@ -28,6 +28,27 @@ class SitemapEntriesTest extends TestCase
         $this->assertTrue($urls->contains(route('tools.show', $tool->slug)));
     }
 
+    public function test_it_never_yields_duplicate_urls(): void
+    {
+        // Un thème-skin dont le slug collisionne avec une route d'index (ici « tools »
+        // → /tools, comme `tools.index`) ne doit pas produire une seconde entrée.
+        Theme::factory()->create(['enabled' => true, 'slug' => 'tools']);
+
+        $urls = app(SitemapEntries::class)->all()->pluck('url');
+
+        $this->assertSame($urls->unique()->count(), $urls->count());
+        $this->assertSame(1, $urls->filter(fn (string $url) => $url === route('tools.index'))->count());
+    }
+
+    public function test_it_excludes_the_broken_posts_index_url(): void
+    {
+        // /posts n'a plus de route (PostController@index inexistant) : ni au
+        // sitemap ni à l'audit. On teste l'URL brute, le nom de route n'existant plus.
+        $urls = app(SitemapEntries::class)->all()->pluck('url');
+
+        $this->assertFalse($urls->contains(url('/posts')));
+    }
+
     public function test_it_carries_the_model_for_content_entries(): void
     {
         $tool = Tool::factory()->create();

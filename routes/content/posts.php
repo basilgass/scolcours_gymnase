@@ -6,8 +6,10 @@ use App\Http\Controllers\web\PostController;
 Route::middleware('web')
      ->group(function () {
 	     // Public routes.
+	     // Pas de 'index' : PostController@index n'existe pas (/posts → 500). La
+	     // version canonique d'un post est la page de son chapitre (cf. show()).
 	     Route::resource('posts', PostController::class)
-	          ->only(['index', 'show']);
+	          ->only(['show']);
 
 	     Route::get('posts/{post}/blocks/{block}', [PostController::class, 'anchor'])
 	          ->name('posts.blocks.anchor');

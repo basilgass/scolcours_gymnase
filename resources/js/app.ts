@@ -26,7 +26,13 @@ useDark()
 axios.get('/sanctum/csrf-cookie').then(async () => {
 	await createInertiaApp({
 		title: (title) => {
-			return title ? `${title} - ScolCours` : `ScolCours`
+			// Le MetaResolver fournit déjà un titre suffixé « | Scolcours » ; on
+			// n'ajoute la marque que pour les titres bruts (pages Auth...), sans la
+			// dupliquer. Format unifié avec le <head> serveur (cf. app.blade.php).
+			if (!title) {
+				return "Scolcours"
+			}
+			return title.includes("Scolcours") ? title : `${title} | Scolcours`
 		},
 		resolve: (title) =>
 			resolvePageComponent(

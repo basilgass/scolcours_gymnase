@@ -26,14 +26,6 @@ return [
             'title'       => 'Scolcours — mathématiques au gymnase',
             'description' => 'Cours, exercices interactifs et outils de mathématiques pour le gymnase.',
         ],
-        'chapters.index' => [
-            'title'       => 'Chapitres | Scolcours',
-            'description' => 'Tous les chapitres de mathématiques du gymnase : algèbre, analyse, géométrie, probabilités et statistiques, arithmétique, avec cours et exercices.',
-        ],
-        'posts.index' => [
-            'title'       => 'Articles | Scolcours',
-            'description' => 'Articles et cours de mathématiques du gymnase : algèbre, analyse, géométrie, probabilités et arithmétique, expliqués pas à pas avec des exemples.',
-        ],
         'tools.index' => [
             'title'       => 'Outils | Scolcours',
             'description' => 'Outils interactifs de mathématiques : graphes, calculs, illustrations.',

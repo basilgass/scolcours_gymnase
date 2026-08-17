@@ -7,9 +7,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('web')
      ->group(function () {
-	     // Public routes.
-	     Route::resource('chapters', ChapterController::class)
-	          ->only(['index']);
+	     // Pas de /chapters « nu » : sans thème lié, index(Theme) rend une liste
+	     // vide et l'URL n'a pas de sens. Le listing des chapitres = themes.show
+	     // (`/{theme:slug}/`, plus bas).
 
 	     // ROUTE: Rendre les choses plus logique (dans le Controller, et déplacer le "slide" dans une autre fonction.
 	     Route::get('chapters/{chapter}', function (Chapter $chapter) {

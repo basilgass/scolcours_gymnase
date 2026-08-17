@@ -3,6 +3,8 @@
 - dans la page `/...theme...`, on charge les challenges. La requête charge également les générateurs, de manière
   inutile.
 
+- la route `tools` peut venir de `tools.index` ou de `themes.show` avec le slug `tools`. A améliorer.
+
 # Liste des petites choses à faire.
 
 ## Keyboards

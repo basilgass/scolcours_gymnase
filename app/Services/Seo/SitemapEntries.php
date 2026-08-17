@@ -18,8 +18,9 @@ class SitemapEntries
         'decks.index',
         'challenges.index',
         'generators.index',
-        'chapters.index',
-        'posts.index',
+        // Ni 'chapters.index' (/chapters nu = liste vide, route supprimée ; le
+        // listing = themes.show) ni 'posts.index' (/posts = 500, route supprimée) :
+        // ces URLs n'existent plus, le listing des chapitres passe par les thèmes.
     ];
 
     /**
@@ -64,6 +65,10 @@ class SitemapEntries
             new SitemapEntry(route('generators.show', $generator->slug), 'generators.show', $generator)
         ));
 
-        return $entries->values();
+        // Une URL revendiquée par une route explicite l'emporte : les routes d'accueil
+        // et d'index sont énumérées en premier, donc `unique` (qui garde la 1re
+        // occurrence) écarte un thème dont le slug collisionne avec une route réservée
+        // (ex. un thème-skin de slug « tools » masquerait `tools.index` → /tools).
+        return $entries->unique(fn (SitemapEntry $entry) => $entry->url)->values();
     }
 }

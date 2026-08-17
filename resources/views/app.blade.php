@@ -4,7 +4,10 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<title data-inertia>{{ config('app.name', 'Scolcours') }}</title>
+	<title data-inertia>{{ $page['props']['meta']['title'] ?? config('app.name', 'Scolcours') }}</title>
+	@if(!empty($page['props']['meta']['description']))
+		<meta name="description" content="{{ $page['props']['meta']['description'] }}">
+	@endif
 
 	<!-- Fonts -->
 	<link rel="preconnect" href="https://fonts.googleapis.com">

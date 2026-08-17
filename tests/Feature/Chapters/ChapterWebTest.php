@@ -40,15 +40,11 @@ class ChapterWebTest extends TestCase
                 ->has('chapters', 1));
     }
 
-    public function test_bare_chapters_index_renders_empty_for_unbound_theme(): void
+    public function test_bare_chapters_url_no_longer_exists(): void
     {
-        // Quirk : la route /chapters appelle index(Theme $theme) sans paramètre
-        // → Theme vide → aucune chapter. Caractérisé.
-        $this->get(route('chapters.index'))
-            ->assertStatus(200)
-            ->assertInertia(fn (Assert $page) => $page
-                ->component('Chapters/ChapterIndex')
-                ->has('chapters', 0));
+        // /chapters « nu » (sans thème) rendait une liste vide et n'avait pas de
+        // sens : la route a été supprimée. Le listing des chapitres = themes.show.
+        $this->get('/chapters')->assertNotFound();
     }
 
     public function test_show_renders_the_chapter_page_publicly(): void
