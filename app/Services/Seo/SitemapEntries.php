@@ -34,13 +34,15 @@ class SitemapEntries
             $entries->push(new SitemapEntry(route($name), $name));
         }
 
-        Theme::where('enabled', true)
-            ->with(['chapters' => fn ($q) => $q->where('active', true)])
-            ->get()
+        // On énumère les thèmes depuis le MÊME cache que le routing
+        // (`Route::bind('theme')` résout via `getThemesFromCache`). Requêter la DB
+        // en parallèle divergerait : un thème enabled en DB mais absent du cache
+        // (seed brut sans event) `abort(404)` au routing → URL fantôme au sitemap.
+        Theme::getThemesFromCache()
             ->each(function (Theme $theme) use ($entries) {
                 $entries->push(new SitemapEntry(route('themes.show', $theme->slug), 'themes.show', $theme));
 
-                $theme->chapters->each(fn (Chapter $chapter) => $entries->push(
+                $theme->chapters()->where('active', true)->get()->each(fn (Chapter $chapter) => $entries->push(
                     new SitemapEntry(
                         route('themes.chapters.show', [$theme->slug, $chapter->slug]),
                         'themes.chapters.show',

@@ -215,7 +215,8 @@
       "PowerShell(npx vitest run tests/ts/Components/Courses/CourseWeekTimetable.test.ts 2>&1 | Select-Object -Last 40)",
       "PowerShell(npx vitest run tests/ts/Components/Courses/LessonDrops.test.ts tests/ts/Components/Courses/CourseWeekTimetable.test.ts 2>&1 | Select-Object -Last 30)",
       "PowerShell(npx vue-tsc --noEmit; if \\($LASTEXITCODE -eq 0\\) { \"TYPECHECK OK\" } else { \"TYPECHECK FAIL \\($LASTEXITCODE\\)\" })",
-      "PowerShell(npx vitest run tests/ts/Components/Courses/LessonDrops.test.ts 2>&1 | Select-Object -Last 12)"
+      "PowerShell(npx vitest run tests/ts/Components/Courses/LessonDrops.test.ts 2>&1 | Select-Object -Last 12)",
+      "PowerShell(node rpncheck.mjs)"
     ]
   },
   "enableAllProjectMcpServers": true,

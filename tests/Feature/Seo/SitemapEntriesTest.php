@@ -7,6 +7,7 @@ use App\Models\Theme;
 use App\Models\Tool;
 use App\Services\Seo\SitemapEntries;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class SitemapEntriesTest extends TestCase
@@ -47,6 +48,25 @@ class SitemapEntriesTest extends TestCase
         $urls = app(SitemapEntries::class)->all()->pluck('url');
 
         $this->assertFalse($urls->contains(url('/posts')));
+    }
+
+    public function test_it_only_lists_themes_reachable_via_the_route_cache(): void
+    {
+        // Route::bind('theme') résout depuis getThemesFromCache : un thème enabled
+        // en DB mais absent du cache (seed brut sans event Eloquent) est injoignable
+        // (abort 404). Le sitemap doit donc suivre le cache, pas la DB brute.
+        $cached = Theme::factory()->create(['enabled' => true]); // event saved → entre au cache
+
+        $ghost = Theme::factory()->make(['slug' => 'ghost-theme', 'enabled' => true]);
+        DB::table('themes')->insert(array_merge($ghost->getAttributes(), [
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]));
+
+        $urls = app(SitemapEntries::class)->all()->pluck('url');
+
+        $this->assertTrue($urls->contains(route('themes.show', $cached->slug)));
+        $this->assertFalse($urls->contains(url('/ghost-theme')));
     }
 
     public function test_it_carries_the_model_for_content_entries(): void
