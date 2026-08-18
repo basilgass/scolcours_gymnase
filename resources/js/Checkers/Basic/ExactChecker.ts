@@ -10,6 +10,18 @@ const description = `exact
 soft = valeur numérique juste, mais pas sous la forme attendue
 `
 
+/**
+ * Compare deux séquences RPN token à token. Deux expressions ont la même
+ * structure mathématique lorsque leur RPN est identique — la RPN ne contient
+ * aucune parenthèse, donc les parenthèses redondantes n'influent pas.
+ *
+ * Le type `NumExp["rpn"]` (soit `Token[]`) évite d'importer `Token` séparément.
+ */
+function rpnEquals(a: NumExp["rpn"], b: NumExp["rpn"]): boolean {
+	return a.length === b.length
+		&& a.every((token, index) => token.token === b[index].token && token.tokenType === b[index].tokenType)
+}
+
 export class ExactChecker extends CheckerAbstract {
 	readonly format = "réponse sous forme exacte, réduite"
 	#isSoft: boolean
@@ -38,24 +50,47 @@ export class ExactChecker extends CheckerAbstract {
 			return makeCheckerResult()
 		}
 
-		// Parse et évalue une expression en valeur numérique.
-		// Renvoie null (au lieu de lever) si l'expression est invalide ou non évaluable :
-		// le constructeur NumExp comme evaluate() peuvent lancer sur une entrée malformée.
-		const toNumber = (expression: string): number | null => {
+		// Parse une expression en NumExp. Renvoie null (au lieu de lever) si l'entrée
+		// est malformée : le constructeur NumExp peut lancer sur une entrée invalide.
+		const toNumExp = (expression: string): NumExp | null => {
 			try {
-				const exp = new NumExp(expression)
-				return exp.isValid() ? exp.evaluate() : null
+				return new NumExp(expression)
 			} catch {
 				return null
 			}
 		}
 
-		const givenValue = toNumber(givenExpression)
+		const givenExp = toNumExp(givenExpression)
+		if (givenExp === null) {
+			return makeCheckerResult("La réponse n'est pas une valeur exacte reconnue.")
+		}
+
+		const expectedExp = toNumExp(expectedExpression)
+		if (expectedExp === null) {
+			return makeCheckerResult("La réponse attendue n'est pas une valeur exacte reconnue.")
+		}
+
+		// Comparaison structurelle via la RPN (notation polonaise inverse). La RPN
+		// n'a pas de parenthèses et absorbe les multiplications implicites : deux
+		// écritures de même structure — (3sqrt(5))/7 et 3sqrt5/7 — y sont identiques.
+		// C'est plus strict que l'égalité numérique (5*3 ≠ 3*5), donc la « forme »
+		// reste distinguée, mais insensible au bruit syntaxique redondant.
+		if (rpnEquals(expectedExp.rpn, givenExp.rpn)) {
+			return makeCheckerResult()
+		}
+
+		// Évalue une expression en valeur numérique, ou null si elle référence des
+		// variables non fournies (isValid() renvoie false) ou n'est pas évaluable.
+		const toNumber = (exp: NumExp): number | null => {
+			return exp.isValid() ? exp.evaluate() : null
+		}
+
+		const givenValue = toNumber(givenExp)
 		if (givenValue === null) {
 			return makeCheckerResult("La réponse n'est pas une valeur exacte reconnue.")
 		}
 
-		const expectedValue = toNumber(expectedExpression)
+		const expectedValue = toNumber(expectedExp)
 		if (expectedValue === null) {
 			return makeCheckerResult("La réponse attendue n'est pas une valeur exacte reconnue.")
 		}

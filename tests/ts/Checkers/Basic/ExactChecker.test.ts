@@ -41,6 +41,15 @@ describe('ExactChecker - égalité stricte et format', () => {
 		expect(checkStrict('2sqrt2', '2sqrt(2)').result).toBe(true)
 	})
 
+	test('accepte des parenthèses externes redondantes (même structure RPN)', () => {
+		// '(3sqrt(5))/7' et '3sqrt5/7' ont des chaînes normalisées différentes
+		// ('(3sqrt(5))/7' vs '3sqrt(5)/7') mais la même RPN : les parenthèses
+		// externes redondantes n'existent pas en notation polonaise inverse.
+		expect(checkStrict('3sqrt5/7', '(3sqrt(5))/7').result).toBe(true)
+		// Non-régression : même équivalence avec un autre radicande.
+		expect(checkStrict('2sqrt2/3', '(2sqrt(2))/3').result).toBe(true)
+	})
+
 	test('retire le préfixe # de la réponse donnée', () => {
 		expect(checkStrict('#1/2', '1/2').result).toBe(true)
 	})
