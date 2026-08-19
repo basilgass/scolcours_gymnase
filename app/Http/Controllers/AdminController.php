@@ -13,8 +13,8 @@ use App\Models\Challenge;
 use App\Models\Chapter;
 use App\Models\Course;
 use App\Models\Illustration;
-use App\Models\Scolcours;
 use App\Models\SchoolTimetable;
+use App\Models\Scolcours;
 use App\Models\Team;
 use App\Models\Theme;
 use App\Models\Tool;
@@ -209,22 +209,29 @@ class AdminController extends Controller
 
 	public function challenges()
 	{
-		// TODO : passer par un ChallengeResource ?
-		return Inertia::render(
-			'Challenges/admin/AdminChallenge',
-			[
-				'challenges' => Challenge::orderBy('title')
-				                         ->get()
-				                         ->map(function (Challenge $tool, $key) {
-					                         return [
-						                         'id'         => $tool->id,
-						                         'slug'       => $tool->slug,
-						                         'title'      => $tool->title,
-						                         'theme_id'   => $tool->chapter?->theme_id,
-						                         'updated_at' => $tool->updated_at->format('d.m.Y H:m'),
-					                         ];
-				                         })
-			]
+
+		$challenges = Challenge::with('chapter')
+		                       ->get()
+		                       ->map(function (Challenge $challenge) {
+			                       return [
+				                       'id'         => $challenge->id,
+				                       'slug'       => $challenge->slug,
+				                       'title'      => $challenge->title,
+				                       'time_limit' => $challenge->time_limit,
+				                       'levels'     => count($challenge->levels),
+				                       'theme_id'   => $challenge->chapter?->theme_id,
+				                       'updated_at' => $challenge->updated_at->format('d.m.Y H:m'),
+			                       ];
+		                       })
+		                       ->sortBy(fn(array $challenge) => [
+			                       $challenge['theme_id'] === null ? 1 : 0,
+			                       $challenge['theme_id'] ?? 0,
+			                       $challenge['title'],
+		                       ])
+		                       ->values();
+
+		return Inertia::render('Challenges/admin/AdminChallenge',
+			['challenges' => $challenges]
 		);
 	}
 

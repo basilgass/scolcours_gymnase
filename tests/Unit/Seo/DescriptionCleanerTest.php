@@ -65,4 +65,39 @@ class DescriptionCleanerTest extends TestCase
 
         $this->assertSame('Cercle de centre O et de rayon 6', $result);
     }
+
+    public function test_sanitize_strips_math_without_truncating(): void
+    {
+        // sanitize() assainit mais ne tronque jamais : un texte long reste intégral.
+        $long = str_repeat('mot ', 100); // 400 chars
+
+        $this->assertSame(trim($long), DescriptionCleaner::sanitize($long));
+        $this->assertSame(
+            'Identité fondamentale.',
+            DescriptionCleaner::sanitize('Identité \\(\\sin^2(\\alpha)=1\\) fondamentale.')
+        );
+    }
+
+    public function test_clean_title_strips_math_and_truncates_at_sixty(): void
+    {
+        // Titre : LaTeX retiré, puis coupe sur frontière de mot au seuil titre (60).
+        $this->assertSame('fonctions', DescriptionCleaner::cleanTitle('fonctions \\(\\ln(x)\\)'));
+
+        $long = str_repeat('mot ', 100);
+        $result = DescriptionCleaner::cleanTitle($long);
+
+        $this->assertLessThanOrEqual(DescriptionCleaner::TITLE_MAX_LENGTH + 1, mb_strlen($result));
+        $this->assertStringEndsWith('…', $result);
+    }
+
+    public function test_contains_math_detects_latex_delimiters_and_commands(): void
+    {
+        $this->assertTrue(DescriptionCleaner::containsMath('matrices \\(a_{ij}\\)'));
+        $this->assertTrue(DescriptionCleaner::containsMath('bloc \\[ x^2 \\] final'));
+        $this->assertTrue(DescriptionCleaner::containsMath('la dérivée $f(x)$'));
+        $this->assertTrue(DescriptionCleaner::containsMath('somme \\sum des termes'));
+
+        $this->assertFalse(DescriptionCleaner::containsMath('Un titre parfaitement normal.'));
+        $this->assertFalse(DescriptionCleaner::containsMath(null));
+    }
 }

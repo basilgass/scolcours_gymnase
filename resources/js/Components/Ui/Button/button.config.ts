@@ -72,8 +72,8 @@ export const buttonActionMap: Record<ButtonAction, ButtonActionValue> = {
 
 export const buttonColorMap: Record<ButtonColor, Record<ButtonVariant, string>> = {
 	default: {
-		solid: "bg-button",
-		outline: "border-button",
+		solid: "bg-button text-button",
+		outline: "border-button text-button",
 		ghost: "text-button bg-transparent border-transparent",
 		hover: "bg-slate-100"
 	},

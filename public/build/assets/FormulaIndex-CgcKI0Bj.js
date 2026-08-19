@@ -1,0 +1,1 @@
+import{D as e,U as t,k as n,w as r}from"./@inertiajs-DtbEXzlC.js";import{t as i}from"./LayoutMain-cmK73oge.js";import{t as a}from"./ArticleTitle-DQniNy2D.js";import{t as o}from"./FormulaSearch-H039XfsY.js";var s={class:`scolcours-container`},c=n({layout:i,__name:`FormulaIndex`,setup(n){return(n,i)=>(t(),r(`main`,s,[e(a,{title:`formulaire`}),e(o)]))}});export{c as default};

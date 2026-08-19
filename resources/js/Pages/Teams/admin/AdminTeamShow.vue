@@ -112,25 +112,13 @@ function updateActiveState() {
 		</div>
 
 
-		Utile : pour les challenges uniquement.
-		<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-			<filtered-list
-				:item-background="(item: ChallengeInterface) => item.chapter?.theme_id ?? null"
-				:list="props.challenges"
-				:route-data="(item: ChallengeInterface) => {return {team: props.team.name, challenge: item.slug}}"
-				:route-name="'admin.teams.challenges.show'"
-				list-class="grid grid-cols-1 gap-3 xl:grid-cols-2"
-				title="challenges"
-			/>
-
-			<filtered-list
-				:item-background="(item: GeneratorInterface) => item.theme_id ?? null"
-				:list="props.generators"
-				:route-data="(item: GeneratorInterface) => {return {team: props.team.name, generator: item.slug}}"
-				:route-name="'admin.teams.generators.show'"
-				list-class="grid grid-cols-1 gap-3 xl:grid-cols-2"
-				title="générateurs"
-			/>
-		</div>
+		<filtered-list
+			:item-background="(item: ChallengeInterface) => item.chapter?.theme_id ?? null"
+			:list="props.challenges"
+			:route-data="(item: ChallengeInterface) => {return {teams: [props.team.name], challenge: item.slug}}"
+			:route-name="'challenges.leaderboard.show'"
+			list-class="grid grid-cols-1 gap-3 xl:grid-cols-2"
+			title="challenges"
+		/>
 	</article>
 </template>

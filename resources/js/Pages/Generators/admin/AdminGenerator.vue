@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import {ComponentPublicInstance, computed, ref} from "vue"
 import {GeneratorInterface} from "@/types/modelInterfaces.ts"
-import GeneratorItem from "@/Components/Elements/GeneratorItem.vue"
 import FilteredList from "@/Components/Ui/FilteredList.vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import axios from "axios"
@@ -13,6 +12,7 @@ import {slugify} from "@/scolcours.ts"
 import LayoutAdmin from "@/Layouts/LayoutAdmin.vue"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import DialogModal from "@/Components/Ui/DialogModal.vue"
+import GeneratorItem from "@/Components/Generators/GeneratorItem.vue"
 
 defineOptions({layout: LayoutAdmin})
 
@@ -112,7 +112,7 @@ function addToRef(el: Element | ComponentPublicInstance | null) {
 
 		<filtered-list
 			:list="filteredGenerators"
-			list-class="grid grid-cols-1 lg:grid-cols-2 gap-12"
+			list-class="grid grid-cols-1 lg:grid-cols-2 gap-x-6 gap-y-3"
 			filter-by-theme
 		>
 			<template #card="{ item }: { item: GeneratorInterface }">

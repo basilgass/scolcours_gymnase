@@ -4,6 +4,7 @@ import ScButton from "@/Components/Ui/Button/scButton.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import ParameterSchemaDialog from "@/Components/Generators/ParameterSchemaDialog.vue"
 import type {GeneratorParameterSchemaEntry} from "@/types/challengeInterfaces.ts"
+import ParameterSchemaLabel from "@/Components/Generators/ParameterSchemaLabel.vue"
 
 const schema = defineModel<Record<string, GeneratorParameterSchemaEntry> | null>()
 
@@ -69,26 +70,11 @@ function removeParam(key: string) {
 				class="border border-gray-300 dark:border-gray-600 rounded p-2 hover:bg-gray-50 dark:hover:bg-gray-800/50"
 			>
 				<div class="flex items-center justify-between gap-2">
-					<div class="flex items-center gap-2 min-w-0">
-						<span class="font-code font-semibold">{{ key }}</span>
-						<span
-							class="text-xs px-2 py-0.5 rounded"
-							:class="{
-								'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200': entry.format === 'number',
-								'bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200': entry.format === 'string',
-								'bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200': entry.format === 'set',
-								'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200': entry.format === 'boolean',
-							}"
-						>
-							{{ entry.format }} = {{ entry.default }}
-						</span>
-						<span
-							v-if="entry.description"
-							class="text-xs text-gray-600 dark:text-gray-400"
-						>
-							{{ entry.description }}
-						</span>
-					</div>
+					<ParameterSchemaLabel
+						:key="key"
+						:entry="entry"
+						:label="key"
+					/>
 					<div class="flex items-center gap-1 shrink-0">
 						<sc-button
 							type="edit"

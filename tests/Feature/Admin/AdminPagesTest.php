@@ -7,6 +7,7 @@ use App\Models\Chapter;
 use App\Models\Course;
 use App\Models\Illustration;
 use App\Models\Team;
+use App\Models\Theme;
 use App\Models\Tool;
 use App\Models\Widget;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -56,6 +57,40 @@ class AdminPagesTest extends TestCase
             ->assertInertia(fn (Assert $page) => $page
                 ->component('Challenges/admin/AdminChallenge')
                 ->has('challenges', 1));
+    }
+
+    public function test_challenges_are_ordered_by_theme_then_title_with_null_last(): void
+    {
+        // Thèmes créés dans l'ordre : le premier obtient le plus petit id (auto-increment).
+        $themeLow = Theme::factory()->create();
+        $themeHigh = Theme::factory()->create();
+
+        $chapterLow = Chapter::factory()->create(['theme_id' => $themeLow->id]);
+        $chapterHigh = Chapter::factory()->create(['theme_id' => $themeHigh->id]);
+
+        // Ordre d'insertion volontairement mélangé pour que seul le tri du contrôleur puisse produire le résultat attendu.
+        Challenge::factory()->create(['title' => 'Alpha', 'chapter_id' => $chapterHigh->id]);
+        Challenge::factory()->create(['title' => 'Zulu', 'chapter_id' => $chapterLow->id]);
+        Challenge::factory()->create(['title' => 'Alpha', 'chapter_id' => $chapterLow->id]);
+        // Titre alphabétiquement premier mais sans thème : doit finir en dernier.
+        Challenge::factory()->create(['title' => 'Aaa', 'chapter_id' => null]);
+
+        $this->get(route('admin.challenges.index'))
+            ->assertStatus(200)
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('Challenges/admin/AdminChallenge')
+                ->has('challenges', 4)
+                // Thème bas, départagé par titre (Alpha avant Zulu).
+                ->where('challenges.0.title', 'Alpha')
+                ->where('challenges.0.theme_id', $themeLow->id)
+                ->where('challenges.1.title', 'Zulu')
+                ->where('challenges.1.theme_id', $themeLow->id)
+                // Thème haut ensuite.
+                ->where('challenges.2.title', 'Alpha')
+                ->where('challenges.2.theme_id', $themeHigh->id)
+                // Sans thème en dernier, malgré un titre alphabétiquement premier.
+                ->where('challenges.3.title', 'Aaa')
+                ->where('challenges.3.theme_id', null));
     }
 
     public function test_illustrations_page(): void

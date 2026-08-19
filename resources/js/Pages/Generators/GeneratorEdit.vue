@@ -10,12 +10,12 @@ import {router} from "@inertiajs/vue3"
 import axios from "axios"
 import {computed, ref} from "vue"
 import {type CompletionGroup, schemaToCompletionItems} from "@/helpers/codemirror_completion.ts"
-import GeneratorsExamples from "@/Components/Elements/GeneratorsExamples.vue"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import MarkdownIt from "@/Components/Ui/MarkdownIt.vue"
 import {useStoreFlashMessage} from "@/stores/useStoreFlashMessage.ts"
 import FormTheme from "@/Components/Form/FormTheme.vue"
 import ParametersSchemaEditor from "@/Components/Generators/ParametersSchemaEditor.vue"
+import GeneratorsExamples from "@/Components/Generators/GeneratorsExamples.vue"
 
 defineOptions({layout: LayoutMain})
 

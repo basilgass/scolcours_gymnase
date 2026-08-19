@@ -15,6 +15,8 @@ interface IChallengeAdmin {
 	id: number,
 	title: string,
 	slug: string
+	time_limit: number
+	levels: number
 	theme_id: number,
 	updated_at: string
 }
@@ -37,7 +39,7 @@ defineProps({
 
 		<filtered-list
 			:list="challenges"
-			list-class="grid grid-cols-1 gap-2"
+			list-class="grid grid-cols-2 gap-2"
 			filter-by-theme
 		>
 			<template #card="{ item }: { item: IChallengeAdmin }">
@@ -46,19 +48,29 @@ defineProps({
 					no-inside-border
 					compact
 				>
-					<div class="flex justify-between">
+					<div>
 						<InertiaLink
+							v-theme.text
 							v-katex.auto="item.title"
+							class="text-lg md:text-xl"
 							:href="route('challenges.show', { challenge: item.slug })"
 						/>
-						<sc-button
-							type="edit"
-							icon
-							xs
-							ghost
-							:href="route('admin.challenges.edit', {challenge: item.id})"
-						/>
+						<div class="font-code flex gap-16 text-sm">
+							<div>durée: {{ item.time_limit }}</div>
+							<div>niveaux: {{ item.levels }}</div>
+						</div>
 					</div>
+					<template #footer>
+						<div class="flex justify-end">
+							<sc-button
+								type="edit"
+								icon
+								xs
+								ghost
+								:href="route('admin.challenges.edit', {challenge: item.id})"
+							/>
+						</div>
+					</template>
 				</card>
 			</template>
 		</filtered-list>

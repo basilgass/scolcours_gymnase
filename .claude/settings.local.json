@@ -218,7 +218,14 @@
       "PowerShell(npx vitest run tests/ts/Components/Courses/LessonDrops.test.ts 2>&1 | Select-Object -Last 12)",
       "PowerShell(node rpncheck.mjs)",
       "PowerShell(npx vitest run tests/ts/Checkers/Basic/ExactChecker.test.ts 2>&1 | Select-Object -Last 40)",
-      "PowerShell(npx vitest run tests/ts/Checkers 2>&1 | Select-Object -Last 25)"
+      "PowerShell(npx vitest run tests/ts/Checkers 2>&1 | Select-Object -Last 25)",
+      "PowerShell(php artisan tinker --execute '$c = App\\\\Models\\\\Chapter::find\\(32\\); $r = app\\(App\\\\Services\\\\Seo\\\\MetaResolver::class\\); $entry = new App\\\\Services\\\\Seo\\\\SitemapEntry\\(url\\(\"/analyse/fonctions-lnx\"\\), \"chapter\", $c\\); $m = $r->resolve\\($entry\\); echo \"TITLE:       [\" . $m->title . \"]\" . PHP_EOL; echo \"DESCRIPTION: [\" . $m->description . \"]\" . PHP_EOL;')",
+      "Bash(php *)",
+      "Bash(Select-String -Pattern \"admin\")",
+      "PowerShell(php artisan test --compact --filter=test_challenges_are_ordered_by_theme_then_title_with_null_last)",
+      "PowerShell(php artisan test --compact tests/Feature/Admin/AdminPagesTest.php)",
+      "PowerShell(php artisan test --compact --filter=test_admin_generators_are_ordered_by_theme_then_slug)",
+      "PowerShell(php artisan test --compact tests/Feature/Generators/GeneratorWebTest.php)"
     ]
   },
   "enableAllProjectMcpServers": true,

@@ -41,9 +41,13 @@ class GeneratorController extends Controller
 
 	public function admin()
 	{
+		$generators = Generator::orderBy('theme_id')
+		                       ->orderBy('slug')
+		                       ->get();
+
 		// Affichage de tous les générateurs, utilisé dans l'admin.
 		return Inertia::render("Generators/admin/AdminGenerator", [
-			"generators" => GeneratorResource::collection(Generator::all())
+			"generators" => GeneratorResource::collection($generators)
 		]);
 	}
 }

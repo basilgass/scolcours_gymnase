@@ -32,7 +32,7 @@ interface FilteredListProps<T> {
 	listClass?: string;
 	noFilterIfLessThan?: number;
 	noTitle?: boolean;
-	routeData?: (item: T) => Record<string, string>;
+	routeData?: (item: T) => Record<string, string | string[]>;
 	routeName?: string;
 	search?: string | null;
 	searchFunction?: ((item: T, searchValue: string) => boolean);
