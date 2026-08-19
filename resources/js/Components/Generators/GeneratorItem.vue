@@ -63,10 +63,9 @@ function updateStatus(event: boolean) {
 					<sc-button
 						:href="route('generators.show', {generator: generator.slug})"
 						xs
-						type="default"
-					>
-						<i class="bi bi-eye" /> Voir
-					</sc-button>
+						type="visit"
+						icon
+					/>
 				</div>
 			</div>
 		</template>

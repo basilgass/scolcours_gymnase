@@ -7,7 +7,8 @@ export type ButtonAction =
 	"delete" |
 	"edit" |
 	"generate" |
-	"save"
+	"save" |
+	"visit"
 
 
 export type ButtonColor =
@@ -67,6 +68,11 @@ export const buttonActionMap: Record<ButtonAction, ButtonActionValue> = {
 		label: "enregistrer",
 		icon: "bi bi-save",
 		color: "primary"
+	},
+	visit: {
+		label: 'visiter',
+		icon: "bi bi-eye",
+		color: "default"
 	}
 }
 
