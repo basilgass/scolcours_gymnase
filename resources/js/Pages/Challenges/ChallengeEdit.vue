@@ -142,7 +142,7 @@ function deleteLevel(levelId: number) {
 			</div>
 		</div>
 
-		<div class="px-5 grid grid-cols-1 gap-10">
+		<div class="grid grid-cols-1 gap-10">
 			<!-- Identité et description -->
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
 				<div class="flex flex-col gap-3 h-full">

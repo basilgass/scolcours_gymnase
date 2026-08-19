@@ -218,7 +218,7 @@ class AdminController extends Controller
 				                       'slug'       => $challenge->slug,
 				                       'title'      => $challenge->title,
 				                       'time_limit' => $challenge->time_limit,
-				                       'levels'     => count($challenge->levels),
+				                       'levels'     => $challenge->levels,
 				                       'theme_id'   => $challenge->chapter?->theme_id,
 				                       'updated_at' => $challenge->updated_at->format('d.m.Y H:m'),
 			                       ];
