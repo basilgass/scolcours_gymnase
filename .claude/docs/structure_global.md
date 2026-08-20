@@ -453,3 +453,20 @@ resources/js/
 - **`Components/Grapheur/`** : un seul composant `GrapheurFunction.vue`. À intégrer dans `Components/Tools/` ou `Components/Pi/` selon sa nature.
 - **`WidgetForm.vue`** à la racine de `Components/` : à déplacer dans `Components/Widgets/`.
 - **`helpers/liste-des-mots-francais*.js`** : données statiques en JS pur dans un dossier de helpers TS. À déplacer dans `public/data/` si elles sont volumineuses, ou garder si l'import dynamique le justifie.
+
+---
+
+## Conventions API backend
+
+### Pas de wrapping `data` sur les JSON Resources
+
+`JsonResource::withoutWrapping()` est appelé globalement dans `AppServiceProvider::boot()` (`app/Providers/AppServiceProvider.php`). Les réponses des `Resource` ne sont donc **pas** enveloppées dans une clé `data`.
+
+Conséquences :
+- **Côté front** : lire directement `res.data.id` (et non `res.data.data.id`) après un appel axios.
+- **Côté test** : `assertJsonPath('id', …)` sans préfixe `data.`.
+- Certaines Resources re-déclarent en plus `public static $wrap = null;` localement (ceinture + bretelles) — inutile mais inoffensif.
+
+### 201 automatique sur duplication / création
+
+Renvoyer une `Resource` qui enveloppe un modèle fraîchement persisté (`wasRecentlyCreated === true`) fait répondre Laravel en **201 Created** automatiquement (ex. `PostApiController::duplicate`, `store`). Les tests doivent asserter `201`, pas `200`.

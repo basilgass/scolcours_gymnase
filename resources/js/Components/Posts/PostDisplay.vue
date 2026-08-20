@@ -8,9 +8,11 @@ import {nextTick, onMounted, provide, ref} from "vue"
 import {useScrollTo} from "@/Composables/useHelpers.ts"
 import ArticleTitle from "@/Components/Ui/ArticleTitle.vue"
 import ContentSeparator from "@/Components/Ui/ContentSeparator.vue"
+import EditLink from "@/Components/Ui/EditLink.vue"
 import dayjs from "dayjs"
 import ScButton from "@/Components/Ui/Button/scButton.vue"
 import axios from "axios"
+import {router} from "@inertiajs/vue3"
 import {AxiosErrorMessage} from "@/types"
 
 const props = defineProps<{
@@ -36,6 +38,17 @@ onMounted(() => {
 })
 
 const toBeRevised = ref<boolean>(props.post.revise)
+
+function duplicatePost() {
+	axios
+		.post(route("api.admin.posts.duplicate", [props.post.id]))
+		.then((res) => {
+			router.visit(route("admin.posts.edit", [res.data.id]))
+		})
+		.catch((err: AxiosErrorMessage) => {
+			console.warn(err.response.data.message)
+		})
+}
 
 function postRevised() {
 	toBeRevised.value = !toBeRevised.value
@@ -78,13 +91,27 @@ function postRevised() {
 		>
 			<!-- title -->
 			<article-title
-				:edit-link="{
-					label: post.id,
-					url: route('admin.posts.edit', {post: post.id})
-				}"
 				:return-link
 				:title="post.title"
-			/>
+			>
+				<template #right>
+					<div class="flex gap-2 items-baseline">
+						<sc-button
+							v-admin
+							type="duplicate"
+							xs
+							outline
+							icon
+							@click="duplicatePost"
+						/>
+						<edit-link
+							:label="post.id"
+							:href="route('admin.posts.edit', {post: post.id})"
+							inline
+						/>
+					</div>
+				</template>
+			</article-title>
 		</header>
 		<header>
 			<div class="w-full flex flex-col md:flex-row justify-between items-baseline">

@@ -51,6 +51,9 @@ Route::middleware('api')
 		          Route::prefix('posts')
 		               ->as('posts.')
 		               ->group(function () {
+			               Route::post('{post}/duplicate', [PostApiController::class, 'duplicate'])
+			                    ->name('duplicate');
+
 			               Route::patch('{post}/move', [PostApiController::class, 'move'])
 			                    ->name('move');
 

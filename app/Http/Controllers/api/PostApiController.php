@@ -49,6 +49,11 @@ class PostApiController extends Controller
 		return PostShowResource::make($post);
 	}
 
+	public function duplicate(Post $post)
+	{
+		return PostShowResource::make($post->duplicate());
+	}
+
 	public function destroy(Post $post)
 	{
 		$chapter = $post->chapter;

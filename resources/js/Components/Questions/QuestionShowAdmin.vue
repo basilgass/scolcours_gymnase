@@ -121,14 +121,14 @@ function deleteQuestion() {
 
 		<div class="flex gap-2">
 			<sc-button
-				type="add"
+				type="duplicate"
 				xs
 				outline
+				icon
+				no-label
 				title="dupliquer"
 				@click="duplicateQuestion"
-			>
-				<i class="bi bi-clipboard-plus" />
-			</sc-button>
+			/>
 			<dropdown-menu prevent-close>
 				<template #button>
 					<i class="bi bi-eye" />

@@ -5,6 +5,7 @@ export type ButtonAction =
 	"add" |
 	"cancel" |
 	"delete" |
+	"duplicate" |
 	"edit" |
 	"generate" |
 	"save" |
@@ -21,6 +22,7 @@ export type ButtonColor =
 	"danger" |
 	"console" |
 	"card" |
+	"duplicate" |
 	"scolcours" | & ThemesSlug
 
 export type ButtonVariant = 'solid' | 'outline' | 'ghost' | 'hover'
@@ -53,6 +55,11 @@ export const buttonActionMap: Record<ButtonAction, ButtonActionValue> = {
 		label: "supprimer",
 		icon: "bi bi-trash",
 		color: "danger"
+	},
+	duplicate: {
+		label: "dupliquer",
+		icon: "bi bi-copy",
+		color: "duplicate"
 	},
 	edit: {
 		label: "modifier",
@@ -178,6 +185,12 @@ export const buttonColorMap: Record<ButtonColor, Record<ButtonVariant, string>> 
 		outline: "outline border bg-slate-200 text-slate-600",
 		ghost: "text-slate-600 bg-transparent border-transparent",
 		hover: "bg-slate-300"
+	},
+	duplicate: {
+		solid: "bg-indigo-500 text-white",
+		outline: "border-indigo-500 text-indigo-500",
+		ghost: "text-indigo-500 bg-transparent border-transparent",
+		hover: "bg-indigo-100"
 	}
 }
 

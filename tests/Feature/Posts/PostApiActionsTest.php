@@ -13,6 +13,61 @@ class PostApiActionsTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_admin_can_duplicate_a_post_with_its_blocks_and_questions(): void
+    {
+        $this->actingAsAdmin();
+        $chapter = Chapter::factory()->create();
+        $post = Post::factory()->forChapter($chapter)->create([
+            'title'  => 'Exercice 3',
+            'active' => true,
+            'order'  => 1,
+        ]);
+        // Donnée : deux blocks, le premier avec des illustrations.
+        Block::factory()->forBlockable($post)->withIllustrations(2)->create(['order' => 1]);
+        Block::factory()->forBlockable($post)->create(['order' => 2]);
+        // Deux questions, chacune avec son block.
+        Question::factory()->forQuestionable($post)->withBlock()->create(['order' => 1]);
+        Question::factory()->forQuestionable($post)->withBlock()->create(['order' => 2]);
+
+        // 201 : la Resource enveloppe un modèle fraîchement créé (wasRecentlyCreated).
+        $response = $this->postJson(route('api.admin.posts.duplicate', $post))
+            ->assertStatus(201)
+            ->assertJsonPath('title', 'Exercice 3 (copie)')
+            ->assertJsonPath('active', 0);
+
+        $newId = $response->json('id');
+        $this->assertNotSame($post->id, $newId);
+
+        $copy = Post::findOrFail($newId);
+        $this->assertSame($chapter->id, $copy->chapter_id);
+        $this->assertFalse((bool) $copy->active);
+        $this->assertSame(2, $copy->order); // placé en fin de chapitre
+
+        // Copie profonde de la donnée + illustrations.
+        $this->assertCount(2, $copy->blocks);
+        $this->assertSame(2, $copy->blocks->first()->illustrations->count());
+
+        // Copie des questions et de leurs blocks.
+        $this->assertCount(2, $copy->questions);
+        foreach ($copy->questions as $question) {
+            $this->assertCount(1, $question->blocks);
+        }
+
+        // L'original reste intact.
+        $this->assertCount(2, $post->fresh()->blocks);
+        $this->assertCount(2, $post->fresh()->questions);
+    }
+
+    public function test_duplicate_requires_admin(): void
+    {
+        $post = Post::factory()->create();
+
+        $this->postJson(route('api.admin.posts.duplicate', $post))->assertStatus(401);
+
+        $this->actingAsUser();
+        $this->postJson(route('api.admin.posts.duplicate', $post))->assertForbidden();
+    }
+
     public function test_admin_can_move_a_post_to_another_chapter(): void
     {
         $this->actingAsAdmin();

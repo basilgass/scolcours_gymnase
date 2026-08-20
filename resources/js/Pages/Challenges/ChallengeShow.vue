@@ -70,7 +70,7 @@ function onSelect(generator: GeneratorInterface | null) {
 					v-for="team of props.teams"
 					:key="team.id"
 					xs
-					:href="route('admin.teams.challenges.show', [team.name, props.challenge.slug])"
+					:href="route('challenges.leaderboard.show', {teams: [team.name], challenge: challenge.slug})"
 				>
 					{{ team.name }}
 				</sc-button>
@@ -121,8 +121,8 @@ function onSelect(generator: GeneratorInterface | null) {
 
 								<div
 									v-for="gen of level.generators"
-									:key="`gen-selector-${gen.slug}`"
-									v-theme.text="selectedGenerator?.id === gen.id"
+									:key="`gen-selector-${gen.pivot_id}`"
+									v-theme.text="selectedGenerator?.pivot_id === gen.pivot_id"
 									class="flex gap-2 px-3 py-1 rounded-lg cursor-pointer
 								       transition-colors"
 									@click="onSelect(gen)"

@@ -109,12 +109,11 @@ function historyBack() {
 				</sc-button>
 				<sc-button
 					disabled
-					type="add"
+					type="duplicate"
 					xs
+					icon
 					@click="duplicateGenerator"
-				>
-					dupliquer
-				</sc-button>
+				/>
 				<confirm-button
 					xs
 					@confirm="deleteGenerator"

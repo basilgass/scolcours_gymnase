@@ -105,4 +105,36 @@ class Post extends Model
 		            ->orderBy('id');
 	}
 
+	/**
+	 * Duplique le post dans le même chapitre : copie profonde de la donnée
+	 * (blocks + illustrations) et des questions (avec leurs propres blocks).
+	 * La copie est un brouillon (active = false) placé en fin de chapitre.
+	 * Les scores des élèves ne sont pas copiés.
+	 */
+	public function duplicate(): Post
+	{
+		$clonedPost = $this->replicate();
+		$clonedPost->title = $this->title . ' (copie)';
+		$clonedPost->active = false;
+		$clonedPost->order = $this->chapter->posts()->count() + 1;
+		$clonedPost->push();
+
+		// Copie des blocks de la donnée (Block::duplicate() copie aussi les illustrations).
+		foreach ($this->blocks as $block) {
+			$clonedPost->blocks()->save($block->duplicate());
+		}
+
+		// Copie des questions, chacune avec ses propres blocks.
+		foreach ($this->questions as $question) {
+			$clonedQuestion = $question->replicate();
+			$clonedPost->questions()->save($clonedQuestion);
+
+			foreach ($question->blocks as $block) {
+				$clonedQuestion->blocks()->save($block->duplicate());
+			}
+		}
+
+		return $clonedPost->refresh();
+	}
+
 }

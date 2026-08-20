@@ -26,7 +26,7 @@ const emits = defineEmits<{
 		</suspense>
 		<suspense v-else>
 			<generator-display
-				:key="selectedGenerator.slug"
+				:key="selectedGenerator.pivot_id ?? selectedGenerator.slug"
 				:generator="selectedGenerator"
 			/>
 		</suspense>
