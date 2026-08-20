@@ -20,6 +20,7 @@ class GeneratorFactory extends Factory
             'keyboard' => '',
             'code' => $this->faker->text(),
             'parameters_schema' => null,
+            'active' => true,
         ];
     }
 }

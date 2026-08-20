@@ -33,6 +33,36 @@ class GeneratorApiTest extends TestCase
             ->assertJsonFragment(['title' => 'Trigonometrie de base']);
     }
 
+    public function test_index_hides_inactive_generators_for_non_admins(): void
+    {
+        Generator::factory()->create(['title' => 'Actif', 'active' => true]);
+        Generator::factory()->create(['title' => 'Inactif', 'active' => false]);
+
+        // Invité : ne voit que l'actif.
+        $this->getJson(route('api.generators.index'))
+            ->assertStatus(200)
+            ->assertJsonCount(1)
+            ->assertJsonFragment(['title' => 'Actif'])
+            ->assertJsonMissing(['title' => 'Inactif']);
+
+        // Utilisateur non-admin : même filtrage.
+        $this->actingAsUser();
+        $this->getJson(route('api.generators.index'))
+            ->assertStatus(200)
+            ->assertJsonCount(1);
+    }
+
+    public function test_index_shows_inactive_generators_to_admins(): void
+    {
+        $this->actingAsAdmin();
+        Generator::factory()->create(['active' => true]);
+        Generator::factory()->create(['active' => false]);
+
+        $this->getJson(route('api.generators.index'))
+            ->assertStatus(200)
+            ->assertJsonCount(2);
+    }
+
     public function test_show_returns_a_single_generator(): void
     {
         $generator = Generator::factory()->create(['title' => 'Mon generateur']);
@@ -108,6 +138,56 @@ class GeneratorApiTest extends TestCase
             ->assertStatus(200);
 
         $this->assertModelMissing($generator);
+    }
+
+    public function test_admin_can_duplicate_a_generator(): void
+    {
+        $this->actingAsAdmin();
+        $generator = Generator::factory()->create([
+            'title'  => 'Mon generateur',
+            'slug'   => 'mon-generateur',
+            'active' => true,
+        ]);
+
+        // 201 : la Resource enveloppe un modèle fraîchement créé (wasRecentlyCreated).
+        $response = $this->postJson(route('api.admin.generators.duplicate', $generator))
+            ->assertStatus(201)
+            ->assertJsonPath('title', 'Mon generateur (copie)')
+            ->assertJsonPath('active', false);
+
+        $newId = $response->json('id');
+        $this->assertNotSame($generator->id, $newId);
+
+        $copy = Generator::findOrFail($newId);
+        $this->assertSame('mon-generateur-copie', $copy->slug);
+        $this->assertFalse($copy->active);
+
+        // L'original reste intact.
+        $this->assertTrue($generator->fresh()->active);
+        $this->assertSame('Mon generateur', $generator->fresh()->title);
+    }
+
+    public function test_duplicate_generates_a_unique_slug_when_copy_slug_is_taken(): void
+    {
+        $this->actingAsAdmin();
+        $generator = Generator::factory()->create(['slug' => 'gen']);
+        // Le slug de copie « naturel » est déjà pris → la copie doit incrémenter.
+        Generator::factory()->create(['slug' => 'gen-copie']);
+
+        $response = $this->postJson(route('api.admin.generators.duplicate', $generator))
+            ->assertStatus(201);
+
+        $this->assertSame('gen-copie-2', Generator::findOrFail($response->json('id'))->slug);
+    }
+
+    public function test_duplicate_requires_admin(): void
+    {
+        $generator = Generator::factory()->create();
+
+        $this->postJson(route('api.admin.generators.duplicate', $generator))->assertStatus(401);
+
+        $this->actingAsUser();
+        $this->postJson(route('api.admin.generators.duplicate', $generator))->assertForbidden();
     }
 
     public function test_generator_write_endpoints_require_admin(): void

@@ -29,10 +29,18 @@ defineProps<{
 					@click="router.visit(route('generators.show', item.slug))"
 				>
 					<template #header>
-						<h1
-							v-katex.auto="item.title"
-							class="text-lg"
-						/>
+						<div class="flex items-center justify-between gap-2">
+							<h1
+								v-katex.auto="item.title"
+								class="text-lg"
+							/>
+							<span
+								v-if="!item.active"
+								class="font-code text-xs px-2 py-0.5 rounded bg-indigo-100 text-indigo-600 whitespace-nowrap"
+							>
+								brouillon
+							</span>
+						</div>
 					</template>
 					<div
 						v-katex.auto="item.body"

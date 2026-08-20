@@ -36,6 +36,7 @@ Et doit retourner un objet `generatedQuestionInterface` (`{question, answer, tit
 | `keyboard`                | string     | clavier par défaut                                |
 | `code`                    | string     | corps de la `Function` JS exécutée                |
 | `parameters_schema`       | json?      | **schéma des paramètres acceptés** (voir §4)      |
+| `active`                  | bool       | défaut `true` — visibilité dans la liste publique (voir §2bis) |
 | `created_at`/`updated_at` | timestamps |                                                   |
 
 ### Table pivot `generatorables` (polymorphique)
@@ -53,6 +54,31 @@ Et doit retourner un objet `generatedQuestionInterface` (`{question, answer, tit
 > - `generators.parameters_schema` = **définition** des paramètres acceptés (typage, defaults)
 > - `generatorables.parameters` = **valeurs** choisies pour cette instance (généralement strings brutes)
 > - `generatorables.config` = **comportement UX** (time_per_question, etc.) — indépendant de la `Function`
+
+---
+
+## 2bis. Visibilité (`active`) et duplication
+
+### Colonne `active` (bool, défaut `true`)
+
+Sémantique **identique au `active` d'un Post** (« brouillon ») : `active` contrôle uniquement la **présence dans la liste publique** `/generators` (`GeneratorController::index`). Un générateur inactif :
+
+- **n'apparaît pas** dans `/generators` pour les non-admins (filtre `where('active', true)` appliqué si `! auth()->user()?->admin`) ;
+- **reste pleinement accessible** par tout autre chemin : URL directe via son slug (`generators.show`), et via un `generatorable` (challenge, évaluation) auquel il est rattaché — il continue de fonctionner dans le jeu.
+
+Les admins voient tous les générateurs dans `/generators` ; `GeneratorIndex.vue` affiche un badge « brouillon » sur les cartes inactives. L'édition (`GeneratorEdit.vue`) expose un `FormSwitch` `active`, sauvegardé par l'update standard (pas de route de toggle dédiée).
+
+Le **même filtre** s'applique à l'API `api.generators.index` (`GeneratorApiController::index`, utilisée par la recherche) : les non-admins n'y reçoivent que les générateurs actifs. Les deux surfaces de listing (page publique + API de recherche) sont donc cohérentes.
+
+### Duplication (`Generator::duplicate()`)
+
+`POST api.admin.generators.duplicate` → `GeneratorApiController::duplicate` → `Generator::duplicate()`. La copie :
+
+- suffixe le titre par ` (copie)` ;
+- est créée **inactive** (`active = false`, brouillon) ;
+- reçoit un **slug unique** (`<slug>-copie`, puis `-copie-2`, `-copie-3`… tant que pris, car `slug` est `unique`).
+
+Un générateur n'ayant pas d'enfants, la duplication est un simple `replicate()` + slug libre (pas de copie profonde, contrairement au Post).
 
 ---
 
@@ -269,6 +295,7 @@ formats). Les valeurs malformées sont gérées gracieusement par les cast funct
 - `app/Http/Controllers/api/GeneratorApiController.php` (CRUD)
 - `database/migrations/2026_05_12_074804_add_parameters_schema_to_generators_table.php`
 - `database/migrations/2026_05_18_120000_add_parameters_to_generatorables_table.php`
+- `database/migrations/2026_08_20_131021_add_active_to_generators_table.php`
 
 ### Frontend
 

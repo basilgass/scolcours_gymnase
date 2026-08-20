@@ -100,7 +100,6 @@ function postRevised() {
 							v-admin
 							type="duplicate"
 							xs
-							outline
 							icon
 							@click="duplicatePost"
 						/>

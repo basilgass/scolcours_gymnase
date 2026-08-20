@@ -17,6 +17,12 @@ class GeneratorApiController extends Controller
 
 		$query = Generator::query();
 
+		// Même règle que la liste publique : les non-admins ne voient que les
+		// générateurs actifs (cf. GeneratorController::index).
+		if (!auth()->user()?->admin) {
+			$query->where('active', true);
+		}
+
 		if ($search) {
 			$query->where('title', 'like', '%' . $search . '%');
 		}
@@ -42,6 +48,11 @@ class GeneratorApiController extends Controller
 		$generator->update($request->validated());
 
 		return $generator->refresh();
+	}
+
+	public function duplicate(Generator $generator)
+	{
+		return GeneratorResource::make($generator->duplicate());
 	}
 
 	public function destroy(Generator $generator)

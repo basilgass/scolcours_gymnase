@@ -64,10 +64,12 @@ class Generator extends Model
 		"slug",
 		"theme_id",
 		"parameters_schema",
+		"active",
 	];
 
 	protected $casts = [
-		"parameters_schema" => "array"
+		"parameters_schema" => "array",
+		"active"            => "boolean",
 	];
 
 	use HasFactory;
@@ -92,5 +94,39 @@ class Generator extends Model
 		return $this
 			->morphedByMany(Evaluation::class, 'generatorable')
 			->withPivot('order');
+	}
+
+	/**
+	 * Duplique le générateur : titre suffixé « (copie) », slug unique, brouillon
+	 * (active = false). Le générateur n'ayant pas d'enfants, la copie est un
+	 * simple replicate avec un slug libre.
+	 */
+	public function duplicate(): Generator
+	{
+		$clone = $this->replicate();
+		$clone->title = $this->title . ' (copie)';
+		$clone->active = false;
+		$clone->slug = $this->uniqueCopySlug();
+		$clone->save();
+
+		return $clone;
+	}
+
+	/**
+	 * Construit un slug de copie libre : « <slug>-copie », puis « -copie-2 »,
+	 * « -copie-3 »… tant que la valeur est déjà prise (colonne slug unique).
+	 */
+	private function uniqueCopySlug(): string
+	{
+		$base = ($this->slug ?: 'generateur') . '-copie';
+		$candidate = $base;
+		$suffix = 2;
+
+		while (static::whereSlug($candidate)->exists()) {
+			$candidate = $base . '-' . $suffix;
+			$suffix++;
+		}
+
+		return $candidate;
 	}
 }

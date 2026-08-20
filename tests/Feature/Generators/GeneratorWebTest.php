@@ -22,6 +22,34 @@ class GeneratorWebTest extends TestCase
                 ->has('generators', 2));
     }
 
+    public function test_generator_index_hides_inactive_generators_for_non_admins(): void
+    {
+        Generator::factory()->create(['active' => true]);
+        Generator::factory()->create(['active' => false]);
+
+        // Invité : ne voit que l'actif.
+        $this->get(route('generators.index'))
+            ->assertStatus(200)
+            ->assertInertia(fn (Assert $page) => $page->has('generators', 1));
+
+        // Utilisateur non-admin : même filtrage.
+        $this->actingAsUser();
+        $this->get(route('generators.index'))
+            ->assertStatus(200)
+            ->assertInertia(fn (Assert $page) => $page->has('generators', 1));
+    }
+
+    public function test_generator_index_shows_inactive_generators_to_admins(): void
+    {
+        $this->actingAsAdmin();
+        Generator::factory()->create(['active' => true]);
+        Generator::factory()->create(['active' => false]);
+
+        $this->get(route('generators.index'))
+            ->assertStatus(200)
+            ->assertInertia(fn (Assert $page) => $page->has('generators', 2));
+    }
+
     public function test_public_can_open_a_generator_by_slug(): void
     {
         $generator = Generator::factory()->create(['slug' => 'mon-generateur']);

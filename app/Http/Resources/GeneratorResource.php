@@ -20,6 +20,7 @@ class GeneratorResource extends JsonResource
 			'template'          => $this->template,
 			'keyboard'          => $this->keyboard,
 			'code'              => $this->code,
+			'active'            => $this->active,
 			'parameters_schema' => $this->parameters_schema,
 			'pivot_id'          => $this->pivot?->id,
 			'label'             => $this->pivot?->label,

@@ -122,8 +122,8 @@ function deleteQuestion() {
 		<div class="flex gap-2">
 			<sc-button
 				type="duplicate"
-				xs
 				outline
+				xs
 				icon
 				no-label
 				title="dupliquer"

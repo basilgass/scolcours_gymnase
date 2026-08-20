@@ -37,6 +37,9 @@ Route::middleware('api')
 	          ->prefix('admin')
 	          ->as('admin.')
 	          ->group(function () {
+		          Route::post('generators/{generator}/duplicate', [GeneratorApiController::class, 'duplicate'])
+		               ->name('generators.duplicate');
+
 		          Route::apiResource('generators', GeneratorApiController::class);
 	          });
 

@@ -227,7 +227,11 @@
       "PowerShell(php artisan test --compact --filter=test_admin_generators_are_ordered_by_theme_then_slug)",
       "PowerShell(php artisan test --compact tests/Feature/Generators/GeneratorWebTest.php)",
       "PowerShell(php artisan test --compact --filter=PostApiActionsTest)",
-      "PowerShell(\\(Get-Content \"C:\\\\websites\\\\scolcours_gymnase\\\\.claude\\\\docs\\\\structure_global.md\" | Measure-Object -Line\\).Lines)"
+      "PowerShell(\\(Get-Content \"C:\\\\websites\\\\scolcours_gymnase\\\\.claude\\\\docs\\\\structure_global.md\" | Measure-Object -Line\\).Lines)",
+      "PowerShell(php artisan make:migration add_active_to_generators_table --no-interaction)",
+      "PowerShell(php artisan migrate --no-interaction 2>&1 | Select-Object -Last 15)",
+      "PowerShell(php artisan test --compact tests/Feature/Generators/GeneratorApiTest.php tests/Feature/Generators/GeneratorWebTest.php)",
+      "PowerShell(php artisan test --compact tests/Feature/Generators/GeneratorApiTest.php)"
     ]
   },
   "enableAllProjectMcpServers": true,

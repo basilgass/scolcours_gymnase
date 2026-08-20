@@ -12,9 +12,17 @@ class GeneratorController extends Controller
 {
 	public function index()
 	{
-		// Affichage de tous les générateurs, utilisé dans l'admin.
+		// Liste publique des générateurs. Les non-admins ne voient que les
+		// générateurs actifs ; un générateur inactif reste accessible par
+		// lien direct (slug) ou via un challenge/évaluation.
+		$query = Generator::query();
+
+		if (!auth()->user()?->admin) {
+			$query->where('active', true);
+		}
+
 		return Inertia::render("Generators/GeneratorIndex", [
-			"generators" => GeneratorResource::collection(Generator::all())
+			"generators" => GeneratorResource::collection($query->get())
 		]);
 	}
 

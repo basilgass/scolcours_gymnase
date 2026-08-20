@@ -12,6 +12,7 @@ export interface GeneratorParameterSchemaEntry {
 }
 
 export interface GeneratorInterface {
+	active: boolean;
 	body: string;
 	code: string;
 	config?: { time_per_question?: number | null } | null;

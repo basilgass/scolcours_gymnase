@@ -3,6 +3,7 @@
 import FormCodearea from "@/Components/Form/FormCodearea.vue"
 import FormKeyboard from "@/Components/Form/FormKeyboard.vue"
 import FormInput from "@/Components/Form/FormInput.vue"
+import FormSwitch from "@/Components/Form/FormSwitch.vue"
 import ConfirmButton from "@/Components/Ui/ConfirmButton.vue"
 import LayoutMain from "@/Layouts/LayoutMain.vue"
 import {ChallengeInterface, GeneratorInterface} from "@/types/modelInterfaces"
@@ -48,7 +49,15 @@ function saveGenerator() {
 }
 
 function duplicateGenerator() {
-// TODO: Duplicate a generator.
+	axios.post(route("api.admin.generators.duplicate", [props.generator.id]))
+		.then((res) => {
+			flash.success("Générateur dupliqué")
+			router.visit(route("admin.generators.edit", [res.data.id]))
+		})
+		.catch((err) => {
+			console.warn(err)
+			flash.error("Erreur lors de la duplication")
+		})
 }
 
 function deleteGenerator() {
@@ -72,7 +81,7 @@ function historyBack() {
 <template>
 	<section class="scolcours-container my-5">
 		<header class="flex justify-between items-baseline mb-6">
-			<div>
+			<div class="flex flex-col gap-2">
 				<h1>
 					<span class="text-xl md:text-2xl">
 						édition d'un générateur
@@ -81,6 +90,11 @@ function historyBack() {
 						(id: {{ props.generator.id }})
 					</span>
 				</h1>
+				<FormSwitch
+					v-model="theGenerator.active"
+					label="actif,inactif"
+					sm
+				/>
 			</div>
 
 			<div class="flex gap-3 justify-end">
@@ -108,7 +122,6 @@ function historyBack() {
 					enregistrer
 				</sc-button>
 				<sc-button
-					disabled
 					type="duplicate"
 					xs
 					icon
